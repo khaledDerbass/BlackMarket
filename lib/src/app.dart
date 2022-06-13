@@ -1,6 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-
 import 'ui/LoginScreen.dart';
 
 class App extends StatelessWidget {
