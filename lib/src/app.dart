@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:souq/src/ui/HomeScreen.dart';
 import 'ui/LoginScreen.dart';
 
 class App extends StatelessWidget {
@@ -13,7 +14,7 @@ class App extends StatelessWidget {
       locale: context.locale,
 
       home: const Scaffold(
-        body: LoginScreen(),
+        body: HomeScreen(),
       ),
     );
   }
