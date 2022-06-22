@@ -7,7 +7,7 @@ class Story {
   String storeID;
   String storeName;
   int category;
-  DateTime date;
+  String date;
   bool? seen;
   String image;
   // 2
@@ -36,7 +36,7 @@ Story _storyFromJson(Map<String, dynamic> json) {
     json['storeID'] as String,
     json['storeName'] as String,
     json['category'] as int,
-    date: (json['date'] as Timestamped).timestamp,
+    date: (json['date'] as String),
     seen: json['seen'] as bool,
     image: json['image'] as String,
   );

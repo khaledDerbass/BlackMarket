@@ -62,9 +62,7 @@ Widget _buildListItem(BuildContext context, DocumentSnapshot snapshot, int lengt
     storyItemList: [
       s.StoryItem(
           name: story.storeName,
-          thumbnail: const NetworkImage(
-            "https://assets.materialup.com/uploads/82eae29e-33b7-4ff7-be10-df432402b2b6/preview",
-          ),
+          thumbnail: Image.memory(base64Decode(story.image)).image,
           stories: List.generate(length, (index) => Scaffold(
             body: Container(
               decoration:  BoxDecoration(
