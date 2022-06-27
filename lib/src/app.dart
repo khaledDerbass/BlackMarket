@@ -12,7 +12,9 @@ class App extends StatelessWidget {
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
       locale: context.locale,
-
+      theme: ThemeData(
+        primaryColor: Colors.deepPurple,
+      ),
       home: const Scaffold(
         body: HomeScreen(),
       ),
