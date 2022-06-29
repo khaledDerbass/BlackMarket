@@ -45,7 +45,9 @@ class _HomeScreenState extends State<HomeScreen>{
 
         body: Column(
           children: [
-            Expanded(
+            LimitedBox(
+              maxHeight: MediaQuery.of(context).size.height * 0.25,
+              maxWidth: MediaQuery.of(context).size.width ,
               child: StreamBuilder <QuerySnapshot>(
                   stream: repository.getStores(),
                   builder: (context, snapshot) {
@@ -130,7 +132,7 @@ Widget _buildCategoryList(BuildContext context, List<DocumentSnapshot>? snapshot
                 body: Container(
                   decoration:  BoxDecoration(
                     image: DecorationImage(
-                      fit: BoxFit.cover,
+                      fit: BoxFit.fitWidth,
                       image: Image.memory(base64Decode(storyByCategory[index].img)).image,
                     ),
                   ),
