@@ -48,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen>{
             child:  Center(
               child: TextField(
               decoration: InputDecoration(
-                  hintText: 'Search about Store',
+                  hintText: 'Search Store',
                   prefixIcon: Icon(Icons.search),
                 suffixIcon: IconButton(
                   icon: Icon(Icons.clear),
@@ -61,6 +61,7 @@ class _HomeScreenState extends State<HomeScreen>{
         ),
         ),
 
+          // third overwrite to show query result
 
         body: Column(
           children: [
@@ -114,7 +115,48 @@ class _HomeScreenState extends State<HomeScreen>{
 
   }
 }
+/*
+@override
+Widget buildResults(BuildContext context) {
+  List<String> matchQuery = [];
+  for(Store store in storesList){
 
+      matchQuery.add(fruit);
+    }
+
+  return ListView.builder(
+    itemCount: matchQuery.length,
+    itemBuilder: (context, index) {
+      var result = matchQuery[index];
+      return ListTile(
+        title: Text(result),
+      );
+    },
+  );
+}
+
+// last overwrite to show the
+// querying process at the runtime
+@override
+Widget buildSuggestions(BuildContext context) {
+
+  List<String> matchQuery = [];
+  for(Store store in storesList){
+    {
+      matchQuery.add(store.toString());
+    }
+  }
+  return ListView.builder(
+    itemCount: matchQuery.length,
+    itemBuilder: (context, index) {
+      var result = matchQuery[index];
+      return ListTile(
+        title: Text(result),
+      );
+    },
+  );
+}
+*/
 Widget _buildCategoryList(BuildContext context, List<DocumentSnapshot>? snapshot) {
   List<Store> storesList = [];
   List<int> categories = [];
@@ -139,7 +181,7 @@ Widget _buildCategoryList(BuildContext context, List<DocumentSnapshot>? snapshot
 
     categoryWidgets.add(
         s.Stories(
-        autoPlayDuration: const Duration(seconds: 3),
+        autoPlayDuration: const Duration(seconds: 5),
         displayProgress: true,
         circlePadding: 2,
         circleRadius: MediaQuery.of(context).size.width / 9,
@@ -186,7 +228,7 @@ Widget _buildListItem(BuildContext context, DocumentSnapshot snapshot, int lengt
   final store = Store.fromSnapshot(snapshot);
 
   return  s.Stories(
-    autoPlayDuration: const Duration(seconds: 3),
+    autoPlayDuration: const Duration(seconds: 5),
     displayProgress: true,
     circlePadding: 2,
     circleRadius: MediaQuery.of(context).size.width / 9,
