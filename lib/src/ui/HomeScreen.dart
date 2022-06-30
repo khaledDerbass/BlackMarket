@@ -39,9 +39,23 @@ class _HomeScreenState extends State<HomeScreen>{
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          title: isArabic(context) ? const Text('الرئيسية') :const Text('Home'),
           backgroundColor: Colors.deepPurple,
+          title: Container(
+            //isArabic(context) ? const Text('الرئيسية') :const Text('Home'),
+            width: double.infinity,
+            height: 40,
+           color: Colors.white,
+            child:  Center(
+            child: TextField(
+              decoration: InputDecoration(
+                  hintText: 'Search',
+                  prefixIcon: Icon(Icons.search),),
+            ),
+          ),
+
         ),
+        ),
+
 
         body: Column(
           children: [
@@ -80,7 +94,7 @@ class _HomeScreenState extends State<HomeScreen>{
         ),
           bottomNavigationBar: ConvexAppBar(
             style: TabStyle.fixed,
-            color: Colors.yellowAccent,
+            color: Colors.yellow.shade600,
             backgroundColor: Colors.deepPurple,
             items:  [
               TabItem(icon: Icons.home, title: isArabic(context) ? 'الرئيسية':'Home'),

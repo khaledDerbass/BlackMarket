@@ -48,6 +48,7 @@ dependencies:
   stories_for_flutter: ^1.2.0
   cloud_firestore: ^3.1.18
   convex_bottom_bar: ^3.0.0
+  flutter_search_bar: ^2.1.0
   #flutter_instagram_stories: ^1.0.2
 
 
