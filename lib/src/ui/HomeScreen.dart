@@ -43,16 +43,21 @@ class _HomeScreenState extends State<HomeScreen>{
           title: Container(
             //isArabic(context) ? const Text('الرئيسية') :const Text('Home'),
             width: double.infinity,
-            height: 40,
+            height: 35,
            color: Colors.white,
             child:  Center(
-            child: TextField(
+              child: TextField(
               decoration: InputDecoration(
-                  hintText: 'Search',
-                  prefixIcon: Icon(Icons.search),),
+                  hintText: 'Search about Store',
+                  prefixIcon: Icon(Icons.search),
+                suffixIcon: IconButton(
+                  icon: Icon(Icons.clear),
+                  onPressed: () {
+                    /* Clear the search field */
+                  },
+                ),),
             ),
           ),
-
         ),
         ),
 
