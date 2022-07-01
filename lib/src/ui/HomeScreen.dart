@@ -9,6 +9,7 @@ import 'package:souq/src/blocs/StoreRepository.dart';
 import 'package:souq/src/blocs/StoryRepository.dart';
 import 'package:souq/src/models/Store.dart';
 import 'package:souq/src/models/StoryItem.dart';
+import 'package:souq/src/ui/SearchPage.dart';
 import 'package:stories_for_flutter/stories_for_flutter.dart' as s;
 
 class HomeScreen extends StatefulWidget {
@@ -24,10 +25,12 @@ class HomeScreen extends StatefulWidget {
 
 
 class _HomeScreenState extends State<HomeScreen>{
+  final myController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+
   }
 
 
@@ -35,9 +38,11 @@ class _HomeScreenState extends State<HomeScreen>{
   Widget build(BuildContext context) {
     context.setLocale(Locale('en', 'US'));
     StoreRepository repository = StoreRepository();
+    //repository.addStoreFuture();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
+          resizeToAvoidBottomInset: false,
         appBar: AppBar(
           backgroundColor: Colors.deepPurple,
           title: Container(
@@ -47,13 +52,22 @@ class _HomeScreenState extends State<HomeScreen>{
            color: Colors.white,
             child:  Center(
               child: TextField(
+                onTap: (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const SearchPage()),
+                  );
+                },
+                controller: myController,
+                  showCursor: false,
+                  readOnly: true,
               decoration: InputDecoration(
-                  hintText: 'Search Store',
+                  hintText: isArabic(context) ? 'إبحث عن متجر' :'Search Store',
                   prefixIcon: Icon(Icons.search),
                 suffixIcon: IconButton(
                   icon: Icon(Icons.clear),
                   onPressed: () {
-                    /* Clear the search field */
+                    myController.text = "";
                   },
                 ),),
             ),
@@ -224,6 +238,9 @@ bool isArabic(BuildContext context){
   return context.locale.languageCode == 'ar';
 }
 
+bool isPortrait (BuildContext context){
+  return MediaQuery.of(context).orientation == Orientation.portrait;
+}
 Widget _buildListItem(BuildContext context, DocumentSnapshot snapshot, int length) {
   final store = Store.fromSnapshot(snapshot);
 
@@ -240,7 +257,7 @@ Widget _buildListItem(BuildContext context, DocumentSnapshot snapshot, int lengt
             body: Container(
               decoration:  BoxDecoration(
                 image: DecorationImage(
-                  fit: BoxFit.cover,
+                  fit: BoxFit.fitWidth,
                   image: Image.memory(base64Decode(store.stories[index].img)).image,
                 ),
               ),
