@@ -11,6 +11,7 @@ import 'package:souq/src/blocs/StoryRepository.dart';
 import 'package:souq/src/models/CategoryWidget.dart';
 import 'package:souq/src/models/Store.dart';
 import 'package:souq/src/models/StoryItem.dart';
+import 'package:souq/src/ui/SearchPage.dart';
 import 'package:stories_for_flutter/stories_for_flutter.dart' as s;
 import 'package:flutter_stories/flutter_stories.dart';
 
@@ -20,13 +21,14 @@ class HomeScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
 
-   return _HomeScreenState();
+    return _HomeScreenState();
   }
 
 }
 
 
 class _HomeScreenState extends State<HomeScreen>{
+  final myController = TextEditingController();
 
   @override
   void initState() {
@@ -41,48 +43,74 @@ class _HomeScreenState extends State<HomeScreen>{
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        appBar: AppBar(
-          title: isArabic(context) ? const Text('الرئيسية') :const Text('Home'),
-          backgroundColor: Colors.deepPurple,
-        ),
+          appBar: AppBar(
+            backgroundColor: Colors.deepPurple,
+            title: Container(
+              width: double.infinity,
+              height: MediaQuery.of(context).size.height * 0.06,
+              color: Colors.white,
+              child:  Center(
+                child: TextField(
+                  onTap: (){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const SearchPage()),
+                    );
+                  },
+                  controller: myController,
+                  showCursor: false,
+                  readOnly: true,
+                  decoration: InputDecoration(
+                    hintText: isArabic(context) ? 'إبحث عن متجر' :'Search Store',
+                    prefixIcon: Icon(Icons.search),
+                    suffixIcon: IconButton(
+                      icon: Icon(Icons.clear),
+                      onPressed: () {
+                        myController.text = "";
+                      },
+                    ),),
+                ),
+              ),
+            ),
+          ),
 
-        body: Column(
-          children: [
-            LimitedBox(
-              maxHeight: MediaQuery.of(context).size.height * 0.25,
-              maxWidth: MediaQuery.of(context).size.width ,
-              child: StreamBuilder <QuerySnapshot>(
-                  stream: repository.getStores(),
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData) return const LinearProgressIndicator();
-                    return _buildList(context, snapshot.data?.docs ?? []);
-                  }),
-            ),
-            Align(
-              alignment: isArabic(context) ? Alignment.centerRight : Alignment.centerLeft,
-                child: Padding(
-                  padding: EdgeInsets.only(left:  MediaQuery.of(context).size.width * 0.02 , right: MediaQuery.of(context).size.width * 0.02),
-                  child: isArabic(context) ? const Text("التصنيفات", style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),): const Text("Categories", style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),),
-                )
-            ),
-            LimitedBox(
-              maxHeight: MediaQuery.of(context).size.height * 0.25,
-              maxWidth: MediaQuery.of(context).size.width ,
-              child: StreamBuilder <QuerySnapshot>(
-                  stream: repository.getStores(),
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData) return const LinearProgressIndicator();
-                    return _buildCategoryList(context, snapshot.data?.docs ?? []);
-                  }),
-            ),
-          ],
-        ),
+          body: Column(
+            children: [
+              LimitedBox(
+                maxHeight: MediaQuery.of(context).size.height * 0.25,
+                maxWidth: MediaQuery.of(context).size.width ,
+                child: StreamBuilder <QuerySnapshot>(
+                    stream: repository.getStores(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) return const LinearProgressIndicator();
+                      return _buildList(context, snapshot.data?.docs ?? []);
+                    }),
+              ),
+              Align(
+                  alignment: isArabic(context) ? Alignment.centerRight : Alignment.centerLeft,
+                  child: Padding(
+                    padding: EdgeInsets.only(left:  MediaQuery.of(context).size.width * 0.02 , right: MediaQuery.of(context).size.width * 0.02),
+                    child: isArabic(context) ? const Text("التصنيفات", style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),): const Text("Categories", style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),),
+                  )
+              ),
+              LimitedBox(
+                maxHeight: MediaQuery.of(context).size.height * 0.25,
+                maxWidth: MediaQuery.of(context).size.width ,
+                child: StreamBuilder <QuerySnapshot>(
+                    stream: repository.getStores(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) return const LinearProgressIndicator();
+                      return _buildCategoryList(context, snapshot.data?.docs ?? []);
+                    }),
+              ),
+            ],
+          ),
           bottomNavigationBar: ConvexAppBar(
             style: TabStyle.fixed,
             color: Colors.yellowAccent,
@@ -110,7 +138,7 @@ Widget _buildCategoryList(BuildContext context, List<DocumentSnapshot>? snapshot
   snapshot!.map((data) => {
     storesList.add(Store.fromSnapshot(data)),
     if(!categories.contains(Store.fromSnapshot(data).category)){
-          categories.add(Store.fromSnapshot(data).category)
+      categories.add(Store.fromSnapshot(data).category)
     }
   }).toList();
 
@@ -133,7 +161,7 @@ Widget _buildCategoryList(BuildContext context, List<DocumentSnapshot>? snapshot
     storyByCategory.clear();
     print("categoryWidgets " + categoryWidgets.length.toString());
   }
-  
+
   for(CategoryWidget cw in categoryWidgets){
     widgetsList.add(
         CupertinoPageScaffold(
