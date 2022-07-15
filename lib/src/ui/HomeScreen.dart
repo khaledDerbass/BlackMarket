@@ -43,12 +43,13 @@ class _HomeScreenState extends State<HomeScreen>{
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
+        backgroundColor: CupertinoColors.white,
           appBar: AppBar(
-            backgroundColor: Colors.deepPurple,
+            backgroundColor: CupertinoColors.systemPurple,
             title: Container(
               width: double.infinity,
               height: MediaQuery.of(context).size.height * 0.06,
-              color: Colors.white,
+              color: CupertinoColors.white,
               child:  Center(
                 child: TextField(
                   onTap: (){
@@ -62,9 +63,9 @@ class _HomeScreenState extends State<HomeScreen>{
                   readOnly: true,
                   decoration: InputDecoration(
                     hintText: isArabic(context) ? 'إبحث عن متجر' :'Search Store',
-                    prefixIcon: Icon(Icons.search),
+                    prefixIcon: const Icon(Icons.search),
                     suffixIcon: IconButton(
-                      icon: Icon(Icons.clear),
+                      icon: const Icon(Icons.clear),
                       onPressed: () {
                         myController.text = "";
                       },
@@ -74,47 +75,49 @@ class _HomeScreenState extends State<HomeScreen>{
             ),
           ),
 
-          body: Column(
-            children: [
-              LimitedBox(
-                maxHeight: MediaQuery.of(context).size.height * 0.25,
-                maxWidth: MediaQuery.of(context).size.width ,
-                child: StreamBuilder <QuerySnapshot>(
-                    stream: repository.getStores(),
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData) return const LinearProgressIndicator();
-                      return _buildList(context, snapshot.data?.docs ?? []);
-                    }),
-              ),
-              Align(
-                  alignment: isArabic(context) ? Alignment.centerRight : Alignment.centerLeft,
-                  child: Padding(
-                    padding: EdgeInsets.only(left:  MediaQuery.of(context).size.width * 0.02 , right: MediaQuery.of(context).size.width * 0.02),
-                    child: isArabic(context) ? const Text("التصنيفات", style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),): const Text("Categories", style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),),
-                  )
-              ),
-              LimitedBox(
-                maxHeight: MediaQuery.of(context).size.height * 0.25,
-                maxWidth: MediaQuery.of(context).size.width ,
-                child: StreamBuilder <QuerySnapshot>(
-                    stream: repository.getStores(),
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData) return const LinearProgressIndicator();
-                      return _buildCategoryList(context, snapshot.data?.docs ?? []);
-                    }),
-              ),
-            ],
+          body: SafeArea(
+            child: Column(
+              children: [
+                LimitedBox(
+                  maxHeight: MediaQuery.of(context).size.height * 0.25,
+                  maxWidth: MediaQuery.of(context).size.width ,
+                  child: StreamBuilder <QuerySnapshot>(
+                      stream: repository.getStores(),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) return const LinearProgressIndicator();
+                        return _buildList(context, snapshot.data?.docs ?? []);
+                      }),
+                ),
+                Align(
+                    alignment: isArabic(context) ? Alignment.centerRight : Alignment.centerLeft,
+                    child: Padding(
+                      padding: EdgeInsets.only(left:  MediaQuery.of(context).size.width * 0.02 , right: MediaQuery.of(context).size.width * 0.02),
+                      child: isArabic(context) ? const Text("التصنيفات", style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),): const Text("Categories", style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),),
+                    )
+                ),
+                LimitedBox(
+                  maxHeight: MediaQuery.of(context).size.height * 0.25,
+                  maxWidth: MediaQuery.of(context).size.width ,
+                  child: StreamBuilder <QuerySnapshot>(
+                      stream: repository.getStores(),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) return const LinearProgressIndicator();
+                        return _buildCategoryList(context, snapshot.data?.docs ?? []);
+                      }),
+                ),
+              ],
+            ),
           ),
           bottomNavigationBar: ConvexAppBar(
             style: TabStyle.fixed,
-            color: Colors.yellowAccent,
-            backgroundColor: Colors.deepPurple,
+            color: CupertinoColors.systemYellow,
+            backgroundColor: CupertinoColors.systemPurple,
             items:  [
               TabItem(icon: Icons.home, title: isArabic(context) ? 'الرئيسية':'Home'),
               TabItem(icon: Icons.camera_alt, title: isArabic(context) ? 'إضافة' :'Add'),
@@ -165,6 +168,7 @@ Widget _buildCategoryList(BuildContext context, List<DocumentSnapshot>? snapshot
   for(CategoryWidget cw in categoryWidgets){
     widgetsList.add(
         CupertinoPageScaffold(
+          backgroundColor: CupertinoColors.white,
           child: Padding(
             padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.004 , right: MediaQuery.of(context).size.width * 0.004),
             child: Center(
@@ -251,6 +255,7 @@ Widget _buildListItem(BuildContext context, DocumentSnapshot snapshot, int lengt
   final store = Store.fromSnapshot(snapshot);
 
   return CupertinoPageScaffold(
+    backgroundColor: CupertinoColors.white,
     child: Padding(
       padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.004 , right: MediaQuery.of(context).size.width * 0.004),
       child: Center(
