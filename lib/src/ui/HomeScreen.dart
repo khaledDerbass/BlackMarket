@@ -3,13 +3,16 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:souq/Helpers/GEnums.dart';
 import 'package:souq/src/blocs/StoreRepository.dart';
 import 'package:souq/src/blocs/StoryRepository.dart';
+import 'package:souq/src/models/CategoryWidget.dart';
 import 'package:souq/src/models/Store.dart';
 import 'package:souq/src/models/StoryItem.dart';
 import 'package:stories_for_flutter/stories_for_flutter.dart' as s;
+import 'package:flutter_stories/flutter_stories.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -68,7 +71,9 @@ class _HomeScreenState extends State<HomeScreen>{
                   ),),
                 )
             ),
-            Expanded(
+            LimitedBox(
+              maxHeight: MediaQuery.of(context).size.height * 0.25,
+              maxWidth: MediaQuery.of(context).size.width ,
               child: StreamBuilder <QuerySnapshot>(
                   stream: repository.getStores(),
                   builder: (context, snapshot) {
@@ -99,8 +104,9 @@ class _HomeScreenState extends State<HomeScreen>{
 Widget _buildCategoryList(BuildContext context, List<DocumentSnapshot>? snapshot) {
   List<Store> storesList = [];
   List<int> categories = [];
-  List<Widget> categoryWidgets = [];
+  List<CategoryWidget> categoryWidgets = [];
   List<StoryContent> storyByCategory = [];
+  List<Widget> widgetsList = [];
   snapshot!.map((data) => {
     storesList.add(Store.fromSnapshot(data)),
     if(!categories.contains(Store.fromSnapshot(data).category)){
@@ -115,38 +121,88 @@ Widget _buildCategoryList(BuildContext context, List<DocumentSnapshot>? snapshot
         storyByCategory.addAll(store.stories.where((e) => e.category == category).toList());
       }
     }
-    if(storyByCategory.isEmpty)
+    if(storyByCategory.isEmpty) {
       continue;
-
-    categoryWidgets.add(
-        s.Stories(
-        autoPlayDuration: const Duration(seconds: 3),
-        displayProgress: true,
-        circlePadding: 2,
-        circleRadius: MediaQuery.of(context).size.width / 9,
-        storyItemList: [
-          s.StoryItem(
-              name: Category.fromId(category).name,
-              thumbnail: Image.memory(base64Decode(storyByCategory.last.img)).image,
-              stories: List.generate(storyByCategory.length, (index) => Scaffold(
-                body: Container(
-                  decoration:  BoxDecoration(
-                    image: DecorationImage(
-                      fit: BoxFit.fitWidth,
-                      image: Image.memory(base64Decode(storyByCategory[index].img)).image,
-                    ),
-                  ),
-                ),
-              ),)),
-        ]
-    ));
+    }
+    List<String> imgs = [];
+    for (StoryContent sc in storyByCategory){
+      imgs.add(sc.img);
+    }
+    CategoryWidget categoryWidget = new CategoryWidget(storyByCategory.last.img,Category.fromId(category).name,imgs);
+    categoryWidgets.add(categoryWidget);
     storyByCategory.clear();
     print("categoryWidgets " + categoryWidgets.length.toString());
+  }
+  
+  for(CategoryWidget cw in categoryWidgets){
+    widgetsList.add(
+        CupertinoPageScaffold(
+          child: Padding(
+            padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.004 , right: MediaQuery.of(context).size.width * 0.004),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(60.0),
+                      image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: Image.memory(base64Decode(cw.thumbnailImage)).image,
+                      ),
+                      border: Border.all(
+                        color: CupertinoColors.activeOrange,
+                        width: 2.0,
+                        style: BorderStyle.solid,
+                      ),
+                    ),
+                    width: MediaQuery.of(context).size.height * 0.12,
+                    height:MediaQuery.of(context).size.height * 0.12,
+                    child: GestureDetector(
+                      onTap: () {
+                        showCupertinoDialog(
+                          context: context,
+                          builder: (context) {
+                            return CupertinoPageScaffold(
+                              child: Story(
+                                topOffset: MediaQuery.of(context).size.height * 0.02,
+                                onFlashForward: Navigator.of(context).pop,
+                                onFlashBack: Navigator.of(context).pop,
+                                momentCount: cw.images.length,
+                                momentDurationGetter: (idx) => Duration(seconds: 5),
+                                momentBuilder: (context, index) => Scaffold(
+                                  body: Container(
+                                    decoration:  BoxDecoration(
+                                      color: CupertinoColors.darkBackgroundGray,
+                                      image: DecorationImage(
+                                        fit: BoxFit.contain,
+                                        image: Image.memory(base64Decode(cw.images[index])).image,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.005),
+                    child: Text(cw.categoryName),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        )
+    );
   }
   return ListView(
     scrollDirection: Axis.horizontal,
     padding: const EdgeInsets.only(top: 20.0),
-    children: categoryWidgets,
+    children: List.of(widgetsList),
   );
 }
 
@@ -154,7 +210,7 @@ Widget _buildList(BuildContext context, List<DocumentSnapshot>? snapshot) {
   print(context.locale.languageCode);
   return ListView(
     scrollDirection: Axis.horizontal,
-    padding: const EdgeInsets.only(top: 20.0),
+    padding: EdgeInsets.only(right: MediaQuery.of(context).size.width * 0.01, left: MediaQuery.of(context).size.width * 0.01),
     children: snapshot!.map((data) => _buildListItem(context, data,Store.fromSnapshot(data).stories.length)).toList(),
   );
 }
@@ -166,26 +222,66 @@ bool isArabic(BuildContext context){
 Widget _buildListItem(BuildContext context, DocumentSnapshot snapshot, int length) {
   final store = Store.fromSnapshot(snapshot);
 
-  return  s.Stories(
-    autoPlayDuration: const Duration(seconds: 3),
-    displayProgress: true,
-    circlePadding: 2,
-    circleRadius: MediaQuery.of(context).size.width / 9,
-    storyItemList: [
-      s.StoryItem(
-          name: isArabic(context) ?  store.nameAr : store.nameEn,
-          thumbnail: Image.memory(base64Decode(store.stories.last.img)).image,
-          stories: List.generate(length, (index) => Scaffold(
-            body: Container(
-              decoration:  BoxDecoration(
+  return CupertinoPageScaffold(
+    child: Padding(
+      padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.004 , right: MediaQuery.of(context).size.width * 0.004),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(60.0),
                 image: DecorationImage(
                   fit: BoxFit.cover,
-                  image: Image.memory(base64Decode(store.stories[index].img)).image,
+                  image: Image.memory(base64Decode(store.stories.last.img)).image,
+                ),
+                border: Border.all(
+                  color: CupertinoColors.activeOrange,
+                  width: 2.0,
+                  style: BorderStyle.solid,
                 ),
               ),
+              width: MediaQuery.of(context).size.height * 0.12,
+              height:MediaQuery.of(context).size.height * 0.12,
+              child: GestureDetector(
+                onTap: () {
+                  showCupertinoDialog(
+                    context: context,
+                    builder: (context) {
+                      return CupertinoPageScaffold(
+                        child: Story(
+                          topOffset: MediaQuery.of(context).size.height * 0.02,
+                          onFlashForward: Navigator.of(context).pop,
+                          onFlashBack: Navigator.of(context).pop,
+                          momentCount: store.stories.length,
+                          momentDurationGetter: (idx) => Duration(seconds: 5),
+                          momentBuilder: (context, index) => Scaffold(
+                            body: Container(
+                              decoration:  BoxDecoration(
+                                color: CupertinoColors.darkBackgroundGray,
+                                image: DecorationImage(
+                                  fit: BoxFit.contain,
+                                  image: Image.memory(base64Decode(store.stories[index].img)).image,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
             ),
-          ),)),
-    ]
+            Container(
+              padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.005),
+              child: isArabic(context) ?Text(store.nameAr) : Text(store.nameEn),
+            ),
+          ],
+        ),
+      ),
+    ),
   );
 }
 
