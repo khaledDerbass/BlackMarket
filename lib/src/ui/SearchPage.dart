@@ -1,6 +1,7 @@
 
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../blocs/StoreRepository.dart';
@@ -42,8 +43,11 @@ class _SearchPageState extends State<SearchPage>{
             title: Container(
               //isArabic(context) ? const Text('الرئيسية') :const Text('Home'),
               width: double.infinity,
-              height: MediaQuery.of(context).size.height * 0.06,
-              color: Colors.white,
+              height: MediaQuery.of(context).size.height * 0.05,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: CupertinoColors.white,
+              ),
               child:  Center(
                 child: TextField(
                     autofocus:true,

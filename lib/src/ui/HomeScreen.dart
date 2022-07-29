@@ -5,14 +5,13 @@ import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:souq/Helpers/GEnums.dart';
 import 'package:souq/src/blocs/StoreRepository.dart';
-import 'package:souq/src/blocs/StoryRepository.dart';
 import 'package:souq/src/models/CategoryWidget.dart';
 import 'package:souq/src/models/Store.dart';
 import 'package:souq/src/models/StoryItem.dart';
 import 'package:souq/src/ui/SearchPage.dart';
-import 'package:stories_for_flutter/stories_for_flutter.dart' as s;
 import 'package:flutter_stories/flutter_stories.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -29,6 +28,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen>{
   final myController = TextEditingController();
+  PickedFile? imageFile=null;
 
   @override
   void initState() {
@@ -48,8 +48,12 @@ class _HomeScreenState extends State<HomeScreen>{
             backgroundColor: CupertinoColors.systemPurple,
             title: Container(
               width: double.infinity,
-              height: MediaQuery.of(context).size.height * 0.06,
-              color: CupertinoColors.white,
+              height: MediaQuery.of(context).size.height * 0.05,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: CupertinoColors.white,
+              ),
+
               child:  Center(
                 child: TextField(
                   onTap: (){
@@ -116,7 +120,7 @@ class _HomeScreenState extends State<HomeScreen>{
           ),
           bottomNavigationBar: ConvexAppBar(
             style: TabStyle.fixed,
-            color: CupertinoColors.systemYellow,
+            color: CupertinoColors.white,
             backgroundColor: CupertinoColors.systemPurple,
             items:  [
               TabItem(icon: Icons.home, title: isArabic(context) ? 'الرئيسية':'Home'),
@@ -124,11 +128,67 @@ class _HomeScreenState extends State<HomeScreen>{
               TabItem(icon: Icons.people, title: isArabic(context) ? 'الحساب' :'Profile'),
             ],
             initialActiveIndex: 0,//optional, default as 0
-            onTap: (int i) => print('click index=$i'),
+            onTap: (int i) => {
+              if(i == 1){
+                _showChoiceDialog(context),
+              }
+            },
+
           )
       ),
     );
 
+  }
+
+  Future<void>_showChoiceDialog(BuildContext context)
+  {
+    return showModalBottomSheet(
+        context: context,
+        builder: (context) {
+         return SingleChildScrollView(
+            child: ListBody(
+              children: [
+                Divider(height: 1,color: CupertinoColors.systemPurple,),
+                ListTile(
+                  onTap: (){
+                    _openGallery(context);
+                  },
+                  title: Text("Gallery"),
+                  leading: Icon(Icons.account_box,color:CupertinoColors.systemPurple,),
+                ),
+
+                Divider(height: 1,color: CupertinoColors.systemPurple,),
+                ListTile(
+                  onTap: (){
+                    _openCamera(context);
+                  },
+                  title: Text("Camera"),
+                  leading: Icon(Icons.camera,color: CupertinoColors.systemPurple,),
+                ),
+              ],
+            ),
+          );
+        });
+  }
+
+  void _openGallery(BuildContext context) async{
+    final pickedFile = await ImagePicker().getImage(
+      source: ImageSource.gallery ,
+    );
+    setState(() {
+      imageFile = pickedFile!;
+    });
+
+    Navigator.pop(context);
+  }
+  void _openCamera(BuildContext context)  async{
+    final pickedFile = await ImagePicker().getImage(
+      source: ImageSource.camera ,
+    );
+    setState(() {
+      imageFile = pickedFile!;
+    });
+    Navigator.pop(context);
   }
 }
 
@@ -197,7 +257,8 @@ Widget _buildCategoryList(BuildContext context, List<DocumentSnapshot>? snapshot
                           builder: (context) {
                             return CupertinoPageScaffold(
                               child: Story(
-                                topOffset: MediaQuery.of(context).size.height * 0.02,
+                                fullscreen: false,
+                                topOffset: MediaQuery.of(context).size.height * 0.06,
                                 onFlashForward: Navigator.of(context).pop,
                                 onFlashBack: Navigator.of(context).pop,
                                 momentCount: cw.images.length,
@@ -284,7 +345,8 @@ Widget _buildListItem(BuildContext context, DocumentSnapshot snapshot, int lengt
                     builder: (context) {
                       return CupertinoPageScaffold(
                         child: Story(
-                          topOffset: MediaQuery.of(context).size.height * 0.02,
+                          fullscreen: false,
+                          topOffset: MediaQuery.of(context).size.height * 0.06,
                           onFlashForward: Navigator.of(context).pop,
                           onFlashBack: Navigator.of(context).pop,
                           momentCount: store.stories.length,
@@ -317,6 +379,4 @@ Widget _buildListItem(BuildContext context, DocumentSnapshot snapshot, int lengt
     ),
   );
 }
-
-
 
