@@ -45,7 +45,17 @@ class _HomeScreenState extends State<HomeScreen>{
       home: Scaffold(
         backgroundColor: CupertinoColors.white,
           appBar: AppBar(
-            backgroundColor: CupertinoColors.systemPurple,
+            backgroundColor: Colors.deepPurple,
+            shape: const RoundedRectangleBorder(
+
+                borderRadius:  BorderRadius.only(
+
+                    bottomRight: Radius.circular(35),
+
+                    bottomLeft: Radius.circular(35))
+
+            ),
+
             title: Container(
               width: double.infinity,
               height: MediaQuery.of(context).size.height * 0.05,
@@ -121,7 +131,7 @@ class _HomeScreenState extends State<HomeScreen>{
           bottomNavigationBar: ConvexAppBar(
             style: TabStyle.fixed,
             color: CupertinoColors.white,
-            backgroundColor: CupertinoColors.systemPurple,
+            backgroundColor: Colors.deepPurple,
             items:  [
               TabItem(icon: Icons.home, title: isArabic(context) ? 'الرئيسية':'Home'),
               TabItem(icon: Icons.camera_alt, title: isArabic(context) ? 'إضافة' :'Add'),

@@ -34,49 +34,85 @@ class _UserPrefrencesScreenState extends State<UserPrefrencesScreen>{
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        backgroundColor: CupertinoColors.systemPurple,
+        backgroundColor: CupertinoColors.white,
         body:SafeArea(
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-
-              DropdownButton<String>(
-                value: dropdownValue,
-              icon: const Icon(Icons.arrow_downward),
-              elevation: 16,
-              style: const TextStyle(color: Colors.black),
-              underline: Container(
-                height: 2,
-                color: Colors.deepPurpleAccent,
-              ),
-              onChanged: (String? newValue) {
-                setState(() {
-                  dropdownValue = newValue!;
-                });
-              },
-              items: <String>['Amman', 'Irbid', 'Zarqa']
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-            ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.02,),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      primary: Colors.black,
-                      fixedSize: Size(MediaQuery.of(context).size.width * 0.3, MediaQuery.of(context).size.height * 0.06,)
-                  ),
-                  onPressed: ()=> {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const HomeScreen()),
+          child: Container(
+            decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [Colors.deepPurple, Colors.white])),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text("Select your City",style: TextStyle(fontSize: 22),),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.1,),
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.7,
+                    child: DecoratedBox(
+                        decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                                colors: [
+                                  Colors.black,
+                                  Colors.deepPurpleAccent,
+                                  //add more colors
+                                ]),
+                            borderRadius: BorderRadius.circular(5),
+                            boxShadow: const <BoxShadow>[
+                              BoxShadow(
+                                  color: Color.fromRGBO(0, 0, 0, 0.57), //shadow for button
+                                  blurRadius: 5) //blur radius of shadow
+                            ]
+                        ),
+                        child: Padding(
+                            padding: const EdgeInsets.only(left:30, right:30),
+                            child:DropdownButton(
+                              value: dropdownValue,
+                              items: const [
+                                DropdownMenuItem(
+                                  value: "Amman",
+                                  child: Text("Amman"),
+                                ),
+                                DropdownMenuItem(
+                                  value: "Irbid",
+                                  child: Text("Irbid"),
+                                ),
+                                DropdownMenuItem(
+                                  value: "Zarqa",
+                                  child: Text("Zarqa"),
+                                )
+                              ],
+                              onChanged: (value){
+                                  setState(() {
+                                    dropdownValue = value.toString();
+                                  });
+                                  print(dropdownValue);
+                              },
+                              isExpanded: true, //make true to take width of parent widget
+                              underline: Container(), //empty line
+                              style: TextStyle(fontSize: 18, color: Colors.white),
+                              dropdownColor: Colors.deepPurpleAccent,
+                              iconEnabledColor: Colors.white, //Icon color
+                            )
+                        )
                     ),
-                  }, child: Text("Next"),
-                ),
-              ],
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.1,),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        primary: Colors.black,
+                        fixedSize: Size(MediaQuery.of(context).size.width * 0.3, MediaQuery.of(context).size.height * 0.06,)
+                    ),
+                    onPressed: ()=> {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const HomeScreen()),
+                      ),
+                    }, child: Text("Next"),
+                  ),
+                ],
+              ),
             ),
           ),
         )

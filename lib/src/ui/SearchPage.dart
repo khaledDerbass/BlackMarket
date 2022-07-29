@@ -40,6 +40,15 @@ class _SearchPageState extends State<SearchPage>{
           resizeToAvoidBottomInset: false,
           appBar: AppBar(
             backgroundColor: Colors.deepPurple,
+            shape: const RoundedRectangleBorder(
+
+                borderRadius:  BorderRadius.only(
+
+                    bottomRight: Radius.circular(35),
+
+                    bottomLeft: Radius.circular(35))
+
+            ),
             leading: Padding(
               padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.01),
               child:IconButton(
