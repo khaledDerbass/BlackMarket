@@ -53,6 +53,8 @@ dependencies:
   image_picker: ^0.8.5+3
   #flutter_instagram_stories: ^1.0.2
 
+dependency_overrides:
+  image_picker_android: 0.8.4+13
 
 flutter_localizations:
   sdk: flutter
