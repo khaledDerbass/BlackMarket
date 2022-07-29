@@ -40,6 +40,15 @@ class _SearchPageState extends State<SearchPage>{
           resizeToAvoidBottomInset: false,
           appBar: AppBar(
             backgroundColor: Colors.deepPurple,
+            leading: Padding(
+              padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.01),
+              child:IconButton(
+                  onPressed:() => Navigator.of(context).pop(),
+                  icon: const Icon(Icons.arrow_back_ios,
+                  )),
+
+            ),
+            leadingWidth: MediaQuery.of(context).size.width * 0.07,
             title: Container(
               //isArabic(context) ? const Text('الرئيسية') :const Text('Home'),
               width: double.infinity,

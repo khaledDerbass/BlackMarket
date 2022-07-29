@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:souq/src/ui/HomeScreen.dart';
+import 'package:souq/src/ui/UserPrefrencesScreen.dart';
 import 'ui/LoginScreen.dart';
 
 class App extends StatelessWidget {
@@ -18,7 +19,7 @@ class App extends StatelessWidget {
         primaryColor: CupertinoColors.systemIndigo,
       ),
       home: const Scaffold(
-        body: HomeScreen(),
+        body: UserPrefrencesScreen(),
       ),
     );
   }
