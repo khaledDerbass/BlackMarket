@@ -3,6 +3,7 @@ import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../blocs/StoreRepository.dart';
 import '../models/Store.dart';
@@ -22,6 +23,7 @@ class UserPrefrencesScreen extends StatefulWidget {
 
 class _UserPrefrencesScreenState extends State<UserPrefrencesScreen>{
   String dropdownValue = 'Amman';
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   @override
   void initState() {
@@ -105,6 +107,7 @@ class _UserPrefrencesScreenState extends State<UserPrefrencesScreen>{
                         fixedSize: Size(MediaQuery.of(context).size.width * 0.3, MediaQuery.of(context).size.height * 0.06,)
                     ),
                     onPressed: ()=> {
+                      _saveUserCity(),
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => const HomeScreen()),
@@ -121,11 +124,20 @@ class _UserPrefrencesScreenState extends State<UserPrefrencesScreen>{
     );
 
   }
+
+  Future<void> _saveUserCity() async {
+    final SharedPreferences prefs = await _prefs;
+
+    setState(() {
+      prefs.setString('city', dropdownValue);
+    });
+  }
 }
 
 bool isArabic(BuildContext context){
   return context.locale.languageCode == 'ar';
 }
+
 
 
 
