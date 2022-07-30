@@ -1,9 +1,7 @@
-
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import '../blocs/StoreRepository.dart';
 import '../models/Store.dart';
 

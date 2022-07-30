@@ -50,7 +50,7 @@ dependencies:
   convex_bottom_bar: ^3.0.0
   flutter_search_bar: ^2.1.0
   flutter_stories: ^0.3.1
-  image_picker: ^0.8.5+3
+  image_picker: ^0.8.5+1
   #flutter_instagram_stories: ^1.0.2
 
 dependency_overrides:
