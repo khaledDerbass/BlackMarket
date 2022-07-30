@@ -51,10 +51,11 @@ dependencies:
   flutter_search_bar: ^2.1.0
   flutter_stories: ^0.3.1
   image_picker: ^0.8.5+1
+  image_picker_android: 0.8.5+1
   #flutter_instagram_stories: ^1.0.2
 
-dependency_overrides:
-  image_picker_android: 0.8.4+13
+#dependency_overrides:
+  #image_picker_android: 0.8.5+1
 
 flutter_localizations:
   sdk: flutter

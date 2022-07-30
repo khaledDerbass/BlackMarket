@@ -26,7 +26,7 @@ class profilepage extends StatelessWidget{
           child: Row(
             children:[
               ClipOval(
-                child: Image.asset('assets/images/Me.jpg',
+                child: images.asset('assets/images/Me.jpg',
                 height: 100, width: 100, fit: BoxFit.cover,
                 ),
               ),
