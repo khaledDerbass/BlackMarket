@@ -11,6 +11,7 @@ class CustomProfileAppBar extends StatelessWidget{
       elevation: 0,
       title: Row(
         mainAxisAlignment: MainAxisAlignment.start,
+
         children:[
         Padding(
           padding: const EdgeInsets.all(3.0),
