@@ -4,78 +4,87 @@ import 'package:flutter/material.dart';
 class profileHeader extends StatelessWidget {
   const profileHeader({Key? key}) : super(key: key);
 
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(color: Colors.white),
+
+    return SliverToBoxAdapter(
       child: Padding(
-        padding: const EdgeInsets.only(left: 18.0, right: 18.0, bottom: 10),
+
+        padding: const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-              height: 10,
+              height: 15,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 CircleAvatar(
-                  radius: 40,
+                  radius: 45,
                   backgroundColor: Color(0xff74EDED),
                   backgroundImage:
                   NetworkImage("https://placeimg.com/640/480/people"),
                 ),
                 Row(
                   children: [
+
                     Column(
                       children: [
                         Text(
                           "23",
                           style: TextStyle(
+                            decoration: TextDecoration.none,
                             fontSize: 15,
-                            fontWeight: FontWeight.w700,
+                            letterSpacing: 1,
+                           fontWeight: FontWeight.w700,
                           ),
                         ),
                         Text(
                           "Posts",
                           style: TextStyle(
-                            fontSize: 15,
-                            letterSpacing: 0.4,
+                            decoration: TextDecoration.none,
+                            fontSize: 12,
+                           letterSpacing: .5,
                           ),
                         )
                       ],
                     ),
                     SizedBox(
-                      width: 30,
+                      width: 20,
                     ),
                     Column(
                       children: [
                         Text(
-                          "1.5M",
+                          "2,896",
                           style: TextStyle(
+                            decoration: TextDecoration.none,
                             fontSize: 15,
-                            fontWeight: FontWeight.w700,
+                            letterSpacing: 1,
+                          fontWeight: FontWeight.w700,
                           ),
                         ),
                         Text(
                           "Followers",
                           style: TextStyle(
-                            letterSpacing: 0.4,
-                            fontSize: 15,
+                            decoration: TextDecoration.none,
+                            letterSpacing: .5,
+                            fontSize: 12,
                           ),
                         )
                       ],
                     ),
                     SizedBox(
-                      width: 30,
+                      width: 20,
                     ),
                     Column(
                       children: [
                         Text(
                           "234",
                           style: TextStyle(
-                            letterSpacing: 0.4,
+                            letterSpacing: 1,
+                            decoration: TextDecoration.none,
                             fontSize: 15,
                             fontWeight: FontWeight.w700,
                           ),
@@ -83,38 +92,42 @@ class profileHeader extends StatelessWidget {
                         Text(
                           "Following",
                           style: TextStyle(
-                            letterSpacing: 0.4,
-                            fontSize: 15,
+                            letterSpacing: .5,
+                            decoration: TextDecoration.none,
+                            fontSize: 12,
                           ),
                         )
                       ],
                     ),
                     SizedBox(
-                      width: 15,
+                      width:20,
                     ),
                   ],
                 )
               ],
             ),
             SizedBox(
-              height: 8,
+              height: 20,
             ),
             Text(
-              "John Doe",
+              "Khaled Derbass",
               style: TextStyle(
-                color: Colors.black87,
                 fontWeight: FontWeight.w600,
-                fontSize: 16,
-                letterSpacing: 0.4,
+                decoration: TextDecoration.none,
+                fontSize: 13,
+                letterSpacing: 0.2,
               ),
             ),
             SizedBox(
-              height: 4,
+              height: 5,
             ),
             Text(
-              "Lorem Ipsum",
+              "Developer",
               style: TextStyle(
-                letterSpacing: 0.4,
+                letterSpacing: 0.2,
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                decoration: TextDecoration.none,
               ),
             ),
 
