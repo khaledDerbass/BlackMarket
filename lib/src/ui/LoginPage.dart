@@ -3,14 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:souq/src/ui/resetpassPage.dart';
 import '../../generated/locale_keys.g.dart';
 import 'package:flutter/cupertino.dart';
-
 import '../models/CustomProfileAppBar.dart';
 import 'HomeScreen.dart';
 import 'RegisterPage.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
+  @override
+  LoginScreenState createState() => LoginScreenState();
+}
 
+
+class LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Material(

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:souq/src/ui/LoginPage.dart';
-
 import '../ui/RegisterPage.dart';
 
 
@@ -20,12 +19,12 @@ class SideDrawer extends StatelessWidget {
             ),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
-              color: Colors.deepPurple,
+              color: Colors.deepPurpleAccent,
             ),
           ),
           ListTile(
             leading: Icon(Icons.app_registration),
-            title: Text('Register'),
+            title: Text('Sign up'),
             onTap: () => {
               Navigator.push(context, MaterialPageRoute(builder: (context) => const RegisterPage()),
               ),
@@ -33,20 +32,25 @@ class SideDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: Icon(Icons.login),
-            title: Text('Login'),
+            title: Text('Sign in'),
             onTap: () => {
               Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen()),
               ),
             },
           ),
           ListTile(
-            leading: Icon(Icons.border_color),
-            title: Text('Feedback'),
+            leading: Icon(Icons.language),
+            title: Text('Language'),
             onTap: () => {Navigator.of(context).pop()},
           ),
           ListTile(
-            leading: Icon(Icons.exit_to_app),
-            title: Text('Logout'),
+            leading: Icon(Icons.home_filled),
+            title: Text('Country/State'),
+            onTap: () => {Navigator.of(context).pop()},
+          ),
+          ListTile(
+            leading: Icon(Icons.logout),
+            title: Text('Sign out'),
             onTap: () => {Navigator.of(context).pop()},
           ),
         ],
