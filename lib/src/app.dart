@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:souq/src/ui/HomeScreen.dart';
 import 'package:souq/src/ui/UserPrefrencesScreen.dart';
-import 'ui/LoginScreen.dart';
+import 'ui/LoginPage.dart';
 
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);

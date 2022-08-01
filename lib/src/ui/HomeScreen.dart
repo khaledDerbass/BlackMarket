@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -14,6 +13,7 @@ import 'package:souq/src/models/StoryItem.dart';
 import 'package:souq/src/ui/SearchPage.dart';
 import 'package:flutter_stories/flutter_stories.dart';
 
+import '../models/SideBar Menu.dart';
 import 'ProfilePage.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -41,6 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
+          drawer: SideDrawer(),
           backgroundColor: CupertinoColors.white,
           appBar: AppBar(
             backgroundColor: Colors.deepPurple,

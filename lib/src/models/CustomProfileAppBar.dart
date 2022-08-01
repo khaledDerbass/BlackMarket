@@ -6,6 +6,7 @@ class CustomProfileAppBar extends StatelessWidget{
   @override
   Widget build(BuildContext context){
     return SliverAppBar(
+      backgroundColor: Colors.deepPurpleAccent,
       pinned: true,
       centerTitle: false,
       elevation: 0,
@@ -13,17 +14,17 @@ class CustomProfileAppBar extends StatelessWidget{
         mainAxisAlignment: MainAxisAlignment.start,
         children:[
         Padding(
-          padding: const EdgeInsets.only(left: 45.0,),
-          child: Icon(Icons.perm_identity_outlined,
+          padding: const EdgeInsets.only(
+            left: 45.0,
+          ),
+          child: Icon(Icons.shopping_cart,
           size: 25,
     ),),
          Text("Souq Story",
         style: TextStyle(fontSize: 20, ),)
         ],
       ),
-      actions: [
-        IconButton(onPressed: () =>{}, icon: Icon(Icons.dehaze_outlined))
-      ],
+
     );
 
       }
