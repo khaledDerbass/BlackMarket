@@ -15,8 +15,8 @@ class CustomProfileAppBar extends StatelessWidget{
         mainAxisAlignment: MainAxisAlignment.start,
         children:[
         Padding(
-          padding: const EdgeInsets.only(
-            left: 45.0,
+          padding: EdgeInsets.only(
+            left: MediaQuery.of(context).size.height * .07,
           ),
           child: Icon(Icons.shopping_cart,
           size: MediaQuery.of(context).size.height * .02,

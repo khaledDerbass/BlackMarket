@@ -88,7 +88,12 @@ class profilepageState extends State<profilepage> {
                   Material(
                     color: Colors.white,
                     child: TabBar(
-                          // ignore: prefer_const_constructors
+                    labelPadding: EdgeInsets.only(top:.001,bottom: .001),
+                      labelColor: Colors.black,
+                      unselectedLabelColor: Colors.black,
+                      indicatorWeight:MediaQuery.of(context).size.height * .002,
+                      indicatorColor: Colors.black,
+                               // ignore: prefer_const_constructors
                      tabs: [
                         Tab(
                           icon: Icon(
@@ -114,7 +119,7 @@ class profilepageState extends State<profilepage> {
         bottomNavigationBar: ConvexAppBar(
           style: TabStyle.fixed,
           color: CupertinoColors.white,
-          backgroundColor: Colors.deepPurple,
+          backgroundColor: Colors.deepPurpleAccent,
           items: [
             TabItem(
                 icon: Icons.home,

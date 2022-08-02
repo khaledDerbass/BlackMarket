@@ -27,7 +27,7 @@ class profileHeader extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 CircleAvatar(
-                  radius: 45,
+                  radius: MediaQuery.of(context).size.height * .06,
                   backgroundColor: Color(0xff74EDED),
                   backgroundImage:
                   NetworkImage("https://placeimg.com/640/480/people"),
@@ -80,14 +80,14 @@ class profileHeader extends StatelessWidget {
                       ],
                     ),
                     SizedBox(
-                      width:MediaQuery.of(context).size.height * .05,
+                      width:MediaQuery.of(context).size.height * .08,
                     ),
                   ],
                 )
               ],
             ),
             SizedBox(
-              height: MediaQuery.of(context).size.height * .02,
+              height: MediaQuery.of(context).size.height * .01,
             ),
             Text(
               "Username",
@@ -95,7 +95,7 @@ class profileHeader extends StatelessWidget {
                 fontWeight: FontWeight.w600,
                 decoration: TextDecoration.none,
                 fontSize: 13,
-                letterSpacing: 0.2,
+                letterSpacing: 0.5,
               ),
             ),
             SizedBox(
@@ -104,7 +104,7 @@ class profileHeader extends StatelessWidget {
             Text(
               "About us",
               style: TextStyle(
-                letterSpacing: 0.2,
+                letterSpacing: 0.5,
                 fontSize: 13,
                 decoration: TextDecoration.none,
               ),
@@ -115,7 +115,7 @@ class profileHeader extends StatelessWidget {
             Text(
               "Location",
               style: TextStyle(
-                letterSpacing: 0.2,
+                letterSpacing: 0.5,
                 fontSize: 13,
                 decoration: TextDecoration.none,
               ),
