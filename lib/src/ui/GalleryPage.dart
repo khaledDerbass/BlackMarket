@@ -28,9 +28,9 @@ class _GalleryState extends State<Gallery> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: GridView.count(
-        crossAxisCount: 4,
+        crossAxisCount: 3,
         childAspectRatio: .5,
-        padding: EdgeInsets.all(1.5),
+        padding: EdgeInsets.all(MediaQuery.of(context).size.height * .002),
         children: imageUrls.map(_createGridTileWidget).toList(),
       ),
     );
@@ -44,6 +44,7 @@ class _GalleryState extends State<Gallery> {
       },
       onLongPressEnd: (details) => _popupDialog?.remove(),
       child: Image.network(url, fit: BoxFit.fill),
+
     ),
   );
 
@@ -68,7 +69,7 @@ class _GalleryState extends State<Gallery> {
       ));
 
   Widget _createActionBar() => Container(
-    padding: EdgeInsets.symmetric(vertical: 5.0),
+    padding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.height * .01),
     color: Colors.white,
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -90,9 +91,9 @@ class _GalleryState extends State<Gallery> {
   );
 
   Widget _createPopupContent(String url) => Container(
-    padding: EdgeInsets.symmetric(horizontal: 5.0),
+    padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.height * .01),
     child: ClipRRect(
-      borderRadius: BorderRadius.circular(16.0),
+      borderRadius: BorderRadius.circular(MediaQuery.of(context).size.height * .01),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

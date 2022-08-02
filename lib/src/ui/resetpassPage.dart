@@ -25,7 +25,7 @@ class _resetPasswordState extends State<resetPassword> {
               SingleChildScrollView(
                 child: Container(
                   padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height * .20,
+                    top: MediaQuery.of(context).size.height * .15,
                     left: MediaQuery.of(context).size.height * .05,
                     right: MediaQuery.of(context).size.height * .05,
                   ),
@@ -40,14 +40,14 @@ class _resetPasswordState extends State<resetPassword> {
                           // hintText: 'Password',
                         ),
                       ),
-                      SizedBox(height: 30.0),
+                      SizedBox(height: MediaQuery.of(context).size.height * .10),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                maximumSize: Size(170.0, 90.0),
-                                minimumSize: Size(170.0, 60.0),
+                                maximumSize: Size(MediaQuery.of(context).size.height * .20, MediaQuery.of(context).size.height * .07),
+                                minimumSize: Size(MediaQuery.of(context).size.height * .20, MediaQuery.of(context).size.height * .07),
                                 primary: Colors.black,
                                 shape: StadiumBorder(),
                               ),

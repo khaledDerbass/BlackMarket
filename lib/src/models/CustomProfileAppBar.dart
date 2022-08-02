@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'SideBar Profile.dart';
 
 class CustomProfileAppBar extends StatelessWidget{
   const CustomProfileAppBar({Key? key}) : super(key: key);
@@ -15,13 +14,12 @@ class CustomProfileAppBar extends StatelessWidget{
       title: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children:[
-
         Padding(
           padding: const EdgeInsets.only(
             left: 45.0,
           ),
           child: Icon(Icons.shopping_cart,
-          size: 20,
+          size: MediaQuery.of(context).size.height * .02,
     ),),
 
          Text("Souq Story",

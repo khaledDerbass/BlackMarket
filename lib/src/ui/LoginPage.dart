@@ -30,7 +30,7 @@ class LoginScreenState extends State<LoginScreen> {
               SingleChildScrollView(
                 child: Container(
                   padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height * .20,
+                    top: MediaQuery.of(context).size.height * .15,
                     left: MediaQuery.of(context).size.height * .05,
                     right: MediaQuery.of(context).size.height * .05,
                   ),
@@ -44,7 +44,7 @@ class LoginScreenState extends State<LoginScreen> {
 
                         ),
                       ),
-                      SizedBox(height: 30.0),
+                      SizedBox(height: MediaQuery.of(context).size.height * .05),
                       TextFormField(
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -61,14 +61,14 @@ class LoginScreenState extends State<LoginScreen> {
                           // hintText: 'Password',
                         ),
                       ),
-                      SizedBox(height: 30.0),
+                      SizedBox(height: MediaQuery.of(context).size.height * .05),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                maximumSize: Size(170.0, 90.0),
-                                minimumSize: Size(170.0, 60.0),
+                                maximumSize: Size(MediaQuery.of(context).size.height * .18, MediaQuery.of(context).size.height * .07),
+                                minimumSize: Size(MediaQuery.of(context).size.height * .18, MediaQuery.of(context).size.height * .07),
                                 primary: Colors.black,
                                 shape: StadiumBorder(),
                               ),
@@ -89,7 +89,7 @@ class LoginScreenState extends State<LoginScreen> {
                               )),
                         ],
                       ),
-                      SizedBox(height: 100.0),
+                      SizedBox(height: MediaQuery.of(context).size.height * .10),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [

@@ -36,7 +36,7 @@ class _RegisterPageState extends State<RegisterPage> {
               SingleChildScrollView(
                 child: Container(
                   padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height * .20,
+                    top: MediaQuery.of(context).size.height * .07,
                     left: MediaQuery.of(context).size.height * .05,
                     right: MediaQuery.of(context).size.height * .05,
                   ),
@@ -47,19 +47,17 @@ class _RegisterPageState extends State<RegisterPage> {
                           fillColor: Colors.transparent,
                           labelText: 'Username',
                           filled: true,
-
                         ),
                       ),
-                      SizedBox(height: 30.0),
+                      SizedBox(height:  MediaQuery.of(context).size.height * .05),
                       TextField(
                         decoration: InputDecoration(
                           fillColor: Colors.transparent,
                           filled: true,
                           labelText: 'Email',
-
                         ),
                       ),
-                      SizedBox(height: 30.0),
+                      SizedBox(height:  MediaQuery.of(context).size.height * .05),
                       TextField(
                         decoration: InputDecoration(
                           fillColor: Colors.transparent,
@@ -67,7 +65,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           labelText: 'Phone',
                         ),
                       ),
-                      SizedBox(height: 30.0),
+                      SizedBox(height:  MediaQuery.of(context).size.height * .05),
                       TextField(
                         obscureText: true,
                         decoration: InputDecoration(
@@ -76,14 +74,14 @@ class _RegisterPageState extends State<RegisterPage> {
                           labelText: 'Password',
                         ),
                       ),
-                      SizedBox(height: 30.0),
+                      SizedBox(height:  MediaQuery.of(context).size.height * .05),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                maximumSize: const Size(170.0, 90.0),
-                                minimumSize: const Size(170.0, 60.0),
+                                maximumSize: Size(MediaQuery.of(context).size.height * .20, MediaQuery.of(context).size.height * .07),
+                                minimumSize: Size(MediaQuery.of(context).size.height * .20, MediaQuery.of(context).size.height * .07),
                                 primary: Colors.black,
                                 shape: const StadiumBorder(),
                               ),
@@ -104,7 +102,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ],
                               )),
                         ],),
-                      SizedBox(height: 30.0),
+                      SizedBox(height: MediaQuery.of(context).size.height * .05),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -113,7 +111,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               Navigator.pushNamed(context, 'supervisor');
                             },
                             child: Text(
-                              'Register as SUPERVISOR',
+                              'Register as Store',
                               style: TextStyle(color: Colors.black),
                             ),
                           )

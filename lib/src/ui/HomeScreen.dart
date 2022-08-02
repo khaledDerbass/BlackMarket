@@ -12,7 +12,6 @@ import 'package:souq/src/models/Store.dart';
 import 'package:souq/src/models/StoryItem.dart';
 import 'package:souq/src/ui/SearchPage.dart';
 import 'package:flutter_stories/flutter_stories.dart';
-
 import '../models/SideBar Home.dart';
 import 'ProfilePage.dart';
 
@@ -44,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
           drawer: SideDrawer(),
           backgroundColor: CupertinoColors.white,
           appBar: AppBar(
-            backgroundColor: Colors.deepPurple,
+            backgroundColor: Colors.deepPurpleAccent,
             shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.only(
                     bottomRight: Radius.circular(35),
@@ -139,7 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
           bottomNavigationBar: ConvexAppBar(
             style: TabStyle.fixed,
             color: CupertinoColors.white,
-            backgroundColor: Colors.deepPurple,
+            backgroundColor: Colors.deepPurpleAccent,
             items: [
               TabItem(
                   icon: Icons.home,
@@ -177,8 +176,8 @@ class _HomeScreenState extends State<HomeScreen> {
             child: ListBody(
               children: [
                 Divider(
-                  height: 1,
-                  color: CupertinoColors.systemPurple,
+                  height: MediaQuery.of(context).size.height * .01,
+                  color: Colors.deepPurpleAccent,
                 ),
                 ListTile(
                   onTap: () {
@@ -187,12 +186,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   title: Text("Gallery"),
                   leading: Icon(
                     Icons.account_box,
-                    color: CupertinoColors.systemPurple,
+                    color: Colors.deepPurpleAccent,
                   ),
                 ),
                 Divider(
                   height: 1,
-                  color: CupertinoColors.systemPurple,
+                  color: Colors.deepPurpleAccent,
                 ),
                 ListTile(
                   onTap: () {
@@ -201,7 +200,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   title: Text("Camera"),
                   leading: Icon(
                     Icons.camera,
-                    color: CupertinoColors.systemPurple,
+                    color: Colors.deepPurpleAccent,
                   ),
                 ),
               ],

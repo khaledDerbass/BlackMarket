@@ -10,12 +10,17 @@ class profileHeader extends StatelessWidget {
     return SliverToBoxAdapter(
       child: Padding(
 
-        padding: const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 10),
-        child: Column(
+        padding: EdgeInsets.only(
+          top: MediaQuery.of(context).size.height * .0,
+          left: MediaQuery.of(context).size.height * .01,
+          right: MediaQuery.of(context).size.height * .01,
+          bottom: MediaQuery.of(context).size.height * .0,
+
+        ),        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-              height: 15,
+              height: MediaQuery.of(context).size.height * .02,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -29,7 +34,6 @@ class profileHeader extends StatelessWidget {
                 ),
                 Row(
                   children: [
-
                     Column(
                       children: [
                         Text(
@@ -42,7 +46,7 @@ class profileHeader extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          "Posts",
+                          "Offers",
                           style: TextStyle(
                             decoration: TextDecoration.none,
                             fontSize: 12,
@@ -52,7 +56,7 @@ class profileHeader extends StatelessWidget {
                       ],
                     ),
                     SizedBox(
-                      width: 20,
+                      width: MediaQuery.of(context).size.height * .05,
                     ),
                     Column(
                       children: [
@@ -76,41 +80,17 @@ class profileHeader extends StatelessWidget {
                       ],
                     ),
                     SizedBox(
-                      width: 20,
-                    ),
-                    Column(
-                      children: [
-                        Text(
-                          "234",
-                          style: TextStyle(
-                            letterSpacing: 1,
-                            decoration: TextDecoration.none,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        Text(
-                          "Following",
-                          style: TextStyle(
-                            letterSpacing: .5,
-                            decoration: TextDecoration.none,
-                            fontSize: 12,
-                          ),
-                        )
-                      ],
-                    ),
-                    SizedBox(
-                      width:20,
+                      width:MediaQuery.of(context).size.height * .05,
                     ),
                   ],
                 )
               ],
             ),
             SizedBox(
-              height: 20,
+              height: MediaQuery.of(context).size.height * .02,
             ),
             Text(
-              "Khaled Derbass",
+              "Username",
               style: TextStyle(
                 fontWeight: FontWeight.w600,
                 decoration: TextDecoration.none,
@@ -119,14 +99,24 @@ class profileHeader extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: 5,
+              height: MediaQuery.of(context).size.height * .005,
             ),
             Text(
-              "Developer",
+              "About us",
               style: TextStyle(
                 letterSpacing: 0.2,
                 fontSize: 13,
-                fontWeight: FontWeight.w600,
+                decoration: TextDecoration.none,
+              ),
+            ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * .005,
+            ),
+            Text(
+              "Location",
+              style: TextStyle(
+                letterSpacing: 0.2,
+                fontSize: 13,
                 decoration: TextDecoration.none,
               ),
             ),
