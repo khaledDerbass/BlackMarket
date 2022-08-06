@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/CustomProfileAppBar.dart';
 import 'HomeScreen.dart';
+import 'StoreRegisteration.dart';
 
 class RegisterPage extends StatefulWidget
 {
@@ -108,8 +109,9 @@ class _RegisterPageState extends State<RegisterPage> {
                         children: [
                           TextButton(
                             onPressed: () {
-                              Navigator.pushNamed(context, 'supervisor');
-                            },
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => const StoreRegisteration()),
+              );
+                              },
                             child: Text(
                               'Register as Store',
                               style: TextStyle(color: Colors.black),

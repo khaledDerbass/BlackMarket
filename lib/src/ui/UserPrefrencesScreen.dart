@@ -1,12 +1,8 @@
-
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../blocs/StoreRepository.dart';
-import '../models/Store.dart';
 import 'HomeScreen.dart';
 
 class UserPrefrencesScreen extends StatefulWidget {
