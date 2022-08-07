@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/CustomProfileAppBar.dart';
+import 'CustomProfileAppBar.dart';
 
 class resetPassword extends StatefulWidget {
   const resetPassword({Key? key}) : super(key: key);

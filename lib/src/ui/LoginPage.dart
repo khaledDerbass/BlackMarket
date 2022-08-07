@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:souq/src/ui/resetpassPage.dart';
 import '../../generated/locale_keys.g.dart';
 import 'package:flutter/cupertino.dart';
-import '../models/CustomProfileAppBar.dart';
+import '../Services/AuthenticationService.dart';
+import 'CustomProfileAppBar.dart';
 import 'HomeScreen.dart';
 import 'RegisterPage.dart';
 
@@ -15,16 +16,23 @@ class LoginScreen extends StatefulWidget {
 
 
 class LoginScreenState extends State<LoginScreen> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    return Material(
-
-      child: NestedScrollView(
-      headerSliverBuilder: (context,index) {
-      return [
-        CustomProfileAppBar(),
-         ];
-       },
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.deepPurpleAccent,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                bottomRight: Radius.circular(25),
+                bottomLeft: Radius.circular(25))),
+        title: Center(
+          child: Text("Login"),
+        ),
+      ),
           body: Stack(
             children: [
               SingleChildScrollView(
@@ -37,6 +45,7 @@ class LoginScreenState extends State<LoginScreen> {
                   child: Column(
                     children: [
                       TextField(
+                        controller: _emailController,
                         decoration: InputDecoration(
                           labelText: 'Email',
                           fillColor: Colors.transparent,
@@ -46,6 +55,7 @@ class LoginScreenState extends State<LoginScreen> {
                       ),
                       SizedBox(height: MediaQuery.of(context).size.height * .05),
                       TextFormField(
+                        controller: _passwordController,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter the password';
@@ -73,13 +83,35 @@ class LoginScreenState extends State<LoginScreen> {
                                 shape: StadiumBorder(),
                               ),
                               onPressed: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => const HomeScreen()),
-                                );                                 },
+                                final snackBar1 = SnackBar(
+                                  content: const Text('Signed In successfully'),
+                                );
+                                final snackBar2 = SnackBar(
+                                  content: const Text('Wrong email/password ...'),
+                                );
+                                AuthenticationService.signInWithEmailAndPassword(
+                                    _emailController.text,
+                                    _passwordController.text,)
+                                    .then((value) => {
+                                  if (value)
+                                    {
+                                      ScaffoldMessenger.of(context).showSnackBar(snackBar1),
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                            const HomeScreen()),
+                                      )
+                                    }else{
+                                    ScaffoldMessenger.of(context).showSnackBar(snackBar2),
+                                  }
+                                });
+                                                                },
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
+                                children: const [
                                   Text('LOGIN'),
                                   Icon(
                                     Icons.lock,
@@ -121,7 +153,7 @@ class LoginScreenState extends State<LoginScreen> {
               ),
             ],
           ),
-        ),
+
     );
   }
 }

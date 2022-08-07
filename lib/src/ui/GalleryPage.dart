@@ -42,7 +42,7 @@ class _GalleryState extends State<Gallery> {
         _popupDialog = _createPopupDialog(url);
         Overlay.of(context)!.insert(_popupDialog);
       },
-      onLongPressEnd: (details) => _popupDialog?.remove(),
+      onLongPressEnd: (details) => _popupDialog.remove(),
       child: Image.network(url, fit: BoxFit.fill),
 
     ),

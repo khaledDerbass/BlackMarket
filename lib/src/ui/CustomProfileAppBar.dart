@@ -14,14 +14,6 @@ class CustomProfileAppBar extends StatelessWidget{
       title: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children:[
-        Padding(
-          padding: EdgeInsets.only(
-            left: MediaQuery.of(context).size.height * .07,
-          ),
-          child: Icon(Icons.shopping_cart,
-          size: MediaQuery.of(context).size.height * .02,
-    ),),
-
          Text("Souq Story",
         style: TextStyle(fontSize: 20, ),)
         ],

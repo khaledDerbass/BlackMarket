@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/CustomProfileAppBar.dart';
+import 'CustomProfileAppBar.dart';
 import 'HomeScreen.dart';
 
 class StoreRegisteration extends StatefulWidget

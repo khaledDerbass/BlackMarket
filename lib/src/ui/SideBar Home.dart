@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:souq/src/ui/HomeScreen.dart';
 import 'package:souq/src/ui/LoginPage.dart';
-import '../ui/RegisterPage.dart';
+import '../Services/AuthenticationService.dart';
+import 'RegisterPage.dart';
+import '../Services/AuthenticationService.dart';
 
 
 class SideDrawer extends StatelessWidget {
+ var isLoggedIN =  AuthenticationService.isCurrentUserLoggedIn();
+
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -22,22 +28,22 @@ class SideDrawer extends StatelessWidget {
               color: Colors.deepPurpleAccent,
             ),
           ),
-          ListTile(
+          isLoggedIN == false  ? ListTile(
             leading: Icon(Icons.app_registration),
             title: Text('Sign up'),
             onTap: () => {
               Navigator.push(context, MaterialPageRoute(builder: (context) => const RegisterPage()),
               ),
             },
-          ),
-          ListTile(
+          ): Container(),
+          isLoggedIN == false ? ListTile(
             leading: Icon(Icons.login),
             title: Text('Sign in'),
             onTap: () => {
               Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen()),
               ),
             },
-          ),
+          ) : Container(),
           ListTile(
             leading: Icon(Icons.language),
             title: Text('Language'),
@@ -48,11 +54,15 @@ class SideDrawer extends StatelessWidget {
             title: Text('Country/State'),
             onTap: () => {Navigator.of(context).pop()},
           ),
-          ListTile(
+          isLoggedIN == true ? ListTile(
             leading: Icon(Icons.logout),
             title: Text('Sign out'),
-            onTap: () => {Navigator.of(context).pop()},
-          ),
+            onTap: () => {
+              AuthenticationService.signOut().then((value) => {
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()))
+              }),
+            },
+          ) : Container(),
         ],
       ),
     );

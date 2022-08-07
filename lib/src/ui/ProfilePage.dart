@@ -2,8 +2,8 @@ import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:souq/src/models/CustomProfileAppBar.dart';
-import '../models/ProfileHeader.dart';
+import 'package:souq/src/ui/CustomProfileAppBar.dart';
+import 'ProfileHeader.dart';
 import 'GalleryPage.dart';
 import 'HomeScreen.dart';
 
@@ -68,7 +68,7 @@ class profilepageState extends State<profilepage> {
               ListTile(
                 leading: Icon(Icons.logout),
                 title: Text('Sign out'),
-                onTap: () => {Navigator.of(context).pop()},
+                onTap: () => {},
               ),
             ],
           ),

@@ -12,7 +12,7 @@ import 'package:souq/src/models/Store.dart';
 import 'package:souq/src/models/StoryItem.dart';
 import 'package:souq/src/ui/SearchPage.dart';
 import 'package:flutter_stories/flutter_stories.dart';
-import '../models/SideBar Home.dart';
+import 'SideBar Home.dart';
 import 'ProfilePage.dart';
 
 class HomeScreen extends StatefulWidget {
