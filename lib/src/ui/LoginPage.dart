@@ -21,6 +21,7 @@ class LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    context.setLocale(Locale('en', 'US'));
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -30,7 +31,7 @@ class LoginScreenState extends State<LoginScreen> {
                 bottomRight: Radius.circular(25),
                 bottomLeft: Radius.circular(25))),
         title: Center(
-          child: Text("Login"),
+          child: Text(isArabic(context) ? 'تسجيل دخول' : 'Login'),
         ),
       ),
           body: Stack(
@@ -47,10 +48,9 @@ class LoginScreenState extends State<LoginScreen> {
                       TextField(
                         controller: _emailController,
                         decoration: InputDecoration(
-                          labelText: 'Email',
+                          labelText: isArabic(context) ? 'البريد الإلكتروني' : 'Email',
                           fillColor: Colors.transparent,
                           filled: true,
-
                         ),
                       ),
                       SizedBox(height: MediaQuery.of(context).size.height * .05),
@@ -58,14 +58,14 @@ class LoginScreenState extends State<LoginScreen> {
                         controller: _passwordController,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter the password';
+                            return isArabic(context) ? 'ادخل كلمة السر' : 'Please enter the password';
                           } else if (value.length <= 6) {
-                            return 'Password must be greater than 6 digits';
+                            return isArabic(context) ? 'كلمة السر يجب ان لا تقل عن 6 أحرف' : 'Password must be greater than 6 digits';
                           }
                         },
                         obscureText: true,
                         decoration: InputDecoration(
-                          labelText: 'Password',
+                          labelText: isArabic(context) ? 'كلمة السر' : 'Password',
                           fillColor: Colors.transparent,
                           filled: true,
                           // hintText: 'Password',
@@ -84,10 +84,10 @@ class LoginScreenState extends State<LoginScreen> {
                               ),
                               onPressed: () {
                                 final snackBar1 = SnackBar(
-                                  content: const Text('Signed In successfully'),
+                                  content:  Text(isArabic(context) ? 'تم تسجيل الدخول' : 'Signed in successfully'),
                                 );
                                 final snackBar2 = SnackBar(
-                                  content: const Text('Wrong email/password ...'),
+                                  content:  Text(isArabic(context) ? 'خطأ في إسم المستخدم او كلمة السر' : 'Wrong Email or Password'),
                                 );
                                 AuthenticationService.signInWithEmailAndPassword(
                                     _emailController.text,
@@ -111,8 +111,8 @@ class LoginScreenState extends State<LoginScreen> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.center,
-                                children: const [
-                                  Text('LOGIN'),
+                                children:  [
+                                  Text(isArabic(context) ? 'تسجيل الدخول' : 'Sign in'),
                                   Icon(
                                     Icons.lock,
                                     color: Colors.white,
@@ -130,9 +130,9 @@ class LoginScreenState extends State<LoginScreen> {
                               Navigator.push(context, MaterialPageRoute(builder: (context) => const RegisterPage()),
                               );
                               },
-                            child: Text(
-                              'Register',
-                              style: TextStyle(color: Colors.black),
+                            child:
+                              Text(isArabic(context) ? 'التسجيل' : 'Register',
+                  style: TextStyle(color: Colors.black),
                             ),
                           ),
                           TextButton(
@@ -140,8 +140,8 @@ class LoginScreenState extends State<LoginScreen> {
                               Navigator.push(context, MaterialPageRoute(builder: (context) => const resetPassword()),
                               );
                               },
-                            child: Text(
-                              'Forgot password?',
+                            child:
+                            Text(isArabic(context) ? 'نسيت كلمة المرور؟' : 'Forgot password?',
                               style: TextStyle(color: Colors.black),
                             ),
                           ),
@@ -155,5 +155,8 @@ class LoginScreenState extends State<LoginScreen> {
           ),
 
     );
+  }
+  bool isArabic(BuildContext context) {
+    return context.locale.languageCode == 'ar';
   }
 }

@@ -35,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    context.setLocale(Locale('en', 'US'));
+    context.setLocale(        Locale('en', 'US'));
     StoreRepository repository = StoreRepository();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -183,7 +183,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   onTap: () {
                     _openGallery(context);
                   },
-                  title: Text("Gallery"),
+                  title: Text(isArabic(context) ? 'الاستوديو' : 'Gallery'),
                   leading: Icon(
                     Icons.account_box,
                     color: Colors.deepPurpleAccent,
@@ -197,7 +197,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   onTap: () {
                     _openCamera(context);
                   },
-                  title: Text("Camera"),
+                  title: Text(isArabic(context) ? 'الكاميرا': 'Camera'),
                   leading: Icon(
                     Icons.camera,
                     color: Colors.deepPurpleAccent,

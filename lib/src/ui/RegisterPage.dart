@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../Services/AuthenticationService.dart';
@@ -20,6 +21,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
+    context.setLocale(Locale('en', 'US'));
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.deepPurpleAccent,
@@ -28,8 +30,8 @@ class _RegisterPageState extends State<RegisterPage> {
             borderRadius: BorderRadius.only(
                 bottomRight: Radius.circular(25),
                 bottomLeft: Radius.circular(25))),
-        title: const Center(
-          child: Text("Registration"),
+        title:  Center(
+          child: Text( isArabic(context) ? 'التسجيل' : "Registration"),
         ),
       ),
 
@@ -47,9 +49,9 @@ class _RegisterPageState extends State<RegisterPage> {
                   TextField(
                     onChanged: (value) {},
                     controller: _usernameController,
-                    decoration: const InputDecoration(
+                    decoration:  InputDecoration(
                       fillColor: Colors.transparent,
-                      labelText: 'Username',
+                     labelText: isArabic(context) ? 'اسم المستخدم' : 'Username',
                       filled: true,
                     ),
                   ),
@@ -57,20 +59,20 @@ class _RegisterPageState extends State<RegisterPage> {
                   TextField(
                     onChanged: (value) {},
                     controller: _emailController,
-                    decoration: const InputDecoration(
+                    decoration:  InputDecoration(
                       fillColor: Colors.transparent,
                       filled: true,
-                      labelText: 'Email',
+                      labelText: isArabic(context) ? 'البريد الإلكتروني' : 'Email',
                     ),
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height * .05),
                   TextField(
                     onChanged: (value) {},
                     controller: _phoneController,
-                    decoration: const InputDecoration(
+                    decoration:  InputDecoration(
                       fillColor: Colors.transparent,
                       filled: true,
-                      labelText: 'Phone',
+                      labelText: isArabic(context) ? 'رقم الهاتف' : 'Phone',
                     ),
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height * .05),
@@ -78,10 +80,10 @@ class _RegisterPageState extends State<RegisterPage> {
                     onChanged: (value) {},
                     controller: _passwordController,
                     obscureText: true,
-                    decoration: const InputDecoration(
+                    decoration:  InputDecoration(
                       fillColor: Colors.transparent,
                       filled: true,
-                      labelText: 'Password',
+                      labelText: isArabic(context) ? 'كلمة السر' : 'Password',
                     ),
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height * .05),
@@ -101,10 +103,11 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                           onPressed: () {
                             final snackBar1 = SnackBar(
-                              content: const Text('Your account has been created successfully'),
+                              content: Text( isArabic(context) ? 'تم التسجيل بنجاح ' : 'Your account has been created successfully'),
                             );
                             final snackBar2 = SnackBar(
-                              content: const Text('Error during sign up...'),
+                              content: Text( isArabic(context) ? 'حدث خطأ اثناء عملية التسجيل' : 'Error during sign up'),
+
                             );
 
                             // Find the ScaffoldMessenger in the widget tree
@@ -133,8 +136,8 @@ class _RegisterPageState extends State<RegisterPage> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             //crossAxisAlignment: CrossAxisAlignment.center,
-                            children: const [
-                              Text('REGISTER'),
+                            children:  [
+                             Text( isArabic(context) ? 'التسجيل' : 'REGISTER'),
                               Icon(
                                 Icons.content_paste_rounded,
                                 color: Colors.white,
@@ -156,8 +159,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                 const StoreRegisteration()),
                           );
                         },
-                        child: const Text(
-                          'Register as Store',
+                        child:  Text(
+                         isArabic(context) ? ' التسجيل كمتجر' : 'Register as Store',
                           style: TextStyle(color: Colors.black),
                         ),
                       )
@@ -171,5 +174,7 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
     );
   }
-
+  bool isArabic(BuildContext context) {
+    return context.locale.languageCode == 'ar';
+  }
 }

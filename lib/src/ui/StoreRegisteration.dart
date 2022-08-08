@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'CustomProfileAppBar.dart';
 import 'HomeScreen.dart';
@@ -13,23 +14,21 @@ class StoreRegisterationState extends State<StoreRegisteration> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-
-      child: NestedScrollView(
-        headerSliverBuilder: (context,index) {
-          return [
-            CustomProfileAppBar(),
-          ];
-        },
+    context.setLocale(Locale('en', 'US'));
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.deepPurpleAccent,
+        automaticallyImplyLeading: false,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                bottomRight: Radius.circular(25),
+                bottomLeft: Radius.circular(25))),
+        title:  Center(
+          child: Text( isArabic(context) ? 'التسجيل كمتجر' : "Registration as Store"),
+        ),
+      ),
         body: Stack(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-
-
-              ],
-            ),
             SingleChildScrollView(
               child: Container(
                 padding: EdgeInsets.only(
@@ -42,7 +41,7 @@ class StoreRegisterationState extends State<StoreRegisteration> {
                     TextField(
                       decoration: InputDecoration(
                         fillColor: Colors.transparent,
-                        labelText: 'Arabic Name',
+                        labelText:  isArabic(context) ? 'الإسم بالعربي' : 'Arabic Name',
                         filled: true,
                       ),
                     ),
@@ -51,7 +50,7 @@ class StoreRegisterationState extends State<StoreRegisteration> {
                       decoration: InputDecoration(
                         fillColor: Colors.transparent,
                         filled: true,
-                        labelText: 'English Name',
+                        labelText:  isArabic(context) ? 'الإسم بالإنجليزية' : 'English Name',
                       ),
                     ),
                     SizedBox(height:  MediaQuery.of(context).size.height * .05),
@@ -59,7 +58,7 @@ class StoreRegisterationState extends State<StoreRegisteration> {
                       decoration: InputDecoration(
                         fillColor: Colors.transparent,
                         filled: true,
-                        labelText: 'Email',
+                        labelText: isArabic(context) ? 'البريد الإلكتروني' : 'Email',
                       ),
                     ),
                     SizedBox(height:  MediaQuery.of(context).size.height * .05),
@@ -67,7 +66,7 @@ class StoreRegisterationState extends State<StoreRegisteration> {
                       decoration: InputDecoration(
                         fillColor: Colors.transparent,
                         filled: true,
-                        labelText: 'Phone',
+                        labelText: isArabic(context) ? 'رقم الهاتف' : 'Phone',
                       ),
                     ),
                     SizedBox(height:  MediaQuery.of(context).size.height * .05),
@@ -75,7 +74,7 @@ class StoreRegisterationState extends State<StoreRegisteration> {
                       decoration: InputDecoration(
                         fillColor: Colors.transparent,
                         filled: true,
-                        labelText: 'Type of product',
+                        labelText: isArabic(context) ? 'نوع البضاعة' : 'Type of product',
                       ),
                     ),
                     SizedBox(height:  MediaQuery.of(context).size.height * .05),
@@ -84,7 +83,7 @@ class StoreRegisterationState extends State<StoreRegisteration> {
                       decoration: InputDecoration(
                         fillColor: Colors.transparent,
                         filled: true,
-                        labelText: 'Password',
+                        labelText: isArabic(context) ? 'كلمة السر' : 'Password',
                       ),
                     ),
                     SizedBox(height:  MediaQuery.of(context).size.height * .05),
@@ -107,7 +106,7 @@ class StoreRegisterationState extends State<StoreRegisteration> {
                               MainAxisAlignment.spaceBetween,
                               //crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Text('REGISTER'),
+                                Text( isArabic(context) ? 'التسجيل' : 'REGISTER'),
                                 Icon(
                                   Icons.content_paste_rounded,
                                   color: Colors.white,
@@ -121,7 +120,9 @@ class StoreRegisterationState extends State<StoreRegisteration> {
             ),
           ],
         ),
-      ),
     );
+  }
+  bool isArabic(BuildContext context) {
+    return context.locale.languageCode == 'ar';
   }
 }

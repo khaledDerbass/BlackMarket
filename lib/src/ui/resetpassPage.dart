@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'CustomProfileAppBar.dart';
 
@@ -11,8 +12,8 @@ class resetPassword extends StatefulWidget {
 class _resetPasswordState extends State<resetPassword> {
   @override
   Widget build(BuildContext context) {
+    context.setLocale(Locale('en', 'US'));
     return Material(
-
       child: NestedScrollView(
         headerSliverBuilder: (context,index) {
           return [
@@ -20,9 +21,8 @@ class _resetPasswordState extends State<resetPassword> {
           ];
         },
           body: Stack(
-            children: [
-              SingleChildScrollView(
-                child: Container(
+                children: [
+                  Container(
                   padding: EdgeInsets.only(
                     top: MediaQuery.of(context).size.height * .15,
                     left: MediaQuery.of(context).size.height * .05,
@@ -33,7 +33,7 @@ class _resetPasswordState extends State<resetPassword> {
                       TextFormField(
                         obscureText: true,
                         decoration: InputDecoration(
-                          labelText: 'Email',
+                          labelText: isArabic(context) ? 'البريد الإلكتروني' : 'Email',
                           fillColor: Colors.transparent,
                           filled: true,
                           // hintText: 'Password',
@@ -56,8 +56,7 @@ class _resetPasswordState extends State<resetPassword> {
                                 MainAxisAlignment.spaceBetween,
                                 //crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Text('RESET NOW'),
-                                  Icon(
+                                  Text( isArabic(context) ? 'إعادة تعيين' : "Reset now"),                                  Icon(
                                     Icons.refresh,
                                     color: Colors.white,
                                   ),
@@ -69,10 +68,13 @@ class _resetPasswordState extends State<resetPassword> {
                     ],
                   ),
                 ),
-              ),
+
             ],
           ),
         ),
     );
+  }
+  bool isArabic(BuildContext context) {
+    return context.locale.languageCode == 'ar';
   }
 }

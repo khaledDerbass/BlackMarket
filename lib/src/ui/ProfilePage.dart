@@ -1,8 +1,12 @@
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:souq/src/ui/CustomProfileAppBar.dart';
+import '../Services/AuthenticationService.dart';
+import 'AboutUsPage.dart';
+import 'ContactUsPage.dart';
 import 'ProfileHeader.dart';
 import 'GalleryPage.dart';
 import 'HomeScreen.dart';
@@ -17,7 +21,9 @@ class profilepage extends StatefulWidget {
 }
 
 class profilepageState extends State<profilepage> {
+
   PickedFile? imageFile = null;
+  var isLoggedIN =  AuthenticationService.isCurrentUserLoggedIn();
 
   @override
   void initState() {
@@ -26,6 +32,7 @@ class profilepageState extends State<profilepage> {
 
   @override
   Widget build(BuildContext context) {
+    context.setLocale(Locale('en', 'US'));
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
@@ -55,21 +62,28 @@ class profilepageState extends State<profilepage> {
               ),
               ListTile(
                 leading: Icon(Icons.contact_support_outlined),
-                title: Text('Contact us'),
-                onTap: () => {Navigator.of(context).pop()},
-              ),
-              ListTile(
-                leading: Icon(Icons.info_outline),
-                title: Text('About us'),
+                title: Text(isArabic(context) ? 'تواصل معنا' : 'Contact us'),
                 onTap: () => {
-                  Navigator.pop(context),
+                  Navigator.push(context,MaterialPageRoute(builder: (context) => const ContactUs())),
                 },
               ),
               ListTile(
-                leading: Icon(Icons.logout),
-                title: Text('Sign out'),
-                onTap: () => {},
+                leading: Icon(Icons.info_outline),
+                title: Text(isArabic(context) ? 'من نحن' : 'About us'),
+                onTap: () => {
+                  Navigator.push(context,MaterialPageRoute(builder: (context) => const AboutUs())),
+                },
               ),
+              isLoggedIN == true  ? ListTile(
+                leading: Icon(Icons.logout),
+                title: Text(isArabic(context) ? 'تسجيل خروج' : 'Sign out'),
+                onTap: () => {
+                  AuthenticationService.signOut().then((value) => {
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()))
+                  }),
+                },
+              ):
+              ListTile(   ),
             ],
           ),
         ),
@@ -165,7 +179,7 @@ class profilepageState extends State<profilepage> {
                   onTap: () {
                     _openGallery(context);
                   },
-                  title: Text("Gallery"),
+                  title: Text(isArabic(context) ? 'الاستوديو' : 'Gallery'),
                   leading: Icon(
                     Icons.account_box,
                     color: CupertinoColors.systemPurple,
@@ -179,7 +193,7 @@ class profilepageState extends State<profilepage> {
                   onTap: () {
                     _openCamera(context);
                   },
-                  title: Text("Camera"),
+                  title: Text(isArabic(context) ? 'الكاميرا': 'Camera'),
                   leading: Icon(
                     Icons.camera,
                     color: CupertinoColors.systemPurple,
@@ -210,5 +224,8 @@ class profilepageState extends State<profilepage> {
       imageFile = pickedFile!;
     });
     Navigator.pop(context);
+  }
+  bool isArabic(BuildContext context) {
+    return context.locale.languageCode == 'ar';
   }
 }

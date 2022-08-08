@@ -57,7 +57,6 @@ class _SearchPageState extends State<SearchPage>{
             ),
             leadingWidth: MediaQuery.of(context).size.width * 0.07,
             title: Container(
-              //isArabic(context) ? const Text('الرئيسية') :const Text('Home'),
               width: double.infinity,
               height: MediaQuery.of(context).size.height * 0.05,
               decoration: BoxDecoration(

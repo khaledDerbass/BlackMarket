@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -6,7 +7,7 @@ class profileHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
+    context.setLocale(        Locale('en', 'US'));
     return SliverToBoxAdapter(
       child: Padding(
 
@@ -46,7 +47,7 @@ class profileHeader extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          "Offers",
+                          isArabic(context) ? 'العروض' : 'Offers',
                           style: TextStyle(
                             decoration: TextDecoration.none,
                             fontSize: 12,
@@ -70,7 +71,7 @@ class profileHeader extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          "Followers",
+                          isArabic(context) ? 'المتابعون' : 'Followers',
                           style: TextStyle(
                             decoration: TextDecoration.none,
                             letterSpacing: .5,
@@ -90,7 +91,7 @@ class profileHeader extends StatelessWidget {
               height: MediaQuery.of(context).size.height * .01,
             ),
             Text(
-              "Username",
+              isArabic(context) ? 'اسم المستخدم' : 'Email',
               style: TextStyle(
                 fontWeight: FontWeight.w600,
                 decoration: TextDecoration.none,
@@ -102,7 +103,7 @@ class profileHeader extends StatelessWidget {
               height: MediaQuery.of(context).size.height * .005,
             ),
             Text(
-              "About us",
+              isArabic(context) ? 'عن المتجر' : 'About us',
               style: TextStyle(
                 letterSpacing: 0.5,
                 fontSize: 13,
@@ -113,18 +114,19 @@ class profileHeader extends StatelessWidget {
               height: MediaQuery.of(context).size.height * .005,
             ),
             Text(
-              "Location",
+              isArabic(context) ? 'الموقع' : "Location",
               style: TextStyle(
                 letterSpacing: 0.5,
                 fontSize: 13,
                 decoration: TextDecoration.none,
               ),
             ),
-
           ],
         ),
       ),
     );
   }
-
+  bool isArabic(BuildContext context) {
+    return context.locale.languageCode == 'ar';
+  }
 }
