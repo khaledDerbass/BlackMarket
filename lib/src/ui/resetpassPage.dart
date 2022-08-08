@@ -12,7 +12,6 @@ class resetPassword extends StatefulWidget {
 class _resetPasswordState extends State<resetPassword> {
   @override
   Widget build(BuildContext context) {
-    context.setLocale(Locale('en', 'US'));
     return Material(
       child: NestedScrollView(
         headerSliverBuilder: (context,index) {

@@ -7,7 +7,6 @@ class profileHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    context.setLocale(        Locale('en', 'US'));
     return SliverToBoxAdapter(
       child: Padding(
 

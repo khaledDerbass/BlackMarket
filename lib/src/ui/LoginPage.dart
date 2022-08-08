@@ -21,7 +21,7 @@ class LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    context.setLocale(Locale('en', 'US'));
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,

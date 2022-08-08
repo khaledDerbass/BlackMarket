@@ -21,7 +21,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
-    context.setLocale(Locale('en', 'US'));
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.deepPurpleAccent,

@@ -13,7 +13,6 @@ class ContactUs extends StatefulWidget {
 class ContactUsState extends State<ContactUs> {
   @override
   Widget build(BuildContext context) {
-    context.setLocale(Locale('en', 'US'));
     return Material(
         child: NestedScrollView(
             headerSliverBuilder: (context, index) {

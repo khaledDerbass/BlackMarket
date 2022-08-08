@@ -35,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    context.setLocale(        Locale('en', 'US'));
+    //context.setLocale(Locale('en', 'US'));
     StoreRepository repository = StoreRepository();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
