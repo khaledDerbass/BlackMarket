@@ -62,7 +62,7 @@ class SideDrawer extends StatelessWidget {
                   }),
           ListTile(
             leading: Icon(Icons.home_filled),
-            title: Text('Country/State'),
+            title: Text(isArabic(context) ? 'المدينة/البلد' :'Country/State'),
             onTap: () => {Navigator.of(context).pop()},
           ),
           isLoggedIN == true

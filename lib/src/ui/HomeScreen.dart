@@ -175,67 +175,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Future<void> _showChoiceDialog(BuildContext context) {
-    return showModalBottomSheet(
-        context: context,
-        builder: (context) {
-          return SingleChildScrollView(
-            child: ListBody(
-              children: [
-                Divider(
-                  height: MediaQuery.of(context).size.height * .01,
-                  color: Colors.deepPurpleAccent,
-                ),
-                ListTile(
-                  onTap: () {
-                    _openGallery(context);
-                  },
-                  title: Text(isArabic(context) ? 'الاستوديو' : 'Gallery'),
-                  leading: Icon(
-                    Icons.account_box,
-                    color: Colors.deepPurpleAccent,
-                  ),
-                ),
-                Divider(
-                  height: 1,
-                  color: Colors.deepPurpleAccent,
-                ),
-                ListTile(
-                  onTap: () {
-                    _openCamera(context);
-                  },
-                  title: Text(isArabic(context) ? 'الكاميرا' : 'Camera'),
-                  leading: Icon(
-                    Icons.camera,
-                    color: Colors.deepPurpleAccent,
-                  ),
-                ),
-              ],
-            ),
-          );
-        });
-  }
-
-  void _openGallery(BuildContext context) async {
-    final pickedFile = await ImagePicker().getImage(
-      source: ImageSource.gallery,
-    );
-    setState(() {
-      imageFile = pickedFile!;
-    });
-
-    Navigator.pop(context);
-  }
-
-  void _openCamera(BuildContext context) async {
-    final pickedFile = await ImagePicker().getImage(
-      source: ImageSource.camera,
-    );
-    setState(() {
-      imageFile = pickedFile!;
-    });
-    Navigator.pop(context);
-  }
 }
 
 Widget _buildCategoryList(
