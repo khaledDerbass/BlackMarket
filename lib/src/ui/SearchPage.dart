@@ -32,7 +32,6 @@ class _SearchPageState extends State<SearchPage>{
 
   @override
   Widget build(BuildContext context) {
-    print("xxxxxxx " + filteredStoreNames.toString());
     return MaterialApp(
       home: Scaffold(
           resizeToAvoidBottomInset: false,
@@ -42,9 +41,9 @@ class _SearchPageState extends State<SearchPage>{
 
                 borderRadius:  BorderRadius.only(
 
-                    bottomRight: Radius.circular(35),
+                    bottomRight: Radius.circular(28),
 
-                    bottomLeft: Radius.circular(35))
+                    bottomLeft: Radius.circular(28))
 
             ),
             leading: Padding(
@@ -58,7 +57,7 @@ class _SearchPageState extends State<SearchPage>{
             leadingWidth: MediaQuery.of(context).size.width * 0.07,
             title: Container(
               width: double.infinity,
-              height: MediaQuery.of(context).size.height * 0.05,
+              height: MediaQuery.of(context).size.height * 0.06,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
                 color: CupertinoColors.white,

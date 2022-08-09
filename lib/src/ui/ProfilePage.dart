@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:souq/src/ui/CustomProfileAppBar.dart';
 import '../Services/AuthenticationService.dart';
 import 'AboutUsPage.dart';
+import 'AddPostScreen.dart';
 import 'ContactUsPage.dart';
 import 'ProfileHeader.dart';
 import 'GalleryPage.dart';
@@ -155,7 +156,11 @@ class profilepageState extends State<profilepage> {
               }
             else if (i == 1)
               {
-                _showChoiceDialog(context),
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const AddPostPage()),
+                ),
               }
           },
         ),

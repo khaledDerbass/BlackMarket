@@ -12,6 +12,7 @@ import 'package:souq/src/models/Store.dart';
 import 'package:souq/src/models/StoryItem.dart';
 import 'package:souq/src/ui/SearchPage.dart';
 import 'package:flutter_stories/flutter_stories.dart';
+import 'AddPostScreen.dart';
 import 'SideBar Home.dart';
 import 'ProfilePage.dart';
 
@@ -50,7 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     bottomLeft: Radius.circular(35))),
             title: Container(
               width: double.infinity,
-              height: MediaQuery.of(context).size.height * 0.05,
+              height: MediaQuery.of(context).size.height * 0.06,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
                 color: CupertinoColors.white,
@@ -154,13 +155,19 @@ class _HomeScreenState extends State<HomeScreen> {
             onTap: (int i) => {
               if (i == 1)
                 {
-                  _showChoiceDialog(context),
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const AddPostPage()),
+                  ),
+                  //_showChoiceDialog(context),
                 }
               else if (i == 2)
                 {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => const profilepage()),
+                    MaterialPageRoute(
+                        builder: (context) => const profilepage()),
                   ),
                 }
             },
@@ -197,7 +204,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   onTap: () {
                     _openCamera(context);
                   },
-                  title: Text(isArabic(context) ? 'الكاميرا': 'Camera'),
+                  title: Text(isArabic(context) ? 'الكاميرا' : 'Camera'),
                   leading: Icon(
                     Icons.camera,
                     color: Colors.deepPurpleAccent,
