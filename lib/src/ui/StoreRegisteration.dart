@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import '../Services/StoreAuthService.dart';
 import 'CustomProfileAppBar.dart';
 import 'HomeScreen.dart';
 
@@ -11,6 +12,13 @@ class StoreRegisteration extends StatefulWidget
   StoreRegisterationState createState() => StoreRegisterationState();
 }
 class StoreRegisterationState extends State<StoreRegisteration> {
+  final TextEditingController _nameArController = TextEditingController();
+  final TextEditingController _nameEnController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _categoryController = TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +46,7 @@ class StoreRegisterationState extends State<StoreRegisteration> {
                 child: Column(
                   children: [
                     TextField(
+                      controller: _nameArController,
                       decoration: InputDecoration(
                         fillColor: Colors.transparent,
                         labelText:  isArabic(context) ? 'الإسم بالعربي' : 'Arabic Name',
@@ -46,6 +55,7 @@ class StoreRegisterationState extends State<StoreRegisteration> {
                     ),
                     SizedBox(height:  MediaQuery.of(context).size.height * .05),
                     TextField(
+                      controller: _nameEnController,
                       decoration: InputDecoration(
                         fillColor: Colors.transparent,
                         filled: true,
@@ -54,6 +64,7 @@ class StoreRegisterationState extends State<StoreRegisteration> {
                     ),
                     SizedBox(height:  MediaQuery.of(context).size.height * .05),
                     TextField(
+                      controller: _emailController,
                       decoration: InputDecoration(
                         fillColor: Colors.transparent,
                         filled: true,
@@ -62,6 +73,7 @@ class StoreRegisterationState extends State<StoreRegisteration> {
                     ),
                     SizedBox(height:  MediaQuery.of(context).size.height * .05),
                     TextField(
+                      controller: _phoneController,
                       decoration: InputDecoration(
                         fillColor: Colors.transparent,
                         filled: true,
@@ -70,6 +82,7 @@ class StoreRegisterationState extends State<StoreRegisteration> {
                     ),
                     SizedBox(height:  MediaQuery.of(context).size.height * .05),
                     TextField(
+                      controller: _categoryController,
                       decoration: InputDecoration(
                         fillColor: Colors.transparent,
                         filled: true,
@@ -78,6 +91,7 @@ class StoreRegisterationState extends State<StoreRegisteration> {
                     ),
                     SizedBox(height:  MediaQuery.of(context).size.height * .05),
                     TextField(
+                      controller: _passwordController,
                       obscureText: true,
                       decoration: InputDecoration(
                         fillColor: Colors.transparent,
@@ -97,8 +111,39 @@ class StoreRegisterationState extends State<StoreRegisteration> {
                               shape: const StadiumBorder(),
                             ),
                             onPressed: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => const HomeScreen()),
+                              final snackBar1 = SnackBar(
+                                content: Text( isArabic(context) ? 'تم التسجيل بنجاح ' : 'Your account has been created successfully'),
                               );
+                              final snackBar2 = SnackBar(
+                                content: Text( isArabic(context) ? 'حدث خطأ اثناء عملية التسجيل' : 'Error during sign up'),
+
+                              );
+
+                              // Find the ScaffoldMessenger in the widget tree
+                              // and use it to show a SnackBar.
+
+                              StoreAuthService.register(
+                                  _emailController.text,
+                                  _passwordController.text,
+                                  _phoneController.text,
+                                  _nameArController.text,
+                                _nameEnController.text,
+                                _categoryController.text,
+                                  )
+                                  .then((value) => {
+                                if (value)
+                                  {
+                                    ScaffoldMessenger.of(context).showSnackBar(snackBar1),
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                          const HomeScreen()),
+                                    )
+                                  }else{
+                                  ScaffoldMessenger.of(context).showSnackBar(snackBar2),
+                                }
+                              });
                             },
                             child: Row(
                               mainAxisAlignment:

@@ -1,8 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:souq/src/models/UserModel.dart';
 import 'package:souq/src/ui/AccountPage.dart';
 import 'package:souq/src/ui/CustomProfileAppBar.dart';
 import 'package:souq/src/ui/SettingPage.dart';
@@ -13,6 +17,7 @@ import 'ContactUsPage.dart';
 import 'ProfileHeader.dart';
 import 'GalleryPage.dart';
 import 'HomeScreen.dart';
+import '../../Helpers/LoginHelper.dart';
 
 class profilepage extends StatefulWidget {
   const profilepage({Key? key}) : super(key: key);
@@ -27,14 +32,27 @@ class profilepageState extends State<profilepage> {
 
   PickedFile? imageFile = null;
   var isLoggedIN =  AuthenticationService.isCurrentUserLoggedIn();
+  final box = GetStorage();
+  late int roleId;
+  late UserModel user;
 
   @override
   void initState() {
     super.initState();
+    //loadUser();
   }
 
+  loadUser() async{
+    await FirebaseFirestore.instance.collection('Users').where('email', isEqualTo: FirebaseAuth.instance.currentUser?.email).get().then((value) => value.docs.forEach((doc) {
+      user = UserModel.fromJson(value.docs.first.data());
+      print(user.name);
+    }));
+  }
   @override
   Widget build(BuildContext context) {
+    roleId = box.read("roleID");
+
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(

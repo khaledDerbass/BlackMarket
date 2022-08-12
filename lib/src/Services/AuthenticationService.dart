@@ -8,7 +8,7 @@ class AuthenticationService{
   static FirebaseAuth getAuthInstance(){
     return FirebaseAuth.instance;
   }
-
+  static int ROLEID = 1;
   static bool isCurrentUserLoggedIn() {
     final User? user = getAuthInstance().currentUser;
     if (user == null) {
@@ -24,7 +24,7 @@ class AuthenticationService{
       password: password,
     )
     ).user;
-      UserModel userModel = UserModel(username,email,phone,password,"",[]);
+      UserModel userModel = UserModel(username,email,phone,password,"",[],ROLEID,"");
       await FirebaseFirestore.instance.collection('Users').add(userModel.toJson()).then((value) => print(value));
       return true;
     }on FirebaseAuthException{

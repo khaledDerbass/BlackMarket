@@ -1,6 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:souq/src/models/UserModel.dart';
 import 'package:souq/src/ui/resetpassPage.dart';
+import '../../Helpers/LoginHelper.dart';
 import '../../generated/locale_keys.g.dart';
 import 'package:flutter/cupertino.dart';
 import '../Services/AuthenticationService.dart';
@@ -21,7 +26,7 @@ class LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-
+  print(FirebaseAuth.instance.currentUser?.email);
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -82,7 +87,7 @@ class LoginScreenState extends State<LoginScreen> {
                                 primary: Colors.black,
                                 shape: StadiumBorder(),
                               ),
-                              onPressed: () {
+                              onPressed: () async{
                                 final snackBar1 = SnackBar(
                                   content:  Text(isArabic(context) ? 'تم تسجيل الدخول' : 'Signed in successfully'),
                                 );
@@ -106,7 +111,8 @@ class LoginScreenState extends State<LoginScreen> {
                                     ScaffoldMessenger.of(context).showSnackBar(snackBar2),
                                   }
                                 });
-                                                                },
+                                await LoginHelper.getUserWithEmail(_emailController.text);
+                              },
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,

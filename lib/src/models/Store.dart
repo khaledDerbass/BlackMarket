@@ -9,8 +9,9 @@ class Store {
   int category;
   bool isApprovedByAdmin;
   List<StoryContent> stories;
+  int numOfFollowers;
   // 2
-  Store(this.nameAr,this.nameEn,this.category,this.isApprovedByAdmin,this.stories);
+  Store(this.nameAr,this.nameEn,this.category,this.isApprovedByAdmin,this.stories,this.numOfFollowers);
   // 3
   factory Store.fromJson(Map<String, dynamic> json) =>
       _storeFromJson(json);
@@ -34,6 +35,7 @@ Store _storeFromJson(Map<String, dynamic> json) {
     json['Category'] as int,
     json['isApprovedByAdmin'] as bool,
     List<StoryContent>.from(json["Stories"].map((x) => StoryContent.fromJson(x))),
+    json['numOfFollowers'] as int
   );
 }
 
@@ -44,4 +46,5 @@ Map<String, dynamic> _storeToJson(Store instance) =>
       'Category': instance.category,
       'isApprovedByAdmin': instance.isApprovedByAdmin,
       'Stories' : instance.stories,
+      'numOfFollowers' : instance.numOfFollowers
     };

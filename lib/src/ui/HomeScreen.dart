@@ -2,16 +2,21 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:souq/Helpers/GEnums.dart';
+import 'package:souq/src/Services/AuthenticationService.dart';
 import 'package:souq/src/blocs/StoreRepository.dart';
 import 'package:souq/src/models/CategoryWidget.dart';
 import 'package:souq/src/models/Store.dart';
 import 'package:souq/src/models/StoryItem.dart';
+import 'package:souq/src/models/UserModel.dart';
 import 'package:souq/src/ui/SearchPage.dart';
 import 'package:flutter_stories/flutter_stories.dart';
+import '../../Helpers/LoginHelper.dart';
 import 'AddPostScreen.dart';
 import 'SideBar Home.dart';
 import 'ProfilePage.dart';
@@ -28,15 +33,17 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final myController = TextEditingController();
   PickedFile? imageFile = null;
-
+  late int roleId;
+  final box = GetStorage();
   @override
   void initState() {
     super.initState();
   }
 
+
   @override
   Widget build(BuildContext context) {
-    //context.setLocale(Locale('en', 'US'));
+    roleId = box.read("roleID");
     StoreRepository repository = StoreRepository();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -134,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       }),
                 ),
               ],
-            ),
+            )
           ),
           bottomNavigationBar: ConvexAppBar(
             style: TabStyle.fixed,
@@ -149,26 +156,36 @@ class _HomeScreenState extends State<HomeScreen> {
                   title: isArabic(context) ? 'إضافة' : 'Add'),
               TabItem(
                   icon: Icons.people,
-                  title: isArabic(context) ? 'الحساب' : 'Profile'),
+                  title: isArabic(context) ? 'الحساب' : 'Account'),
             ],
             initialActiveIndex: 0, //optional, default as 0
             onTap: (int i) => {
               if (i == 1)
                 {
+                  if(AuthenticationService.isCurrentUserLoggedIn()){
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => const AddPostPage()),
                   ),
+                }else{
+                    LoginHelper.showLoginAlertDialog(context),
+                  }
+
                   //_showChoiceDialog(context),
                 }
               else if (i == 2)
                 {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const profilepage()),
-                  ),
+                  if(AuthenticationService.isCurrentUserLoggedIn()){
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const profilepage()),
+                    ),
+                  }else{
+                    LoginHelper.showLoginAlertDialog(context),
+                  }
+
                 }
             },
           )),
@@ -176,6 +193,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
 }
+
+
 
 Widget _buildCategoryList(
     BuildContext context, List<DocumentSnapshot>? snapshot) {
@@ -193,7 +212,6 @@ Widget _buildCategoryList(
       .toList();
 
   for (int category in categories) {
-    print("category " + category.toString());
     for (Store store in storesList) {
       if (store.isApprovedByAdmin) {
         storyByCategory.addAll(
@@ -211,7 +229,6 @@ Widget _buildCategoryList(
         storyByCategory.last.img, Category.fromId(category).name, imgs);
     categoryWidgets.add(categoryWidget);
     storyByCategory.clear();
-    print("categoryWidgets " + categoryWidgets.length.toString());
   }
 
   for (CategoryWidget cw in categoryWidgets) {
@@ -321,7 +338,8 @@ Widget _buildListItem(
           left: MediaQuery.of(context).size.width * 0.004,
           right: MediaQuery.of(context).size.width * 0.004),
       child: Center(
-        child: Column(
+        child: store.stories.isNotEmpty ?
+        Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
@@ -380,8 +398,9 @@ Widget _buildListItem(
                   isArabic(context) ? Text(store.nameAr) : Text(store.nameEn),
             ),
           ],
-        ),
+        ) : Container(),
       ),
     ),
   );
 }
+

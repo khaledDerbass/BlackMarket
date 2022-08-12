@@ -9,8 +9,10 @@ class UserModel {
   String password;
   String profilePicture;
   List<Store> followedStores;
+  int RoleID;
+  String storeId = "";
 
-  UserModel(this.name,this.email,this.phoneNumber,this.password,this.profilePicture,this.followedStores);
+  UserModel(this.name,this.email,this.phoneNumber,this.password,this.profilePicture,this.followedStores,this.RoleID,this.storeId);
   factory UserModel.fromJson(Map<String, dynamic> json) =>
       _userFromJson(json);
 
@@ -29,6 +31,8 @@ UserModel _userFromJson(Map<String, dynamic> json) {
     json['password'] as String,
     json['profilePicture'] as String,
     List<Store>.from(json["followedStores"].map((x) => UserModel.fromJson(x))),
+    json['RoleID'] as int,
+    json['storeId'] ?? "" as String
   );
 }
 Map<String, dynamic> _userToJson(UserModel instance) =>
@@ -39,4 +43,6 @@ Map<String, dynamic> _userToJson(UserModel instance) =>
       'password': instance.password,
       'profilePicture' : instance.profilePicture,
       'followedStores' : instance.followedStores,
+      'RoleID' : instance.RoleID,
+      'storeId' : instance.storeId
     };
