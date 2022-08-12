@@ -117,17 +117,6 @@ class _GalleryState extends State<Gallery> {
     ),
   );
 
-  Widget _createGridTileWidgetUser(String url) => Builder(
-    builder: (context) => GestureDetector(
-      onLongPress: () {
-        _popupDialog = _createPopupDialog(url);
-        Overlay.of(context)!.insert(_popupDialog);
-      },
-      onLongPressEnd: (details) => _popupDialog.remove(),
-      child: Image.memory(base64Decode(url) ,fit: BoxFit.cover),
-
-    ),
-  );
 
   OverlayEntry _createPopupDialog(String url) {
     return OverlayEntry(
