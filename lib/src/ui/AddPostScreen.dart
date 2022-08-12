@@ -74,7 +74,8 @@ class _AddPostPageState extends State<AddPostPage> {
                                 "Choose Category",
                                 style: TextStyle(
                                   fontSize: 18,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight:
+                                  FontWeight.bold,
                                 ),
                               ),
                       ),

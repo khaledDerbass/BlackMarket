@@ -44,8 +44,13 @@ class _UserPrefrencesScreenState extends State<UserPrefrencesScreen>{
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text("Select your City",style: TextStyle(fontSize: 22),),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.1,),
+                  const Text("Select state or province",style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  ),
+
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.05,),
                   Container(
                     width: MediaQuery.of(context).size.width * 0.7,
                     child: DecoratedBox(
@@ -96,11 +101,12 @@ class _UserPrefrencesScreenState extends State<UserPrefrencesScreen>{
                         )
                     ),
                   ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.1,),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.3,),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                         primary: Colors.black,
-                        fixedSize: Size(MediaQuery.of(context).size.width * 0.3, MediaQuery.of(context).size.height * 0.06,)
+                        fixedSize: Size(MediaQuery.of(context).size.width * 0.4,
+                          MediaQuery.of(context).size.height * 0.08,)
                     ),
                     onPressed: ()=> {
                       _saveUserCity(),
@@ -108,7 +114,34 @@ class _UserPrefrencesScreenState extends State<UserPrefrencesScreen>{
                         context,
                         MaterialPageRoute(builder: (context) => const HomeScreen()),
                       ),
-                    }, child: Text("Next"),
+                    }, child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      maximumSize: Size(
+                          MediaQuery.of(context).size.height * .20,
+                          MediaQuery.of(context).size.height * .05),
+                      minimumSize: Size(
+                          MediaQuery.of(context).size.height * .20,
+                          MediaQuery.of(context).size.height * .05),
+                      primary: Colors.black,
+                      shape: StadiumBorder(),
+                    ),
+                    onPressed: () {Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const HomeScreen()),);},
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                            isArabic(context) ? 'التالي' : 'Next'),
+                        Icon(
+                          Icons.navigate_next
+                          ,
+                          color: Colors.white,
+                        ),
+                      ],
+                    ),
+                  ),
                   ),
                 ],
               ),

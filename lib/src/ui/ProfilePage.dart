@@ -74,6 +74,14 @@ class profilepageState extends State<profilepage> {
                   Navigator.push(context,MaterialPageRoute(builder: (context) => const AboutUs())),
                 },
               ),
+              ListTile(
+                leading: Icon(Icons.settings
+                ),
+                title: Text(isArabic(context) ? 'الإعدادات' : 'Settings'),
+                onTap: () => {
+                  showSettingAlertDialog(context),
+                },
+              ),
               isLoggedIN == true  ? ListTile(
                 leading: Icon(Icons.logout),
                 title: Text(isArabic(context) ? 'تسجيل خروج' : 'Sign out'),
@@ -231,5 +239,134 @@ class profilepageState extends State<profilepage> {
   }
   bool isArabic(BuildContext context) {
     return context.locale.languageCode == 'ar';
+  }
+
+  showSettingAlertDialog(BuildContext context) {
+    Widget okButton = FlatButton(
+      child: isArabic(context) ? const Text("إلغاء") : const Text("Dismiss"),
+      onPressed: () {
+        Navigator.of(context, rootNavigator: true).pop('dialog');
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      actions: [
+        okButton,
+      ],
+      title: isArabic(context) ? const Text("الإعدادات" ,  style: TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.bold,
+      ),) : const Text("Settings",  style: TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.bold,
+    )),
+      content: SizedBox(
+        width: double.maxFinite,
+        height: MediaQuery.of(context).size.height / 5,
+        child: ListView(
+          children: <Widget>[
+            ListTile(
+                title: isArabic(context)
+                    ? const Text(
+                  'الحساب',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                )
+                    : const Text(
+                  'Account',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                trailing: Icon(
+                  Icons.account_circle_outlined
+                  ,
+                  color: Colors.black,
+                ),
+                    onTap: () => {
+
+                }),
+            const Divider(),
+            ListTile(
+                title: isArabic(context)
+                    ? const Text(
+                  'إشعارات',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),                )
+                    : const Text(
+                  'Notifications',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),                ),
+                trailing: Icon(
+                  Icons.notification_add
+                  ,
+                  color: Colors.black,
+                ),
+                onTap: () => {
+                }),
+            const Divider(),
+            ListTile(
+                title: isArabic(context)
+                    ? const Text(
+                  'مساعدة',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                )
+                    : const Text(
+                  'Help',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                trailing: Icon(
+                  Icons.live_help_outlined
+                  ,
+                  color: Colors.black,
+                ),
+                 onTap: () => {
+                    }),
+            const Divider(),
+            ListTile(
+                title: isArabic(context)
+                    ? const Text(
+                  'إعلانات ممولة',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),                )
+                    :  Text(
+                  'Ads',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),                ),
+                trailing: Icon(
+                  Icons.ads_click
+                  ,
+                  color: Colors.black,
+                ),
+                onTap: () => {
+                }),          ],
+        ),
+      ),
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 }
