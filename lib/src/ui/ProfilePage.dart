@@ -3,7 +3,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:souq/src/ui/AccountPage.dart';
 import 'package:souq/src/ui/CustomProfileAppBar.dart';
+import 'package:souq/src/ui/SettingPage.dart';
 import '../Services/AuthenticationService.dart';
 import 'AboutUsPage.dart';
 import 'AddPostScreen.dart';
@@ -61,14 +63,14 @@ class profilepageState extends State<profilepage> {
                 ),
               ),
               ListTile(
-                leading: Icon(Icons.contact_support_outlined),
+                leading: Icon(Icons.info_outline),
                 title: Text(isArabic(context) ? 'تواصل معنا' : 'Contact us'),
                 onTap: () => {
                   Navigator.push(context,MaterialPageRoute(builder: (context) => const ContactUs())),
                 },
               ),
               ListTile(
-                leading: Icon(Icons.info_outline),
+                leading: Icon(Icons.contact_support_outlined),
                 title: Text(isArabic(context) ? 'من نحن' : 'About us'),
                 onTap: () => {
                   Navigator.push(context,MaterialPageRoute(builder: (context) => const AboutUs())),
@@ -79,7 +81,7 @@ class profilepageState extends State<profilepage> {
                 ),
                 title: Text(isArabic(context) ? 'الإعدادات' : 'Settings'),
                 onTap: () => {
-                  showSettingAlertDialog(context),
+                  Navigator.push(context,MaterialPageRoute(builder: (context) => const SettingPage())),
                 },
               ),
               isLoggedIN == true  ? ListTile(
@@ -287,8 +289,11 @@ class profilepageState extends State<profilepage> {
                   color: Colors.black,
                 ),
                     onTap: () => {
-
-                }),
+                    Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                    builder: (context) => const AccountPage()),
+                    ),}),
             const Divider(),
             ListTile(
                 title: isArabic(context)

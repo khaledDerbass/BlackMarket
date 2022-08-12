@@ -220,7 +220,7 @@ class _AddPostPageState extends State<AddPostPage> {
                             Text(
                                 isArabic(context) ? 'إضافة الإعلان' : 'Submit'),
                             Icon(
-                              Icons.add_to_home_screen,
+                              Icons.done_outline,
                               color: Colors.white,
                             ),
                           ],
