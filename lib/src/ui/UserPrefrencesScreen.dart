@@ -68,6 +68,7 @@ class _UserPrefrencesScreenState extends State<UserPrefrencesScreen>{
                                   blurRadius: 5) //blur radius of shadow
                             ]
                         ),
+
                         child: Padding(
                             padding: const EdgeInsets.only(left:30, right:30),
                             child:DropdownButton(

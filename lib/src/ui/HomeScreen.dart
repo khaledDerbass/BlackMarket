@@ -40,161 +40,196 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
   }
 
+  String dropdownValue = 'Amman';
 
   @override
   Widget build(BuildContext context) {
-    roleId = box.read("roleID");
+    //
+    // roleId = box.read("roleID");
+
+    /*
+            title: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+                children:
+            [
+            DropdownButton(
+                    value: dropdownValue,
+                    items: const [
+                      DropdownMenuItem(
+                        value: "Amman",
+                        child: Text("Amman"),
+                      ),
+                      DropdownMenuItem(
+                        value: "Irbid",
+                        child: Text("Irbid"),
+                      ),
+                      DropdownMenuItem(
+                        value: "Zarqa",
+                        child: Text("Zarqa"),
+                      )
+                    ],
+                    underline: SizedBox(height: 0,),
+                    onChanged: (value){
+                      setState(() {
+                        dropdownValue = value.toString();
+                      });
+                    },
+                    style: TextStyle(fontSize: 20, color: Colors.white),
+                    dropdownColor: Colors.deepPurpleAccent,
+                    iconEnabledColor: Colors.white, //Icon color
+                  ),*/
     StoreRepository repository = StoreRepository();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-          drawer: SideDrawer(),
-          backgroundColor: CupertinoColors.white,
-          appBar: AppBar(
-            backgroundColor: Colors.deepPurpleAccent,
-            shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.only(
-                    bottomRight: Radius.circular(35),
-                    bottomLeft: Radius.circular(35))),
-            title: Container(
-              width: double.infinity,
-              height: MediaQuery.of(context).size.height * 0.06,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: CupertinoColors.white,
-              ),
-              child: Center(
-                child: TextField(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const SearchPage()),
-                    );
-                  },
-                  controller: myController,
-                  showCursor: false,
-                  readOnly: true,
-                  decoration: InputDecoration(
-                    hintText:
-                        isArabic(context) ? 'إبحث عن متجر' : 'Search Store',
-                    prefixIcon: const Icon(Icons.search),
-                    suffixIcon: IconButton(
-                      icon: const Icon(Icons.clear),
-                      onPressed: () {
-                        myController.text = "";
-                      },
-                    ),
+        drawer: SideDrawer(),
+        backgroundColor: CupertinoColors.white,
+        appBar: AppBar(
+          backgroundColor: Colors.deepPurpleAccent,
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                  bottomRight: Radius.circular(35),
+                  bottomLeft: Radius.circular(35))),
+          title: Container(
+            width: double.infinity,
+            height: MediaQuery.of(context).size.height * 0.05,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              color: CupertinoColors.white,
+            ),
+            child: Center(
+              child: TextField(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const SearchPage()),
+                  );
+                },
+                controller: myController,
+                showCursor: false,
+                readOnly: true,
+                decoration: InputDecoration(
+                  hintText: isArabic(context) ? 'إبحث عن متجر' : 'Search Store',
+                  prefixIcon: const Icon(Icons.search),
+                  suffixIcon: IconButton(
+                    icon: const Icon(Icons.clear),
+                    onPressed: () {
+                      myController.text = "";
+                    },
                   ),
                 ),
               ),
             ),
           ),
-          body: SafeArea(
+        ),
+        body: SafeArea(
             child: Column(
-              children: [
-                LimitedBox(
-                  maxHeight: MediaQuery.of(context).size.height * 0.25,
-                  maxWidth: MediaQuery.of(context).size.width,
-                  child: StreamBuilder<QuerySnapshot>(
-                      stream: repository.getStores(),
-                      builder: (context, snapshot) {
-                        if (!snapshot.hasData)
-                          return const LinearProgressIndicator();
-                        return _buildList(context, snapshot.data?.docs ?? []);
-                      }),
-                ),
-                Align(
-                    alignment: isArabic(context)
-                        ? Alignment.centerRight
-                        : Alignment.centerLeft,
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                          left: MediaQuery.of(context).size.width * 0.02,
-                          right: MediaQuery.of(context).size.width * 0.02),
-                      child: isArabic(context)
-                          ? const Text(
-                              "التصنيفات",
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            )
-                          : const Text(
-                              "Categories",
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                    )),
-                LimitedBox(
-                  maxHeight: MediaQuery.of(context).size.height * 0.25,
-                  maxWidth: MediaQuery.of(context).size.width,
-                  child: StreamBuilder<QuerySnapshot>(
-                      stream: repository.getStores(),
-                      builder: (context, snapshot) {
-                        if (!snapshot.hasData)
-                          return const LinearProgressIndicator();
-                        return _buildCategoryList(
-                            context, snapshot.data?.docs ?? []);
-                      }),
-                ),
-              ],
-            )
-          ),
-          bottomNavigationBar: ConvexAppBar(
-            style: TabStyle.fixed,
-            color: CupertinoColors.white,
-            backgroundColor: Colors.deepPurpleAccent,
-            items: [
-              TabItem(
-                  icon: Icons.home,
-                  title: isArabic(context) ? 'الرئيسية' : 'Home'),
-              TabItem(
-                  icon: Icons.camera_alt,
-                  title: isArabic(context) ? 'إضافة' : 'Add'),
-              TabItem(
-                  icon: Icons.people,
-                  title: isArabic(context) ? 'الحساب' : 'Account'),
-            ],
-            initialActiveIndex: 0, //optional, default as 0
-            onTap: (int i) => {
-              if (i == 1)
-                {
-                  if(AuthenticationService.isCurrentUserLoggedIn()){
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const AddPostPage()),
-                  ),
-                }else{
+          children: [
+            LimitedBox(
+              maxHeight: MediaQuery.of(context).size.height * 0.25,
+              maxWidth: MediaQuery.of(context).size.width,
+              child: StreamBuilder<QuerySnapshot>(
+                  stream: repository.getStores(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData)
+                      return const LinearProgressIndicator();
+                    return _buildList(context, snapshot.data?.docs ?? []);
+                  }),
+            ),
+            Align(
+                alignment: isArabic(context)
+                    ? Alignment.centerRight
+                    : Alignment.centerLeft,
+                child: Padding(
+                  padding: EdgeInsets.only(
+                      left: MediaQuery.of(context).size.width * 0.02,
+                      right: MediaQuery.of(context).size.width * 0.02),
+                  child: isArabic(context)
+                      ? const Text(
+                          "التصنيفات",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )
+                      : const Text(
+                          "Categories",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                )),
+            LimitedBox(
+              maxHeight: MediaQuery.of(context).size.height * 0.25,
+              maxWidth: MediaQuery.of(context).size.width,
+              child: StreamBuilder<QuerySnapshot>(
+                  stream: repository.getStores(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData)
+                      return const LinearProgressIndicator();
+                    return _buildCategoryList(
+                        context, snapshot.data?.docs ?? []);
+                  }),
+            ),
+          ],
+        )),
+        bottomNavigationBar: ConvexAppBar(
+          style: TabStyle.fixed,
+          color: CupertinoColors.white,
+          backgroundColor: Colors.deepPurpleAccent,
+          items: [
+            TabItem(
+                icon: Icons.home,
+                title: isArabic(context) ? 'الرئيسية' : 'Home'),
+            TabItem(
+                icon: Icons.camera_alt,
+                title: isArabic(context) ? 'إضافة' : 'Add'),
+            TabItem(
+                icon: Icons.people,
+                title: isArabic(context) ? 'الحساب' : 'Account'),
+          ],
+          initialActiveIndex: 0, //optional, default as 0
+          onTap: (int i) => {
+            if (i == 1)
+              {
+                if (AuthenticationService.isCurrentUserLoggedIn())
+                  {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const AddPostPage()),
+                    ),
+                  }
+                else
+                  {
                     LoginHelper.showLoginAlertDialog(context),
                   }
 
-                  //_showChoiceDialog(context),
-                }
-              else if (i == 2)
-                {
-                  if(AuthenticationService.isCurrentUserLoggedIn()){
+                //_showChoiceDialog(context),
+              }
+            else if (i == 2)
+              {
+                if (AuthenticationService.isCurrentUserLoggedIn())
+                  {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
                           builder: (context) => const profilepage()),
                     ),
-                  }else{
+                  }
+                else
+                  {
                     LoginHelper.showLoginAlertDialog(context),
                   }
-
-                }
-            },
-          )),
+              }
+          },
+        ),
+      ),
     );
   }
-
 }
-
-
 
 Widget _buildCategoryList(
     BuildContext context, List<DocumentSnapshot>? snapshot) {
@@ -338,69 +373,73 @@ Widget _buildListItem(
           left: MediaQuery.of(context).size.width * 0.004,
           right: MediaQuery.of(context).size.width * 0.004),
       child: Center(
-        child: store.stories.isNotEmpty ?
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(60.0),
-                image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image:
-                      Image.memory(base64Decode(store.stories.last.img)).image,
-                ),
-                border: Border.all(
-                  color: CupertinoColors.activeOrange,
-                  width: 2.0,
-                  style: BorderStyle.solid,
-                ),
-              ),
-              width: MediaQuery.of(context).size.height * 0.12,
-              height: MediaQuery.of(context).size.height * 0.12,
-              child: GestureDetector(
-                onTap: () {
-                  showCupertinoDialog(
-                    context: context,
-                    builder: (context) {
-                      return CupertinoPageScaffold(
-                        child: Story(
-                          fullscreen: false,
-                          topOffset: MediaQuery.of(context).size.height * 0.06,
-                          onFlashForward: Navigator.of(context).pop,
-                          onFlashBack: Navigator.of(context).pop,
-                          momentCount: store.stories.length,
-                          momentDurationGetter: (idx) => Duration(seconds: 5),
-                          momentBuilder: (context, index) => Scaffold(
-                            body: Container(
-                              decoration: BoxDecoration(
-                                color: CupertinoColors.darkBackgroundGray,
-                                image: DecorationImage(
-                                  fit: BoxFit.contain,
-                                  image: Image.memory(base64Decode(
-                                          store.stories[index].img))
-                                      .image,
+        child: store.stories.isNotEmpty
+            ? Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(60.0),
+                      image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image:
+                            Image.memory(base64Decode(store.stories.last.img))
+                                .image,
+                      ),
+                      border: Border.all(
+                        color: CupertinoColors.activeOrange,
+                        width: 2.0,
+                        style: BorderStyle.solid,
+                      ),
+                    ),
+                    width: MediaQuery.of(context).size.height * 0.12,
+                    height: MediaQuery.of(context).size.height * 0.12,
+                    child: GestureDetector(
+                      onTap: () {
+                        showCupertinoDialog(
+                          context: context,
+                          builder: (context) {
+                            return CupertinoPageScaffold(
+                              child: Story(
+                                fullscreen: false,
+                                topOffset:
+                                    MediaQuery.of(context).size.height * 0.06,
+                                onFlashForward: Navigator.of(context).pop,
+                                onFlashBack: Navigator.of(context).pop,
+                                momentCount: store.stories.length,
+                                momentDurationGetter: (idx) =>
+                                    Duration(seconds: 5),
+                                momentBuilder: (context, index) => Scaffold(
+                                  body: Container(
+                                    decoration: BoxDecoration(
+                                      color: CupertinoColors.darkBackgroundGray,
+                                      image: DecorationImage(
+                                        fit: BoxFit.contain,
+                                        image: Image.memory(base64Decode(
+                                                store.stories[index].img))
+                                            .image,
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  );
-                },
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).size.height * 0.005),
-              child:
-                  isArabic(context) ? Text(store.nameAr) : Text(store.nameEn),
-            ),
-          ],
-        ) : Container(),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height * 0.005),
+                    child: isArabic(context)
+                        ? Text(store.nameAr)
+                        : Text(store.nameEn),
+                  ),
+                ],
+              )
+            : Container(),
       ),
     ),
   );
 }
-

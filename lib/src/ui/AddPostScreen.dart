@@ -4,11 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
-import '../Services/AuthenticationService.dart';
-import 'CustomProfileAppBar.dart';
 import 'HomeScreen.dart';
 import 'ProfilePage.dart';
-import 'StoreRegisteration.dart';
 
 class AddPostPage extends StatefulWidget {
   const AddPostPage({Key? key}) : super(key: key);
@@ -25,7 +22,8 @@ class _AddPostPageState extends State<AddPostPage> {
   void initState() {
     super.initState();
   }
-  String dropdownvalue ='Al al-Bayt University';
+
+  String dropdownvalue = 'Al al-Bayt University';
   // List of items in our dropdown menu
   var items = [
     'STS-Specialized Technical Services',
@@ -33,6 +31,16 @@ class _AddPostPageState extends State<AddPostPage> {
     'IRIS Technology ',
     'Al al-Bayt University'
   ];
+ /* String dropdownvalue = '1 Day';
+  // List of items in our dropdown menu
+  var items2 = [
+    '2 Day',
+    '3 Day',
+    '4 Day',
+    '5 Day',
+    '6 Day',
+    '7 Day'
+  ];*/
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -55,32 +63,151 @@ class _AddPostPageState extends State<AddPostPage> {
               child: Column(
                 children: [
                   Align(
-                      alignment: isArabic(context)
-                          ? Alignment.centerRight
-                          : Alignment.centerLeft,
-                      child: Padding(
+                    alignment: isArabic(context)
+                        ? Alignment.centerRight
+                        : Alignment.centerLeft,
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                          top: MediaQuery.of(context).size.width * 0.05,
+                          left: MediaQuery.of(context).size.width * 0.02,
+                          right: MediaQuery.of(context).size.width * 0.02,
+                          bottom: MediaQuery.of(context).size.width * 0.05),
+                      child: isArabic(context)
+                          ? const Text(
+                              "اختر القسم",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            )
+                          : const Text(
+                              "Choose Category",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                    ),
+                  ),
+                  DropdownButton(
+                      // Down Arrow Icon
+                      icon: const Icon(Icons.keyboard_arrow_down),
+                      value: dropdownvalue,
+                      // Array list of items
+                      items: items.map((String items) {
+                        return DropdownMenuItem(
+                          value: items,
+                          child: Text(items),
+                        );
+                      }).toList(),
+                      // After selecting the desired option,it will
+                      // change button value to selected value
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          dropdownvalue = newValue!;
+                        });
+                      }),
+                  SizedBox(height: MediaQuery.of(context).size.height * .05),
+                  Row(
+                    children: [
+                      Padding(
                         padding: EdgeInsets.only(
                             top: MediaQuery.of(context).size.width * 0.05,
-                            left: MediaQuery.of(context).size.width * 0.02,
-                            right: MediaQuery.of(context).size.width * 0.02,
-                          bottom: MediaQuery.of(context).size.width * 0.05),
+                            left: MediaQuery.of(context).size.width * 0.2,
+                            right: MediaQuery.of(context).size.width * 0.1,
+                            bottom: MediaQuery.of(context).size.width * 0.05),
                         child: isArabic(context)
-                            ? const Text(
-                                "اختر القسم",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
+                            ? ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  maximumSize: Size(
+                                      MediaQuery.of(context).size.height * .20,
+                                      MediaQuery.of(context).size.height * .05),
+                                  minimumSize: Size(
+                                      MediaQuery.of(context).size.height * .20,
+                                      MediaQuery.of(context).size.height * .05),
+                                  primary: Colors.black,
                                 ),
-                              )
-                            : const Text(
-                                "Choose Category",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight:
-                                  FontWeight.bold,
+                                onPressed: () {
+                                  _showChoiceDialog(context);
+                                },
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text('إضافة صور'),
+                                    Icon(
+                                      Icons.add_photo_alternate_outlined,
+                                      color: Colors.white,
+                                    ),
+                                  ],
+                                ))
+                            : ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  maximumSize: Size(
+                                      MediaQuery.of(context).size.height * .20,
+                                      MediaQuery.of(context).size.height * .05),
+                                  minimumSize: Size(
+                                      MediaQuery.of(context).size.height * .20,
+                                      MediaQuery.of(context).size.height * .05),
+                                  primary: Colors.black,
+                                ),
+                                onPressed: () {
+                                  _showChoiceDialog(context);
+                                },
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text('Add Photos'),
+                                    Icon(
+                                      Icons.add_photo_alternate_outlined,
+                                      color: Colors.white,
+                                    ),
+                                  ],
                                 ),
                               ),
                       ),
+                      Container(
+                        height: MediaQuery.of(context).size.height * 0.1,
+                        width: MediaQuery.of(context).size.width * 0.2,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage('assets/images/addPhoto.png'),
+                            fit: BoxFit.fill,
+                          ),
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Align(
+                    alignment: isArabic(context)
+                        ? Alignment.centerRight
+                        : Alignment.centerLeft,
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                          top: MediaQuery.of(context).size.width * 0.05,
+                          left: MediaQuery.of(context).size.width * 0.02,
+                          right: MediaQuery.of(context).size.width * 0.02,
+                          bottom: MediaQuery.of(context).size.width * 0.05),
+                      child: isArabic(context)
+                          ? const Text(
+                        "عدد أيام القصة",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )
+                          : const Text(
+                        "Day of story",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
                   ),
                   DropdownButton(
                     // Down Arrow Icon
@@ -92,8 +219,7 @@ class _AddPostPageState extends State<AddPostPage> {
                           value: items,
                           child: Text(items),
                         );
-                      }
-                      ).toList(),
+                      }).toList(),
                       // After selecting the desired option,it will
                       // change button value to selected value
                       onChanged: (String? newValue) {
@@ -101,65 +227,6 @@ class _AddPostPageState extends State<AddPostPage> {
                           dropdownvalue = newValue!;
                         });
                       }),
-                  Align(
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                          top: MediaQuery.of(context).size.width * 0.10,
-                          left: MediaQuery.of(context).size.width * 0.01,
-                          right: MediaQuery.of(context).size.width * 0.01),
-                      child: isArabic(context)
-                          ? ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                maximumSize: Size(
-                                    MediaQuery.of(context).size.height * .20,
-                                    MediaQuery.of(context).size.height * .05),
-                                minimumSize: Size(
-                                    MediaQuery.of(context).size.height * .20,
-                                    MediaQuery.of(context).size.height * .05),
-                                primary: Colors.black,
-                              ),
-                              onPressed: () {
-                                _showChoiceDialog(context);
-                              },
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text('إضافة صور'),
-                                  Icon(
-                                    Icons.add_photo_alternate_outlined,
-                                    color: Colors.white,
-                                  ),
-                                ],
-                              ))
-                          : ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                maximumSize: Size(
-                                    MediaQuery.of(context).size.height * .20,
-                                    MediaQuery.of(context).size.height * .05),
-                                minimumSize: Size(
-                                    MediaQuery.of(context).size.height * .20,
-                                    MediaQuery.of(context).size.height * .05),
-                                primary: Colors.black,
-                              ),
-                              onPressed: () {
-                                _showChoiceDialog(context);
-                              },
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text('Add Photos'),
-                                  Icon(
-                                    Icons.add_photo_alternate_outlined,
-                                    color: Colors.white,
-                                  ),
-                                ],
-                              )),
-                    ),
-                  ),
                   Align(
                     alignment: isArabic(context)
                         ? Alignment.centerRight

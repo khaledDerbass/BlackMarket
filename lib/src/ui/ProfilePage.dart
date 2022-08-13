@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -19,7 +18,7 @@ import 'AboutUsPage.dart';
 import 'AddPostScreen.dart';
 import 'ContactUsPage.dart';
 import 'ProfileHeader.dart';
-import 'GalleryPage.dart';
+import 'Gallery.dart';
 import 'HomeScreen.dart';
 import '../../Helpers/LoginHelper.dart';
 
@@ -311,202 +310,10 @@ class profilepageState extends State<profilepage> {
     );
   }
 
-  Future<void> _showChoiceDialog(BuildContext context) {
-    return showModalBottomSheet(
-        context: context,
-        builder: (context) {
-          return SingleChildScrollView(
-            child: ListBody(
-              children: [
-                Divider(
-                  height: 1,
-                  color: CupertinoColors.systemPurple,
-                ),
-                ListTile(
-                  onTap: () {
-                    _openGallery(context);
-                  },
-                  title: Text(isArabic(context) ? 'الاستوديو' : 'Gallery'),
-                  leading: Icon(
-                    Icons.account_box,
-                    color: CupertinoColors.systemPurple,
-                  ),
-                ),
-                Divider(
-                  height: 1,
-                  color: CupertinoColors.systemPurple,
-                ),
-                ListTile(
-                  onTap: () {
-                    _openCamera(context);
-                  },
-                  title: Text(isArabic(context) ? 'الكاميرا': 'Camera'),
-                  leading: Icon(
-                    Icons.camera,
-                    color: CupertinoColors.systemPurple,
-                  ),
-                ),
-              ],
-            ),
-          );
-        });
-  }
-
-  void _openGallery(BuildContext context) async {
-    final pickedFile = await ImagePicker().getImage(
-      source: ImageSource.gallery,
-    );
-    setState(() {
-      imageFile = pickedFile!;
-    });
-
-    Navigator.pop(context);
-  }
-
-  void _openCamera(BuildContext context) async {
-    final pickedFile = await ImagePicker().getImage(
-      source: ImageSource.camera,
-    );
-    setState(() {
-      imageFile = pickedFile!;
-    });
-    Navigator.pop(context);
-  }
   bool isArabic(BuildContext context) {
     return context.locale.languageCode == 'ar';
   }
 
-  showSettingAlertDialog(BuildContext context) {
-    Widget okButton = FlatButton(
-      child: isArabic(context) ? const Text("إلغاء") : const Text("Dismiss"),
-      onPressed: () {
-        Navigator.of(context, rootNavigator: true).pop('dialog');
-      },
-    );
-
-    AlertDialog alert = AlertDialog(
-      actions: [
-        okButton,
-      ],
-      title: isArabic(context) ? const Text("الإعدادات" ,  style: TextStyle(
-        fontSize: 16,
-        fontWeight: FontWeight.bold,
-      ),) : const Text("Settings",  style: TextStyle(
-      fontSize: 16,
-      fontWeight: FontWeight.bold,
-    )),
-      content: SizedBox(
-        width: double.maxFinite,
-        height: MediaQuery.of(context).size.height / 5,
-        child: ListView(
-          children: <Widget>[
-            ListTile(
-                title: isArabic(context)
-                    ? const Text(
-                  'الحساب',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                )
-                    : const Text(
-                  'Account',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                trailing: Icon(
-                  Icons.account_circle_outlined
-                  ,
-                  color: Colors.black,
-                ),
-                    onTap: () => {
-                    Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                    builder: (context) => const AccountPage()),
-                    ),}),
-            const Divider(),
-            ListTile(
-                title: isArabic(context)
-                    ? const Text(
-                  'إشعارات',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),                )
-                    : const Text(
-                  'Notifications',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),                ),
-                trailing: Icon(
-                  Icons.notification_add
-                  ,
-                  color: Colors.black,
-                ),
-                onTap: () => {
-                }),
-            const Divider(),
-            ListTile(
-                title: isArabic(context)
-                    ? const Text(
-                  'مساعدة',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                )
-                    : const Text(
-                  'Help',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                trailing: Icon(
-                  Icons.live_help_outlined
-                  ,
-                  color: Colors.black,
-                ),
-                 onTap: () => {
-                    }),
-            const Divider(),
-            ListTile(
-                title: isArabic(context)
-                    ? const Text(
-                  'إعلانات ممولة',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),                )
-                    :  Text(
-                  'Ads',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),                ),
-                trailing: Icon(
-                  Icons.ads_click
-                  ,
-                  color: Colors.black,
-                ),
-                onTap: () => {
-                }),          ],
-        ),
-      ),
-    );
-
-    // show the dialog
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
-  }
 
   Future<Store> loadStore(BuildContext context)async{
     late Store store;
