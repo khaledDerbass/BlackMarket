@@ -44,41 +44,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //
-    // roleId = box.read("roleID");
-
-    /*
-            title: Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-                children:
-            [
-            DropdownButton(
-                    value: dropdownValue,
-                    items: const [
-                      DropdownMenuItem(
-                        value: "Amman",
-                        child: Text("Amman"),
-                      ),
-                      DropdownMenuItem(
-                        value: "Irbid",
-                        child: Text("Irbid"),
-                      ),
-                      DropdownMenuItem(
-                        value: "Zarqa",
-                        child: Text("Zarqa"),
-                      )
-                    ],
-                    underline: SizedBox(height: 0,),
-                    onChanged: (value){
-                      setState(() {
-                        dropdownValue = value.toString();
-                      });
-                    },
-                    style: TextStyle(fontSize: 20, color: Colors.white),
-                    dropdownColor: Colors.deepPurpleAccent,
-                    iconEnabledColor: Colors.white, //Icon color
-                  ),*/
     StoreRepository repository = StoreRepository();
     return MaterialApp(
       debugShowCheckedModeBanner: false,

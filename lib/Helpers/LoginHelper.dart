@@ -79,5 +79,104 @@ class LoginHelper{
    return user;
  }
 
+ static showSuccessAlertDialog(BuildContext context,String message) {
+   Widget okButton = FlatButton(
+     child: isArabic(context) ? const Text("تم") : const Text("Done"),
+     onPressed: () {
+       Navigator.of(context, rootNavigator: true).pop('dialog');
+     },
+   );
+
+   AlertDialog alert = AlertDialog(
+     shape: const RoundedRectangleBorder(
+         borderRadius: BorderRadius.all(Radius.circular(32.0))),
+     actions: [
+       okButton,
+     ],
+     content: SizedBox(
+       width: double.maxFinite,
+       height: MediaQuery.of(context).size.height / 4,
+       child: ListView(
+         children: <Widget>[
+           Row(
+             mainAxisAlignment: MainAxisAlignment.center,
+             children: [
+               LimitedBox(
+                   maxHeight: MediaQuery.of(context).size.height * 0.15,
+                   maxWidth: MediaQuery.of(context).size.width,
+                   child: Image.asset('assets/images/success.png')
+               ),
+             ],
+           ),
+           const Divider(),
+           ListTile(
+             title: Text(
+               message,
+               style: TextStyle(fontSize: 17),
+             ),
+           ),
+         ],
+       ),
+     ),
+   );
+
+   // show the dialog
+   showDialog(
+     context: context,
+     builder: (BuildContext context) {
+       return alert;
+     },
+   );
+ }
+
+ static showErrorAlertDialog(BuildContext context,String ErrorMessage) {
+   Widget okButton = FlatButton(
+     child: isArabic(context) ? const Text("تم") : const Text("Done"),
+     onPressed: () {
+       Navigator.of(context, rootNavigator: true).pop('dialog');
+     },
+   );
+
+   AlertDialog alert = AlertDialog(
+     shape: const RoundedRectangleBorder(
+         borderRadius: BorderRadius.all(Radius.circular(32.0))),
+     actions: [
+       okButton,
+     ],
+     content: SizedBox(
+       width: double.maxFinite,
+       height: MediaQuery.of(context).size.height / 4,
+       child: ListView(
+         children: <Widget>[
+           Row(
+             mainAxisAlignment: MainAxisAlignment.center,
+             children: [
+               LimitedBox(
+                   maxHeight: MediaQuery.of(context).size.height * 0.15,
+                   maxWidth: MediaQuery.of(context).size.width,
+                   child: Image.asset('assets/images/error.png')
+               ),
+             ],
+           ),
+           const Divider(),
+           ListTile(
+             title: Text(
+               ErrorMessage,
+               style: TextStyle(fontSize: 17),
+             ),
+           ),
+         ],
+       ),
+     ),
+   );
+
+   // show the dialog
+   showDialog(
+     context: context,
+     builder: (BuildContext context) {
+       return alert;
+     },
+   );
+ }
 
 }

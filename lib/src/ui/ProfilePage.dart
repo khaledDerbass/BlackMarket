@@ -47,9 +47,9 @@ class profilepageState extends State<profilepage> {
 
   @override
   Widget build(BuildContext context) {
-    roleId = box.read("roleID");
-
-
+    roleId = box.read("roleID") ?? 0;
+    print("Test Role ID");
+    print(roleId);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(

@@ -26,7 +26,7 @@ class _GalleryState extends State<Gallery> {
 
   @override
   Widget build(BuildContext context) {
-    roleId = box.read("roleID");
+    roleId = box.read("roleID")?? 0;
     return Scaffold(
       body: roleId == 1 ? FutureBuilder(
         builder: (ctx, snapshot) {

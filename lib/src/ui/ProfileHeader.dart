@@ -19,7 +19,7 @@ class profileHeader extends StatelessWidget {
    String storeName = "Souq Story";
   @override
   Widget build(BuildContext context) {
-    roleId = box.read("roleID");
+    roleId = box.read("roleID") ?? 0;
     print('rele for' + roleId.toString());
     return roleId == 2 ? SliverToBoxAdapter(
       child: FutureBuilder(

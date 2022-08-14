@@ -1,9 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import '../blocs/CategoriesRepoitory.dart';
+import '../models/Category.dart';
 import 'HomeScreen.dart';
 import 'ProfilePage.dart';
 
@@ -17,7 +21,7 @@ class AddPostPage extends StatefulWidget {
 class _AddPostPageState extends State<AddPostPage> {
   PickedFile? imageFile = null;
   final box = GetStorage();
-
+  CategoriesRepository repository = CategoriesRepository();
   @override
   void initState() {
     super.initState();
@@ -89,24 +93,19 @@ class _AddPostPageState extends State<AddPostPage> {
                             ),
                     ),
                   ),
-                  DropdownButton(
-                      // Down Arrow Icon
-                      icon: const Icon(Icons.keyboard_arrow_down),
-                      value: dropdownvalue,
-                      // Array list of items
-                      items: items.map((String items) {
-                        return DropdownMenuItem(
-                          value: items,
-                          child: Text(items),
-                        );
-                      }).toList(),
-                      // After selecting the desired option,it will
-                      // change button value to selected value
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          dropdownvalue = newValue!;
-                        });
-                      }),
+                  LimitedBox(
+                    maxHeight: MediaQuery.of(context).size.height * 0.25,
+                    maxWidth: MediaQuery.of(context).size.width,
+                    child: StreamBuilder<QuerySnapshot>(
+                        stream: repository.getCategoriesStream(),
+                        builder: (context, snapshot) {
+
+                          if (!snapshot.hasData)
+                            return const LinearProgressIndicator();
+                          return _buildList(context, snapshot.data?.docs ?? []);
+                        }),
+                  ),
+
                   SizedBox(height: MediaQuery.of(context).size.height * .05),
                   Row(
                     children: [
@@ -379,6 +378,42 @@ class _AddPostPageState extends State<AddPostPage> {
             ),
           );
         });
+  }
+  Widget _buildList(BuildContext context, List<DocumentSnapshot>? snapshot) {
+    print(snapshot?.first.data());
+    var list = snapshot!
+        .map((data) => CategoryModel.fromSnapshot(data))
+        .toList();
+
+    print(list);
+    return DropdownButton(
+      // Down Arrow Icon
+        icon: const Icon(Icons.keyboard_arrow_down),
+        value: dropdownvalue,
+
+        items: list.map((CategoryModel item) {
+          return DropdownMenuItem(
+            value: item.value,
+            child: Text(item.type),
+          );
+        }).toList(),
+        // After selecting the desired option,it will
+        // change button value to selected value
+        onChanged: (String? newValue) {
+          setState(() {
+            dropdownvalue = newValue!;
+          });
+        });
+  }
+
+  Widget _buildListItem(
+      BuildContext context, DocumentSnapshot snapshot, int length) {
+    final category = CategoryModel.fromSnapshot(snapshot);
+
+    return DropdownMenuItem(
+      child: Text(category.type),
+      value: category.value,
+    );
   }
 
   void _openGallery(BuildContext context) async {
