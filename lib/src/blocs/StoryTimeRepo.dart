@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 
-class CategoriesRepository {
+class StoryTimeRepo {
   final CollectionReference collection =
-  FirebaseFirestore.instance.collection('Categories');
+  FirebaseFirestore.instance.collection('StoryTime');
 
-  Stream<QuerySnapshot> getCategoriesStream() {
+  Stream<QuerySnapshot> getStoryTimeStream() {
     return collection.snapshots();
   }
 }

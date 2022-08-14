@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -7,7 +9,11 @@ import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import '../blocs/CategoriesRepoitory.dart';
-import '../models/Category.dart';
+import '../blocs/StoryTimeRepo.dart';
+import '../models/CategoryList.dart';
+import '../models/CategoryModel.dart';
+import '../models/StoryTimeList.dart';
+import '../models/StoryTimeModel.dart';
 import 'HomeScreen.dart';
 import 'ProfilePage.dart';
 
@@ -22,30 +28,16 @@ class _AddPostPageState extends State<AddPostPage> {
   PickedFile? imageFile = null;
   final box = GetStorage();
   CategoriesRepository repository = CategoriesRepository();
+  StoryTimeRepo repositoryStoryTimeRepo = StoryTimeRepo();
   @override
   void initState() {
     super.initState();
   }
 
-  String dropdownvalue = 'Al al-Bayt University';
-  // List of items in our dropdown menu
-  var items = [
-    'STS-Specialized Technical Services',
-    'Estarta Solutions ',
-    'IRIS Technology ',
-    'Al al-Bayt University'
-  ];
- /* String dropdownvalue = '1 Day';
-  // List of items in our dropdown menu
-  var items2 = [
-    '2 Day',
-    '3 Day',
-    '4 Day',
-    '5 Day',
-    '6 Day',
-    '7 Day'
-  ];*/
-  @override
+  int dropdownvalue = 1;
+  int dropdownDaysvalue = 1;
+
+
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -102,7 +94,7 @@ class _AddPostPageState extends State<AddPostPage> {
 
                           if (!snapshot.hasData)
                             return const LinearProgressIndicator();
-                          return _buildList(context, snapshot.data?.docs ?? []);
+                          return _buildCategoriesList(context, snapshot.data?.docs ?? []);
                         }),
                   ),
 
@@ -158,7 +150,7 @@ class _AddPostPageState extends State<AddPostPage> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
+                                  children: const [
                                     Text('Add Photos'),
                                     Icon(
                                       Icons.add_photo_alternate_outlined,
@@ -168,12 +160,20 @@ class _AddPostPageState extends State<AddPostPage> {
                                 ),
                               ),
                       ),
-                      Container(
+                      imageFile !=  null ? LimitedBox(
+                        maxHeight: MediaQuery.of(context).size.height * 0.2,
+                        maxWidth: MediaQuery.of(context).size.width * 0.25,
+                        child: Container(
+                          child: Image(
+                            image: FileImage(File(imageFile!.path.toString())),
+                          ),
+                        ),
+                      ):Container(
                         height: MediaQuery.of(context).size.height * 0.1,
-                        width: MediaQuery.of(context).size.width * 0.2,
-                        decoration: BoxDecoration(
+                        width: MediaQuery.of(context).size.width * 0.25,
+                        decoration: const BoxDecoration(
                           image: DecorationImage(
-                            image: AssetImage('assets/images/addPhoto.png'),
+                            image: AssetImage('assets/images/placeholder.png'),
                             fit: BoxFit.fill,
                           ),
                           shape: BoxShape.circle,
@@ -208,24 +208,18 @@ class _AddPostPageState extends State<AddPostPage> {
                       ),
                     ),
                   ),
-                  DropdownButton(
-                    // Down Arrow Icon
-                      icon: const Icon(Icons.keyboard_arrow_down),
-                      value: dropdownvalue,
-                      // Array list of items
-                      items: items.map((String items) {
-                        return DropdownMenuItem(
-                          value: items,
-                          child: Text(items),
-                        );
-                      }).toList(),
-                      // After selecting the desired option,it will
-                      // change button value to selected value
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          dropdownvalue = newValue!;
-                        });
-                      }),
+                  LimitedBox(
+                    maxHeight: MediaQuery.of(context).size.height * 0.25,
+                    maxWidth: MediaQuery.of(context).size.width,
+                    child: StreamBuilder<QuerySnapshot>(
+                        stream: repositoryStoryTimeRepo.getStoryTimeStream(),
+                        builder: (context, snapshot) {
+
+                          if (!snapshot.hasData)
+                            return const LinearProgressIndicator();
+                          return _buildDaysList(context, snapshot.data?.docs ?? []);
+                        }),
+                  ),
                   Align(
                     alignment: isArabic(context)
                         ? Alignment.centerRight
@@ -379,41 +373,63 @@ class _AddPostPageState extends State<AddPostPage> {
           );
         });
   }
-  Widget _buildList(BuildContext context, List<DocumentSnapshot>? snapshot) {
-    print(snapshot?.first.data());
+  Widget _buildCategoriesList(BuildContext context, List<DocumentSnapshot>? snapshot) {
+    var snapshots = snapshot?.first;
     var list = snapshot!
-        .map((data) => CategoryModel.fromSnapshot(data))
+        .map((data) => CategoryList.fromJson(snapshots!['CategoryList']))
         .toList();
 
-    print(list);
+    List<CategoryModel> listOfCategories = [];
+    for(int i =0 ;i < list.first.toJson().entries.length; i++){
+      listOfCategories.add(CategoryModel(list.first.toJson().entries.toList().elementAt(i).key,list.first.toJson().entries.toList().elementAt(i).value));
+    }
     return DropdownButton(
       // Down Arrow Icon
         icon: const Icon(Icons.keyboard_arrow_down),
-        value: dropdownvalue,
+        value:  dropdownvalue,
 
-        items: list.map((CategoryModel item) {
+        items: listOfCategories.map((CategoryModel item) {
           return DropdownMenuItem(
             value: item.value,
             child: Text(item.type),
           );
         }).toList(),
-        // After selecting the desired option,it will
-        // change button value to selected value
-        onChanged: (String? newValue) {
+
+        onChanged: (int? newValue) {
           setState(() {
             dropdownvalue = newValue!;
           });
         });
   }
+  Widget _buildDaysList(BuildContext context, List<DocumentSnapshot>? snapshot) {
+    var snapshots = snapshot?.first;
+    print(snapshots?.data());
+    var list = snapshot!
+        .map((data) => StoryDurration.fromJson(snapshots!['StoryDurration']))
+        .toList();
 
-  Widget _buildListItem(
-      BuildContext context, DocumentSnapshot snapshot, int length) {
-    final category = CategoryModel.fromSnapshot(snapshot);
+    print(list.first.toJson());
+    List<StoryTimeModel> listOfDurrations = [];
+    for(int i =0 ;i < list.first.toJson().entries.length; i++){
+      listOfDurrations.add(StoryTimeModel(list.first.toJson().entries.toList().elementAt(i).key,list.first.toJson().entries.toList().elementAt(i).value));
+    }
+    return DropdownButton(
+      // Down Arrow Icon
+        icon: const Icon(Icons.keyboard_arrow_down),
+        value:  dropdownDaysvalue,
 
-    return DropdownMenuItem(
-      child: Text(category.type),
-      value: category.value,
-    );
+        items: listOfDurrations.map((StoryTimeModel item) {
+          return DropdownMenuItem(
+            value: item.value,
+            child: Text(item.Day),
+          );
+        }).toList(),
+
+        onChanged: (int? newValue) {
+          setState(() {
+            dropdownDaysvalue = newValue!;
+          });
+        });
   }
 
   void _openGallery(BuildContext context) async {
