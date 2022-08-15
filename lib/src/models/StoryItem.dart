@@ -4,9 +4,12 @@ class StoryContent {
 
   String img;
   int category;
+  String description;
+  int duration;
+  int createdAt;
 
   // 2
-  StoryContent(this.img,this.category);
+  StoryContent(this.img,this.category,this.description,this.duration,this.createdAt);
   // 3
   factory StoryContent.fromJson(Map<String, dynamic> json) =>
       _StoryItemFromJson(json);
@@ -23,6 +26,9 @@ class StoryContent {
     return {
       'img': img,
       'Category':category,
+      'description':description,
+      'duration' :duration,
+      'createdAt' : createdAt
     };}}
 
 
@@ -31,11 +37,18 @@ StoryContent _StoryItemFromJson(Map<String, dynamic> json) {
   return StoryContent(
       json['img'] as String,
       json['Category'] as int,
+      json['description'] ?? "",
+      json['duration'] ?? 1,
+      json['createdAt']  ?? DateTime.now().millisecondsSinceEpoch,
   );
 }
 // 2
 Map<String, dynamic> _StoryItemToJson(StoryContent instance) =>
     <String, dynamic>{
-      'img': instance.img,
+
       'Category': instance.category,
+      'description' : instance.description,
+      'duration' : instance.duration,
+      'createdAt' : instance.createdAt,
+      'img': instance.img,
     };

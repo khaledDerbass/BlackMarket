@@ -33,8 +33,7 @@ Store _storeFromJson(Map<String, dynamic> json) {
     json['NameAr'] as String,
     json['NameEn'] as String,
     json['Category'] as int,
-    json['isApprovedByAdmin'] as bool,
-    List<StoryContent>.from(json["Stories"].map((x) => StoryContent.fromJson(x))),
+    json['isApprovedByAdmin'] as bool, json["Stories"] != null ? List<StoryContent>.from(json["Stories"].map((x) => StoryContent.fromJson(x))) : [],
     json['numOfFollowers'] ?? 0 as int
   );
 }

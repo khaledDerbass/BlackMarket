@@ -203,15 +203,24 @@ Widget _buildCategoryList(
   List<CategoryWidget> categoryWidgets = [];
   List<StoryContent> storyByCategory = [];
   List<Widget> widgetsList = [];
+  Store currentStore;
   snapshot!
       .map((data) => {
-            storesList.add(Store.fromSnapshot(data)),
+    currentStore = Store.fromSnapshot(data),
+            storesList.add(currentStore),
             if (!categories.contains(Store.fromSnapshot(data).category))
-              {categories.add(Store.fromSnapshot(data).category)}
+              {categories.add(Store.fromSnapshot(data).category)},
+            if(currentStore.stories.length > 0)
+              for(int i = 0; i< currentStore.stories.length ; i++){
+                if(!categories.contains(currentStore.stories[i].category)){
+                  {categories.add(currentStore.stories[i].category)},
+                }
+              }
           })
       .toList();
 
   for (int category in categories) {
+    print(category);
     for (Store store in storesList) {
       if (store.isApprovedByAdmin) {
         storyByCategory.addAll(

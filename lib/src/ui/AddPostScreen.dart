@@ -1,19 +1,29 @@
+import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:souq/src/blocs/StoreRepository.dart';
+import 'package:stories_for_flutter/stories_for_flutter.dart';
+import '../../Helpers/LoginHelper.dart';
 import '../blocs/CategoriesRepoitory.dart';
 import '../blocs/StoryTimeRepo.dart';
 import '../models/CategoryList.dart';
 import '../models/CategoryModel.dart';
+import '../models/Store.dart';
+import '../models/StoryItem.dart';
 import '../models/StoryTimeList.dart';
 import '../models/StoryTimeModel.dart';
+import '../models/UserModel.dart';
+import '../models/UserStore.dart';
 import 'HomeScreen.dart';
 import 'ProfilePage.dart';
 
@@ -29,6 +39,8 @@ class _AddPostPageState extends State<AddPostPage> {
   final box = GetStorage();
   CategoriesRepository repository = CategoriesRepository();
   StoryTimeRepo repositoryStoryTimeRepo = StoryTimeRepo();
+  final TextEditingController _descriptionController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -246,6 +258,7 @@ class _AddPostPageState extends State<AddPostPage> {
                     ),
                   ),
                   TextField(
+                    controller: _descriptionController,
                     maxLines: 5,
                     decoration: InputDecoration(
                       labelText: isArabic(context)
@@ -273,7 +286,20 @@ class _AddPostPageState extends State<AddPostPage> {
                           primary: Colors.black,
                           shape: StadiumBorder(),
                         ),
-                        onPressed: () {},
+                        onPressed: () async{
+                          UserStore userStore = await loadStore(context);
+                          Uint8List? bytes = await imageFile?.readAsBytes();
+                          String img = base64Encode(bytes!);
+                          StoryContent storyContent = StoryContent(img, dropdownvalue, _descriptionController.text, dropdownDaysvalue, DateTime.now().millisecondsSinceEpoch);
+                          List<dynamic> list = [];
+                          list.add(storyContent.toJson());
+                          await FirebaseFirestore.instance
+                              .collection('Store')
+                              .doc(userStore.userModel.storeId)
+                              .update({'Stories' : FieldValue.arrayUnion(list)}).then((value) => {
+                                LoginHelper.showSuccessAlertDialog(context, "Your Story has been shared successfully"),
+                          });
+                        },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -332,6 +358,31 @@ class _AddPostPageState extends State<AddPostPage> {
     );
   }
 
+  Future<UserStore> loadStore(BuildContext context)async{
+    late Store store;
+    late UserModel user;
+
+    await FirebaseFirestore.instance.collection('Users').where(
+        'email', isEqualTo: FirebaseAuth.instance.currentUser?.email)
+        .get()
+        .then((value) =>
+        value.docs.forEach((doc) {
+          user = UserModel.fromJson(value.docs.first.data());
+          print(user.name);
+        }));
+
+    DocumentSnapshot snap;
+
+    await FirebaseFirestore.instance.collection('Store').doc(user.storeId)
+        .get().then((value) => {
+      snap = value,
+      store = Store.fromSnapshot(snap),
+      print(store.nameAr),
+    });
+
+    UserStore userStore = UserStore(user, store);
+    return userStore;
+  }
   Future<void> _showChoiceDialog(BuildContext context) {
     return showModalBottomSheet(
         context: context,
@@ -409,7 +460,6 @@ class _AddPostPageState extends State<AddPostPage> {
         .map((data) => StoryDurration.fromJson(snapshots!['StoryDurration']))
         .toList();
 
-    print(list.first.toJson());
     List<StoryTimeModel> listOfDurrations = [];
     for(int i =0 ;i < list.first.toJson().entries.length; i++){
       if(list.first.toJson().entries.toList().elementAt(i).value != null)

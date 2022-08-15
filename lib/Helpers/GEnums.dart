@@ -1,5 +1,5 @@
 enum Category {
-  clothes(1),mobiles(2),Health(3);
+  mobiles(1),clothes(2),health(3),grocery(4);
 
   const Category(this.value);
   final num value;
