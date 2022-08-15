@@ -13,7 +13,6 @@ import 'package:souq/src/blocs/StoreRepository.dart';
 import 'package:souq/src/models/CategoryWidget.dart';
 import 'package:souq/src/models/Store.dart';
 import 'package:souq/src/models/StoryItem.dart';
-import 'package:souq/src/models/UserModel.dart';
 import 'package:souq/src/ui/SearchPage.dart';
 import 'package:flutter_stories/flutter_stories.dart';
 import '../../Helpers/LoginHelper.dart';
@@ -218,7 +217,7 @@ Widget _buildCategoryList(
               }
           })
       .toList();
-
+print(categories);
   for (int category in categories) {
     print(category);
     for (Store store in storesList) {
@@ -235,7 +234,7 @@ Widget _buildCategoryList(
       imgs.add(sc.img);
     }
     CategoryWidget categoryWidget = new CategoryWidget(
-        storyByCategory.last.img, Category.fromId(category).name, imgs);
+        storyByCategory.first.img, Category.fromId(category).name, imgs);
     categoryWidgets.add(categoryWidget);
     storyByCategory.clear();
   }
@@ -256,7 +255,10 @@ Widget _buildCategoryList(
                   borderRadius: BorderRadius.circular(60.0),
                   image: DecorationImage(
                     fit: BoxFit.cover,
-                    image: Image.memory(base64Decode(cw.thumbnailImage)).image,
+                    image: Image.memory(
+                        base64Decode(cw.thumbnailImage),
+
+                    ).image,
                   ),
                   border: Border.all(
                     color: CupertinoColors.activeOrange,

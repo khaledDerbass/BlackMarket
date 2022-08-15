@@ -9,6 +9,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:souq/src/blocs/StoreRepository.dart';
@@ -35,7 +36,7 @@ class AddPostPage extends StatefulWidget {
 }
 
 class _AddPostPageState extends State<AddPostPage> {
-  PickedFile? imageFile = null;
+  XFile? imageFile;
   final box = GetStorage();
   CategoriesRepository repository = CategoriesRepository();
   StoryTimeRepo repositoryStoryTimeRepo = StoryTimeRepo();
@@ -48,7 +49,7 @@ class _AddPostPageState extends State<AddPostPage> {
 
   int dropdownvalue = 1;
   int dropdownDaysvalue = 1;
-
+  bool isLoading = false;
 
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -287,18 +288,41 @@ class _AddPostPageState extends State<AddPostPage> {
                           shape: StadiumBorder(),
                         ),
                         onPressed: () async{
+                          setState(() {
+                            isLoading = true;
+                          });
                           UserStore userStore = await loadStore(context);
-                          Uint8List? bytes = await imageFile?.readAsBytes();
-                          String img = base64Encode(bytes!);
+                          File? file = await compressFile(File(imageFile!.path));
+                          print("Size before : ${File(imageFile!.path).lengthSync()}");
+                          print("Size After : ${File(file!.path).lengthSync()}");
+                          XFile compressedImage = XFile(file.path);
+                          Uint8List? bytes = await compressedImage.readAsBytes();
+                          String img = base64Encode(bytes);
                           StoryContent storyContent = StoryContent(img, dropdownvalue, _descriptionController.text, dropdownDaysvalue, DateTime.now().millisecondsSinceEpoch);
                           List<dynamic> list = [];
                           list.add(storyContent.toJson());
-                          await FirebaseFirestore.instance
-                              .collection('Store')
-                              .doc(userStore.userModel.storeId)
-                              .update({'Stories' : FieldValue.arrayUnion(list)}).then((value) => {
-                                LoginHelper.showSuccessAlertDialog(context, "Your Story has been shared successfully"),
-                          });
+                          print(storyContent.toJson());
+                          try {
+                            await FirebaseFirestore.instance
+                                .collection('Store')
+                                .doc(userStore.userModel.storeId)
+                                .update(
+                                {'Stories': FieldValue.arrayUnion(list)}).then((
+                                value) =>
+                            {
+                            setState(() {
+                            isLoading = false;
+                            }),
+                              LoginHelper.showSuccessAlertDialog(context,
+                                  "Your Story has been shared successfully"),
+                            });
+                          }on FirebaseException catch  (e) {
+                            LoginHelper.showErrorAlertDialog(context, e.message.toString());
+                            print(e.message);
+                            setState(() {
+                              isLoading = false;
+                            });
+                          }
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -306,7 +330,7 @@ class _AddPostPageState extends State<AddPostPage> {
                           children: [
                             Text(
                                 isArabic(context) ? 'إضافة الإعلان' : 'Submit'),
-                            Icon(
+                            isLoading ? CircularProgressIndicator() :Icon(
                               Icons.done_outline,
                               color: Colors.white,
                             ),
@@ -485,8 +509,8 @@ class _AddPostPageState extends State<AddPostPage> {
   }
 
   void _openGallery(BuildContext context) async {
-    final pickedFile = await ImagePicker().getImage(
-      source: ImageSource.gallery,
+    final pickedFile = await ImagePicker().pickImage(
+      source: ImageSource.gallery
     );
     setState(() {
       imageFile = pickedFile!;
@@ -496,17 +520,35 @@ class _AddPostPageState extends State<AddPostPage> {
   }
 
   void _openCamera(BuildContext context) async {
-    final pickedFile = await ImagePicker().getImage(
-      source: ImageSource.camera,
-    );
+    final pickedFile = await ImagePicker().pickImage(source: ImageSource.camera);
     setState(() {
       imageFile = pickedFile!;
     });
+
     Navigator.pop(context);
   }
 
   bool isArabic(BuildContext context) {
     return context.locale.languageCode == 'ar';
+  }
+
+  Future<File?> compressFile(File file) async {
+    final filePath = file.absolute.path;
+
+    final lastIndex = filePath.lastIndexOf(RegExp(r'.jp'));
+    final splitted = filePath.substring(0, (lastIndex));
+    final outPath = "${splitted}_out${filePath.substring(lastIndex)}";
+    var result = await FlutterImageCompress.compressAndGetFile(
+      file.absolute.path, outPath,
+      quality: 40,
+      minHeight: 700,
+      minWidth: 700
+    );
+
+    print(file.lengthSync());
+    print(result?.lengthSync());
+
+    return result;
   }
 
   showCategoryAlertDialog(BuildContext context) {
