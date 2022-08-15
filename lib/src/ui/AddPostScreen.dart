@@ -214,7 +214,6 @@ class _AddPostPageState extends State<AddPostPage> {
                     child: StreamBuilder<QuerySnapshot>(
                         stream: repositoryStoryTimeRepo.getStoryTimeStream(),
                         builder: (context, snapshot) {
-
                           if (!snapshot.hasData)
                             return const LinearProgressIndicator();
                           return _buildDaysList(context, snapshot.data?.docs ?? []);
@@ -381,6 +380,7 @@ class _AddPostPageState extends State<AddPostPage> {
 
     List<CategoryModel> listOfCategories = [];
     for(int i =0 ;i < list.first.toJson().entries.length; i++){
+      if(list.first.toJson().entries.toList().elementAt(i).value != null)
       listOfCategories.add(CategoryModel(list.first.toJson().entries.toList().elementAt(i).key,list.first.toJson().entries.toList().elementAt(i).value));
     }
     return DropdownButton(
@@ -403,7 +403,8 @@ class _AddPostPageState extends State<AddPostPage> {
   }
   Widget _buildDaysList(BuildContext context, List<DocumentSnapshot>? snapshot) {
     var snapshots = snapshot?.first;
-    print(snapshots?.data());
+
+    print(snapshot?.first.data());
     var list = snapshot!
         .map((data) => StoryDurration.fromJson(snapshots!['StoryDurration']))
         .toList();
@@ -411,6 +412,7 @@ class _AddPostPageState extends State<AddPostPage> {
     print(list.first.toJson());
     List<StoryTimeModel> listOfDurrations = [];
     for(int i =0 ;i < list.first.toJson().entries.length; i++){
+      if(list.first.toJson().entries.toList().elementAt(i).value != null)
       listOfDurrations.add(StoryTimeModel(list.first.toJson().entries.toList().elementAt(i).key,list.first.toJson().entries.toList().elementAt(i).value));
     }
     return DropdownButton(
