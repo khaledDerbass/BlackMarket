@@ -16,6 +16,7 @@ import 'package:souq/src/models/StoryItem.dart';
 import 'package:souq/src/ui/SearchPage.dart';
 import 'package:flutter_stories/flutter_stories.dart';
 import '../../Helpers/LoginHelper.dart';
+import '../models/ImageStoreModel.dart';
 import 'AddPostScreen.dart';
 import 'SideBar Home.dart';
 import 'ProfilePage.dart';
@@ -89,56 +90,56 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         body: SafeArea(
             child: Column(
-          children: [
-            LimitedBox(
-              maxHeight: MediaQuery.of(context).size.height * 0.25,
-              maxWidth: MediaQuery.of(context).size.width,
-              child: StreamBuilder<QuerySnapshot>(
-                  stream: repository.getStores(),
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData)
-                      return const LinearProgressIndicator();
-                    return _buildList(context, snapshot.data?.docs ?? []);
-                  }),
-            ),
-            Align(
-                alignment: isArabic(context)
-                    ? Alignment.centerRight
-                    : Alignment.centerLeft,
-                child: Padding(
-                  padding: EdgeInsets.only(
-                      left: MediaQuery.of(context).size.width * 0.02,
-                      right: MediaQuery.of(context).size.width * 0.02),
-                  child: isArabic(context)
-                      ? const Text(
-                          "التصنيفات",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )
-                      : const Text(
-                          "Categories",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
+              children: [
+                LimitedBox(
+                  maxHeight: MediaQuery.of(context).size.height * 0.25,
+                  maxWidth: MediaQuery.of(context).size.width,
+                  child: StreamBuilder<QuerySnapshot>(
+                      stream: repository.getStores(),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData)
+                          return const LinearProgressIndicator();
+                        return _buildList(context, snapshot.data?.docs ?? []);
+                      }),
+                ),
+                Align(
+                    alignment: isArabic(context)
+                        ? Alignment.centerRight
+                        : Alignment.centerLeft,
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                          left: MediaQuery.of(context).size.width * 0.02,
+                          right: MediaQuery.of(context).size.width * 0.02),
+                      child: isArabic(context)
+                          ? const Text(
+                        "التصنيفات",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
                         ),
-                )),
-            LimitedBox(
-              maxHeight: MediaQuery.of(context).size.height * 0.25,
-              maxWidth: MediaQuery.of(context).size.width,
-              child: StreamBuilder<QuerySnapshot>(
-                  stream: repository.getStores(),
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData)
-                      return const LinearProgressIndicator();
-                    return _buildCategoryList(
-                        context, snapshot.data?.docs ?? []);
-                  }),
-            ),
-          ],
-        )),
+                      )
+                          : const Text(
+                        "Categories",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    )),
+                LimitedBox(
+                  maxHeight: MediaQuery.of(context).size.height * 0.25,
+                  maxWidth: MediaQuery.of(context).size.width,
+                  child: StreamBuilder<QuerySnapshot>(
+                      stream: repository.getStores(),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData)
+                          return const LinearProgressIndicator();
+                        return _buildCategoryList(
+                            context, snapshot.data?.docs ?? []);
+                      }),
+                ),
+              ],
+            )),
         bottomNavigationBar: ConvexAppBar(
           style: TabStyle.fixed,
           color: CupertinoColors.white,
@@ -206,35 +207,37 @@ Widget _buildCategoryList(
   snapshot!
       .map((data) => {
     currentStore = Store.fromSnapshot(data),
-            storesList.add(currentStore),
-            if (!categories.contains(Store.fromSnapshot(data).category))
-              {categories.add(Store.fromSnapshot(data).category)},
-            if(currentStore.stories.length > 0)
-              for(int i = 0; i< currentStore.stories.length ; i++){
-                if(!categories.contains(currentStore.stories[i].category)){
-                  {categories.add(currentStore.stories[i].category)},
-                }
-              }
-          })
+    storesList.add(currentStore),
+    if (!categories.contains(Store.fromSnapshot(data).category))
+      {categories.add(Store.fromSnapshot(data).category)},
+    if(currentStore.stories.length > 0)
+      for(int i = 0; i< currentStore.stories.length ; i++){
+        if(!categories.contains(currentStore.stories[i].category)){
+          {categories.add(currentStore.stories[i].category)},
+        }
+      }
+  })
       .toList();
-print(categories);
+  print(categories);
   for (int category in categories) {
     print(category);
     for (Store store in storesList) {
       if (store.isApprovedByAdmin) {
-        storyByCategory.addAll(
-            store.stories.where((e) => e.category == category).toList());
+        for(StoryContent sc in store.stories){
+          sc.storeName = isArabic(context) ? store.nameAr : store.nameEn;
+        }
+        storyByCategory.addAll(store.stories.where((e) => e.category == category).toList());
+
       }
     }
     if (storyByCategory.isEmpty) {
       continue;
     }
-    List<String> imgs = [];
+    List<ImageStoreModel> imgs = [];
     for (StoryContent sc in storyByCategory) {
-      imgs.add(sc.img);
+      imgs.add(ImageStoreModel(sc.img,sc.storeName));
     }
-    CategoryWidget categoryWidget = new CategoryWidget(
-        storyByCategory.first.img, Category.fromId(category).name, imgs);
+    CategoryWidget categoryWidget = CategoryWidget(storyByCategory.last.img, Category.fromId(category).name, imgs);
     categoryWidgets.add(categoryWidget);
     storyByCategory.clear();
   }
@@ -256,7 +259,7 @@ print(categories);
                   image: DecorationImage(
                     fit: BoxFit.cover,
                     image: Image.memory(
-                        base64Decode(cw.thumbnailImage),
+                      base64Decode(cw.thumbnailImage),
 
                     ).image,
                   ),
@@ -277,23 +280,41 @@ print(categories);
                           child: Story(
                             fullscreen: false,
                             topOffset:
-                                MediaQuery.of(context).size.height * 0.06,
+                            MediaQuery.of(context).size.height * 0.06,
                             onFlashForward: Navigator.of(context).pop,
                             onFlashBack: Navigator.of(context).pop,
                             momentCount: cw.images.length,
                             momentDurationGetter: (idx) => Duration(seconds: 5),
                             momentBuilder: (context, index) => Scaffold(
-                              body: Container(
-                                decoration: BoxDecoration(
-                                  color: CupertinoColors.darkBackgroundGray,
-                                  image: DecorationImage(
-                                    fit: BoxFit.contain,
-                                    image: Image.memory(
-                                            base64Decode(cw.images[index]))
-                                        .image,
-                                  ),
-                                ),
-                              ),
+                                body: Stack(
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: CupertinoColors.darkBackgroundGray,
+                                        image: DecorationImage(
+                                          fit: BoxFit.contain,
+                                          image: Image.memory(
+                                              base64Decode(cw.images[index].img))
+                                              .image,
+                                        ),
+                                      ),
+                                    ),
+                                    Positioned(
+                                      top: 70,
+                                      left: 20,
+                                      child: Row(
+                                        children: [
+                                          ClipOval(
+                                            child: Image(image: Image.memory(
+                                                base64Decode(cw.images[index].img)).image, height: 25,width: 25,),
+                                          ),
+                                          SizedBox(width: MediaQuery.of(context).size.width * 0.02,),
+                                          Text(cw.images[index].storeName,style: const TextStyle(color: Colors.white,fontSize: 17),),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                )
                             ),
                           ),
                         );
@@ -329,7 +350,7 @@ Widget _buildList(BuildContext context, List<DocumentSnapshot>? snapshot) {
         left: MediaQuery.of(context).size.width * 0.01),
     children: snapshot!
         .map((data) => _buildListItem(
-            context, data, Store.fromSnapshot(data).stories.length))
+        context, data, Store.fromSnapshot(data).stories.length))
         .toList(),
   );
 }
@@ -351,69 +372,85 @@ Widget _buildListItem(
       child: Center(
         child: store.stories.isNotEmpty
             ? Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(60.0),
-                      image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image:
-                            Image.memory(base64Decode(store.stories.last.img))
-                                .image,
-                      ),
-                      border: Border.all(
-                        color: CupertinoColors.activeOrange,
-                        width: 2.0,
-                        style: BorderStyle.solid,
-                      ),
-                    ),
-                    width: MediaQuery.of(context).size.height * 0.12,
-                    height: MediaQuery.of(context).size.height * 0.12,
-                    child: GestureDetector(
-                      onTap: () {
-                        showCupertinoDialog(
-                          context: context,
-                          builder: (context) {
-                            return CupertinoPageScaffold(
-                              child: Story(
-                                fullscreen: false,
-                                topOffset:
-                                    MediaQuery.of(context).size.height * 0.06,
-                                onFlashForward: Navigator.of(context).pop,
-                                onFlashBack: Navigator.of(context).pop,
-                                momentCount: store.stories.length,
-                                momentDurationGetter: (idx) =>
-                                    Duration(seconds: 5),
-                                momentBuilder: (context, index) => Scaffold(
-                                  body: Container(
-                                    decoration: BoxDecoration(
-                                      color: CupertinoColors.darkBackgroundGray,
-                                      image: DecorationImage(
-                                        fit: BoxFit.contain,
-                                        image: Image.memory(base64Decode(
-                                                store.stories[index].img))
-                                            .image,
-                                      ),
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(60.0),
+                image: DecorationImage(
+                  fit: BoxFit.cover,
+                  image:
+                  Image.memory(base64Decode(store.stories.last.img))
+                      .image,
+                ),
+                border: Border.all(
+                  color: CupertinoColors.activeOrange,
+                  width: 2.0,
+                  style: BorderStyle.solid,
+                ),
+              ),
+              width: MediaQuery.of(context).size.height * 0.12,
+              height: MediaQuery.of(context).size.height * 0.12,
+              child: GestureDetector(
+                onTap: () {
+                  showCupertinoDialog(
+                    context: context,
+                    builder: (context) {
+                      return CupertinoPageScaffold(
+                        child: Story(
+                          fullscreen: false,
+                          topOffset:
+                          MediaQuery.of(context).size.height * 0.06,
+                          onFlashForward: Navigator.of(context).pop,
+                          onFlashBack: Navigator.of(context).pop,
+                          momentCount: store.stories.length,
+                          momentDurationGetter: (idx) => const Duration(seconds: 5),
+                          momentBuilder: (context, index) => Scaffold(
+                            body: Stack(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: CupertinoColors.darkBackgroundGray,
+                                    image: DecorationImage(
+                                      fit: BoxFit.contain,
+                                      image: Image.memory(base64Decode(
+                                          store.stories[index].img))
+                                          .image,
                                     ),
                                   ),
                                 ),
-                              ),
-                            );
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height * 0.005),
-                    child: isArabic(context)
-                        ? Text(store.nameAr)
-                        : Text(store.nameEn),
-                  ),
-                ],
-              )
+                                Positioned(
+                                  top: 70,
+                                  left: 20,
+                                  child: Row(
+                                    children: [
+                                      ClipOval(
+                                        child: Image(image: Image.memory(base64Decode(store.stories.last.img)).image, height: 25,width: 25,),
+                                      ),
+                                      SizedBox(width: MediaQuery.of(context).size.width * 0.02,),
+                                      Text(isArabic(context) ? store.nameAr : store.nameEn,style: const TextStyle(color: Colors.white,fontSize: 17),),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height * 0.005),
+              child: isArabic(context)
+                  ? Text(store.nameAr)
+                  : Text(store.nameEn),
+            ),
+          ],
+        )
             : Container(),
       ),
     ),
