@@ -310,6 +310,34 @@ Widget _buildCategoryList(
                                           ),
                                           SizedBox(width: MediaQuery.of(context).size.width * 0.02,),
                                           Text(cw.images[index].storeName,style: const TextStyle(color: Colors.white,fontSize: 17),),
+                                          Padding(
+                                            padding:  EdgeInsets.only(left: MediaQuery.of(context).size.height *
+                                                .02 ),
+                                            child: ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                maximumSize: Size(
+                                                    MediaQuery.of(context).size.height *
+                                                        .15,
+                                                    MediaQuery.of(context).size.height *
+                                                        .04),
+                                                minimumSize: Size(
+                                                    MediaQuery.of(context).size.height *
+                                                        .15,
+                                                    MediaQuery.of(context).size.height *
+                                                        .04),
+                                                primary: Colors.transparent,
+                                              ),
+                                              onPressed: () {},
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                                children: const [
+                                                  Text('Follow'),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
                                         ],
                                       ),
                                     ),
@@ -327,6 +355,7 @@ Widget _buildCategoryList(
                 padding: EdgeInsets.only(
                     top: MediaQuery.of(context).size.height * 0.005),
                 child: Text(cw.categoryName),
+
               ),
             ],
           ),

@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:souq/src/models/UserModel.dart';
-import 'package:souq/src/ui/AccountPage.dart';
 import 'package:souq/src/ui/CustomProfileAppBar.dart';
 import 'package:souq/src/ui/SettingPage.dart';
 import '../Services/AuthenticationService.dart';
@@ -244,7 +243,6 @@ class profilepageState extends State<profilepage> {
                   Material(
                     color: Colors.white,
                     child: TabBar(
-                    labelPadding: EdgeInsets.only(top:.001,bottom: .001),
                       labelColor: Colors.black,
                       unselectedLabelColor: Colors.black,
                       indicatorWeight:MediaQuery.of(context).size.height * .002,
