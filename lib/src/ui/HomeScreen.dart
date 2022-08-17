@@ -108,6 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         : Alignment.centerLeft,
                     child: Padding(
                       padding: EdgeInsets.only(
+                        bottom: MediaQuery.of(context).size.width * 0.02,
                           left: MediaQuery.of(context).size.width * 0.02,
                           right: MediaQuery.of(context).size.width * 0.02),
                       child: isArabic(context)
@@ -126,14 +127,16 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                     )),
-                LimitedBox(
-                  maxHeight: MediaQuery.of(context).size.height * 0.25,
-                  maxWidth: MediaQuery.of(context).size.width,
+                Expanded(
                   child: StreamBuilder<QuerySnapshot>(
                       stream: repository.getStores(),
                       builder: (context, snapshot) {
-                        if (!snapshot.hasData)
-                          return const LinearProgressIndicator();
+                        if (!snapshot.hasData) {
+                          return SizedBox(
+                             height: MediaQuery.of(context).size.height * 0.01,
+                              width: MediaQuery.of(context).size.width * 0.01,
+                              child: const CircularProgressIndicator());
+                        }
                         return _buildCategoryList(
                             context, snapshot.data?.docs ?? []);
                       }),
@@ -237,7 +240,7 @@ Widget _buildCategoryList(
     for (StoryContent sc in storyByCategory) {
       imgs.add(ImageStoreModel(sc.img,sc.storeName));
     }
-    CategoryWidget categoryWidget = CategoryWidget(storyByCategory.last.img, Category.fromId(category).name, imgs);
+    CategoryWidget categoryWidget = CategoryWidget(storyByCategory.first.img, Category.fromId(category).name, imgs);
     categoryWidgets.add(categoryWidget);
     storyByCategory.clear();
   }
@@ -255,7 +258,7 @@ Widget _buildCategoryList(
             children: [
               Container(
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(60.0),
+                  borderRadius: BorderRadius.circular(10),
                   image: DecorationImage(
                     fit: BoxFit.cover,
                     image: Image.memory(
@@ -363,9 +366,11 @@ Widget _buildCategoryList(
       ),
     ));
   }
-  return ListView(
-    scrollDirection: Axis.horizontal,
-    padding: const EdgeInsets.only(top: 20.0),
+  return GridView.count(
+    // Create a grid with 2 columns. If you change the scrollDirection to
+    // horizontal, this produces 2 rows.
+    crossAxisCount: 3,
+    // Generate 100 widgets that display their index in the List.
     children: List.of(widgetsList),
   );
 }

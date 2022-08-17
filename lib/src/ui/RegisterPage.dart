@@ -1,9 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:souq/src/ui/LoginPage.dart';
 import '../Services/AuthenticationService.dart';
-import 'CustomProfileAppBar.dart';
-import 'HomeScreen.dart';
 import 'StoreRegisteration.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -113,7 +112,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             // and use it to show a SnackBar.
 
                             AuthenticationService.register(
-                                _emailController.text,
+                                _emailController.text.toLowerCase().trim(),
                                 _passwordController.text,
                                 _phoneController.text,
                                 _usernameController.text)
@@ -125,7 +124,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                        const HomeScreen()),
+                                        const LoginScreen()),
                                   )
                                 }else{
                                 ScaffoldMessenger.of(context).showSnackBar(snackBar2),

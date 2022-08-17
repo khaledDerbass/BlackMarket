@@ -23,26 +23,44 @@ class CategoryList {
   int? mobiles;
   int? health;
   int? clothes;
-  int? frozen;
+  int? flowers;
+  int? cars;
+  int? buildings;
+  int? electronics;
+  int? games;
+  int? services;
+
 
   CategoryList(
-      {this.grocery, this.mobiles, this.health, this.clothes, this.frozen});
+      {this.grocery, this.mobiles, this.health, this.clothes, this.flowers,
+      this.cars, this.services, this.buildings, this.electronics, this.games});
 
   CategoryList.fromJson(Map<String, dynamic> json) {
-    grocery = json['Grocery'];
+    grocery = json['grocery'];
     mobiles = json['Mobiles'];
-    health = json['Health'];
-    clothes = json['Clothes'];
-    frozen = json['Frozen'];
+    health = json['health'];
+    clothes = json['clothes'];
+    flowers = json['flowers'];
+    cars = json['cars'];
+    buildings = json['buildings'];
+    electronics = json['electronics'];
+    games = json['games'];
+    services = json['services'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['Grocery'] = this.grocery;
+    data['grocery'] = this.grocery;
     data['Mobiles'] = this.mobiles;
-    data['Health'] = this.health;
-    data['Clothes'] = this.clothes;
-    data['Frozen'] = this.frozen;
+    data['health'] = this.health;
+    data['clothes'] = this.clothes;
+    data['flowers'] = this.flowers;
+    data['cars'] = this.cars;
+    data['buildings'] = this.buildings;
+    data['services'] = this.services;
+    data['electronics'] = this.electronics;
+    data['games'] = this.games;
+
     return data;
   }
 }

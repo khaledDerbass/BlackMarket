@@ -452,7 +452,7 @@ class _AddPostPageState extends State<AddPostPage> {
     var list = snapshot!
         .map((data) => CategoryList.fromJson(snapshots!['CategoryList']))
         .toList();
-
+    print("lwngth "   + list.length.toString());
     List<CategoryModel> listOfCategories = [];
     for(int i =0 ;i < list.first.toJson().entries.length; i++){
       if(list.first.toJson().entries.toList().elementAt(i).value != null)
@@ -540,7 +540,7 @@ class _AddPostPageState extends State<AddPostPage> {
     final outPath = "${splitted}_out${filePath.substring(lastIndex)}";
     var result = await FlutterImageCompress.compressAndGetFile(
       file.absolute.path, outPath,
-      quality: 40,
+      quality: 50,
       minHeight: 700,
       minWidth: 700
     );

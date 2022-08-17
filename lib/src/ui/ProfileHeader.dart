@@ -58,9 +58,10 @@ class profileHeader extends StatelessWidget {
                               CircleAvatar(
                                 radius:
                                     MediaQuery.of(context).size.height * .06,
-                                backgroundColor: Color(0xff74EDED),
-                                backgroundImage: Image.memory(base64Decode(
-                                        userStore.userModel.profilePicture))
+                                backgroundColor: Color(0xffe4eeee),
+                                backgroundImage: userStore.userModel.profilePicture.isNotEmpty ?
+                                Image.memory(base64Decode(userStore.userModel.profilePicture)).image
+                                : Image.asset('assets/images/pic2.png')
                                     .image,
                               ),
                               Row(
@@ -193,7 +194,7 @@ class profileHeader extends StatelessWidget {
 
               // Future that needs to be resolved
               // inorder to display something on the Canvas
-              future: roleId == 1 ? loadUser() : loadStore(context),
+              future:  loadStore(context),
             ),
           )
         : SliverToBoxAdapter(
@@ -307,7 +308,7 @@ class profileHeader extends StatelessWidget {
 
               // Future that needs to be resolved
               // inorder to display something on the Canvas
-              future: roleId == 1 ? loadUser() : loadStore(context),
+              future: loadUser(),
             ),
           );
   }

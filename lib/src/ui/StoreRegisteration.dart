@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:souq/src/ui/LoginPage.dart';
 import '../Services/StoreAuthService.dart';
 import 'CustomProfileAppBar.dart';
 import 'HomeScreen.dart';
@@ -123,7 +124,7 @@ class StoreRegisterationState extends State<StoreRegisteration> {
                               // and use it to show a SnackBar.
 
                               StoreAuthService.register(
-                                  _emailController.text,
+                                  _emailController.text.toLowerCase().trim(),
                                   _passwordController.text,
                                   _phoneController.text,
                                   _nameArController.text,
@@ -138,7 +139,7 @@ class StoreRegisterationState extends State<StoreRegisteration> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                          const HomeScreen()),
+                                          const LoginScreen()),
                                     )
                                   }else{
                                   ScaffoldMessenger.of(context).showSnackBar(snackBar2),

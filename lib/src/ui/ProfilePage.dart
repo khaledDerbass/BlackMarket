@@ -317,14 +317,20 @@ class profilepageState extends State<profilepage> {
     late Store store;
     late UserModel user;
 
-    await FirebaseFirestore.instance.collection('Users').where(
-        'email', isEqualTo: FirebaseAuth.instance.currentUser?.email)
-        .get()
-        .then((value) =>
-        value.docs.forEach((doc) {
-          user = UserModel.fromJson(value.docs.first.data());
-          print(user.name);
-        }));
+    try{
+      print(FirebaseAuth.instance.currentUser?.email);
+      await FirebaseFirestore.instance.collection('Users').where(
+          'email', isEqualTo: FirebaseAuth.instance.currentUser?.email)
+          .get()
+          .then((value) =>
+          value.docs.forEach((doc) {
+            user = UserModel.fromJson(value.docs.first.data());
+            print(user.name);
+          }));
+    }on FirebaseException catch(e){
+      print(e);
+    };
+
 
     DocumentSnapshot snap;
 

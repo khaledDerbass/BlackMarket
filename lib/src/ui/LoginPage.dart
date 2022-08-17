@@ -95,7 +95,7 @@ class LoginScreenState extends State<LoginScreen> {
                                   content:  Text(isArabic(context) ? 'خطأ في إسم المستخدم او كلمة السر' : 'Wrong Email or Password'),
                                 );
                                 AuthenticationService.signInWithEmailAndPassword(
-                                    _emailController.text,
+                                    _emailController.text.toLowerCase().trim(),
                                     _passwordController.text,)
                                     .then((value) => {
                                   if (value)

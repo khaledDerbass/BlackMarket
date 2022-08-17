@@ -62,6 +62,7 @@ class LoginHelper{
       },
     );
   }
+
  static bool isArabic(BuildContext context) {
    return context.locale.languageCode == 'ar';
  }
