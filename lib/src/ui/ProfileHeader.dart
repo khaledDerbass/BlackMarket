@@ -61,9 +61,39 @@ class profileHeader extends StatelessWidget {
                                 backgroundColor: Color(0xffe4eeee),
                                 backgroundImage: userStore.userModel.profilePicture.isNotEmpty ?
                                 Image.memory(base64Decode(userStore.userModel.profilePicture)).image
-                                : Image.asset('assets/images/pic2.png')
-                                    .image,
+                                : Image.asset('assets/images/pic2.png').image,),
+                                 Padding(
+                                  padding:  EdgeInsets.only(top: 0 ),
+                                child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  maximumSize: Size(
+                                      MediaQuery.of(context).size.height *
+                                          .08,
+                                      MediaQuery.of(context).size.height *
+                                          .04),
+                                  minimumSize: Size(
+                                      MediaQuery.of(context).size.height *
+                                          .08,
+                                      MediaQuery.of(context).size.height *
+                                          .04),
+                                  primary: Colors.white,
+                                ),
+                                onPressed: () {},
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  crossAxisAlignment:
+                                  CrossAxisAlignment.center,
+                                  children: const [
+                                    Text(''),
+                                    Icon(
+                                      Icons.add,
+                                      color: Colors.blue,
+                                    ),
+                                  ],
+                                ),
                               ),
+                              ),
+
                               Row(
                                 children: [
                                   Column(
@@ -85,7 +115,6 @@ class profileHeader extends StatelessWidget {
                                           letterSpacing: .5,
                                         ),
                                       ),
-
                                     ],
                                   ),
                                   SizedBox(
@@ -305,9 +334,6 @@ class profileHeader extends StatelessWidget {
                   child: CircularProgressIndicator(),
                 );
               },
-
-              // Future that needs to be resolved
-              // inorder to display something on the Canvas
               future: loadUser(),
             ),
           );
