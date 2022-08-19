@@ -22,14 +22,14 @@ import 'HomeScreen.dart';
 import '../../Helpers/LoginHelper.dart';
 
 class profilepage extends StatefulWidget {
-  final Store? searchStore;
-
-  const profilepage({Key? key,this.searchStore}) : super(key: key);
+  final UserStore? searchStore;
+  final UserModel? currentUser;
+  const profilepage({Key? key,this.searchStore,this.currentUser}) : super(key: key);
 
 
   @override
   State<StatefulWidget> createState() {
-    return profilepageState(searchStore);
+    return profilepageState(searchStore,currentUser);
   }
 }
 
@@ -42,7 +42,7 @@ class profilepageState extends State<profilepage> {
   late UserStore userStore;
   String storeName = "Souq Story";
 
-  profilepageState(searchStore);
+  profilepageState(searchStore,currentUser);
 
   @override
   void initState() {
@@ -63,7 +63,7 @@ class profilepageState extends State<profilepage> {
             headerSliverBuilder: (context, index) {
               return [
                 CustomProfileAppBar(),
-                profileHeader(searchStore: widget.searchStore),
+                profileHeader(searchStore: widget.searchStore,currentUser: widget.currentUser),
               ];
             },
             body: SafeArea(

@@ -31,6 +31,7 @@ class StoreAuthService{
       DocumentReference storeId = await FirebaseFirestore.instance.collection('Store').add(store.toJson());
       UserModel userModel = UserModel(email,email,phone,password,"",[],ROLEID,storeId.id);
       await FirebaseFirestore.instance.collection('Users').add(userModel.toJson()).then((value) => print(value));
+      await FirebaseFirestore.instance.collection('Store').doc(storeId.id).update({'storeId' : storeId.id.replaceAll(" ", "")});
       return true;
     }on FirebaseAuthException{
       return false;

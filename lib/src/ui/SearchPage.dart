@@ -4,7 +4,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:souq/Helpers/LoginHelper.dart';
 import 'package:souq/src/models/UserStore.dart';
+import '../Services/AuthenticationService.dart';
 import '../blocs/StoreRepository.dart';
 import '../models/Store.dart';
 import '../models/UserModel.dart';
@@ -32,7 +34,6 @@ class _SearchPageState extends State<SearchPage>{
   void initState() {
     super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -77,11 +78,9 @@ class _SearchPageState extends State<SearchPage>{
                    setState(()  {
                      stores.addAll(value.docs.map((e) => Store.fromSnapshot(e)));
                      filteredStore.addAll(stores.where((element) => element.nameAr.toLowerCase().startsWith(x.toLowerCase()) || element.nameEn.toLowerCase().startsWith(x.toLowerCase())));
+                     filteredStore = filteredStore.toSet().toList();
                    }),
                    });
-
-
-
                 },
                   controller: myController,
                   decoration: InputDecoration(
@@ -108,14 +107,42 @@ class _SearchPageState extends State<SearchPage>{
               itemBuilder: (context, index){
                 return ListTile(
                   title:  Text(isArabic(context) ? filteredStore[index].nameAr : filteredStore[index].nameEn,style: const TextStyle(fontSize: 20),),
-                  onTap: (){
+                  onTap: () async{
+                    if(AuthenticationService.isCurrentUserLoggedIn()){
+                      late UserModel user;
+                      late UserModel currentUser;
+                      await FirebaseFirestore.instance.collection('Users').where(
+                          'storeId', isEqualTo:filteredStore[index].storeId.trim())
+                          .get()
+                          .then((value) =>
+                          value.docs.forEach((doc) {
+                            user = UserModel.fromJson(value.docs.first.data());
+                            print(user.name);
+                          }));
+
+                      await FirebaseFirestore.instance.collection('Users').where(
+                          'email', isEqualTo:AuthenticationService.getAuthInstance().currentUser!.email)
+                          .get()
+                          .then((value) =>
+                          value.docs.forEach((doc) {
+                            currentUser = UserModel.fromJson(value.docs.first.data());
+                            print(user.name);
+                          }));
+
+                      if (user != null) {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>  profilepage(searchStore: UserStore(user,filteredStore[index],),currentUser: currentUser,)),
+                        );
+                      }else{
+                        LoginHelper.showErrorAlertDialog(context, "Error");
+                      }
+                    }else{
+                      LoginHelper.showLoginAlertDialog(context);
+                    }
 
 
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>  profilepage(searchStore: filteredStore[index])),
-                    );
                   },
                 );
               }, separatorBuilder: (context,index) {

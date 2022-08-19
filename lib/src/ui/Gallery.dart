@@ -10,7 +10,7 @@ import '../models/UserModel.dart';
 import '../models/UserStore.dart';
 
 class Gallery extends StatefulWidget {
-  final Store? searchStore;
+  final UserStore? searchStore;
 
   const Gallery({Key? key,this.searchStore}) : super(key: key);
 
@@ -24,7 +24,7 @@ class _GalleryState extends State<Gallery> {
   final box = GetStorage();
   late UserStore userStore;
   String storeName = "Souq Story";
-  final Store? searchStore;
+  final UserStore? searchStore;
   List<String> imageUrls = [
 
   ];
@@ -35,8 +35,8 @@ class _GalleryState extends State<Gallery> {
     // TODO: implement initState
     super.initState();
     if(searchStore != null){
-      for(int i= 0; i < widget.searchStore!.stories.length; i++){
-        imageUrls.add(widget.searchStore!.stories[i].img);
+      for(int i= 0; i < widget.searchStore!.store.stories.length; i++){
+        imageUrls.add(widget.searchStore!.store.stories[i].img);
       }
     }
   }

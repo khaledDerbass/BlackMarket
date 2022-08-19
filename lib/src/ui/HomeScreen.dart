@@ -243,7 +243,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 title: isArabic(context) ? 'الرئيسية' : 'Home'),
             TabItem(
                 icon: Icons.camera_alt,
-                title: isArabic(context) ? 'إضافة' : 'Add'),
+                title: isArabic(context) ? 'إضافة' : 'Add') ,
             TabItem(
                 icon: Icons.people,
                 title: isArabic(context) ? 'الحساب' : 'Account'),
@@ -289,8 +289,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-Widget _buildCategoryList(
-    BuildContext context, List<DocumentSnapshot>? snapshot) {
+Widget _buildCategoryList(BuildContext context, List<DocumentSnapshot>? snapshot) {
   List<Store> storesList = [];
   List<int> categories = [];
   List<CategoryWidget> categoryWidgets = [];
@@ -478,23 +477,23 @@ Widget _buildList(BuildContext context, List<DocumentSnapshot>? snapshot, int ro
   if(isSignedIn){
     loggedInStore = AuthenticationService.getAuthInstance().currentUser?.uid;
     if(userModel.followedStores.isEmpty) {
-      print("True !!");
       return Padding(
         padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.02 , bottom: MediaQuery.of(context).size.height * 0.02 ),
         child: Center(child: Text(isArabic(context) ? "يمكنك متابعة المتاجر لمشاهدة قصصهم" : "You can follow stores accounts to see their stories")),
       );
     }
+    return ListView(
+      scrollDirection: Axis.horizontal,
+      padding: EdgeInsets.only(
+          right: MediaQuery.of(context).size.width * 0.01,
+          left: MediaQuery.of(context).size.width * 0.01),
+      children: snapshot!
+          .map((data) => _buildListItem(
+          context, data, Store.fromSnapshot(data).stories.length,roleId,userModel))
+          .toList(),
+    );
   }
-  return ListView(
-    scrollDirection: Axis.horizontal,
-    padding: EdgeInsets.only(
-        right: MediaQuery.of(context).size.width * 0.01,
-        left: MediaQuery.of(context).size.width * 0.01),
-    children: snapshot!
-        .map((data) => _buildListItem(
-        context, data, Store.fromSnapshot(data).stories.length,roleId,userModel))
-        .toList(),
-  );
+  return Container();
 }
 
 bool isArabic(BuildContext context) {
@@ -518,10 +517,9 @@ Future<UserModel?> loadUser() async {
 
   return user;
 }
-Widget _buildListItem(
-    BuildContext context, DocumentSnapshot snapshot, int length, int roleId, UserModel userModel) {
+Widget _buildListItem(BuildContext context, DocumentSnapshot snapshot, int length, int roleId, UserModel userModel) {
     final store = Store.fromSnapshot(snapshot);
-    return userModel.followedStores.contains(snapshot.id) ?  CupertinoPageScaffold(
+    return userModel.followedStores.contains(store.storeId.trim()) ?  CupertinoPageScaffold(
     backgroundColor: CupertinoColors.white,
     child: Padding(
       padding: EdgeInsets.only(
