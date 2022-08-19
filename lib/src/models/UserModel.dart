@@ -8,7 +8,7 @@ class UserModel {
   String phoneNumber;
   String password;
   String profilePicture;
-  List<Store> followedStores;
+  List<String> followedStores;
   int RoleID;
   String storeId = "";
 
@@ -30,7 +30,7 @@ UserModel _userFromJson(Map<String, dynamic> json) {
     json['phoneNumber'] as String,
     json['password'] as String,
     json['profilePicture'] as String,
-    List<Store>.from(json["followedStores"].map((x) => UserModel.fromJson(x))),
+      List.from(json["followedStores"]),
     json['RoleID'] as int,
     json['storeId'] ?? "" as String
   );

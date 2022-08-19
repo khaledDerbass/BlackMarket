@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:souq/src/models/UserModel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -40,6 +41,8 @@ class AuthenticationService{
     )).user;
 
     if(user != null) {
+      final box = GetStorage();
+      box.write("roleID",ROLEID);
       return true;
     }
 

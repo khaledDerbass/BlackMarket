@@ -345,7 +345,8 @@ class _AddPostPageState extends State<AddPostPage> {
           ],
         ),
         bottomNavigationBar: ConvexAppBar(
-          style: TabStyle.fixed,
+          height: MediaQuery.of(context).size.height * 0.07,
+          style: TabStyle.fixedCircle,
           color: CupertinoColors.white,
           backgroundColor: Colors.deepPurpleAccent,
           items: [

@@ -10,7 +10,9 @@ import '../models/UserModel.dart';
 import '../models/UserStore.dart';
 
 class profileHeader extends StatelessWidget {
-  profileHeader({Key? key}) : super(key: key);
+  final Store? searchStore;
+
+  profileHeader({Key? key, this.searchStore}) : super(key: key);
   late int roleId;
   final box = GetStorage();
   late UserStore userStore;
@@ -19,7 +21,151 @@ class profileHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     roleId = box.read("roleID") ?? 0;
     print('rele for' + roleId.toString());
-    return roleId == 2
+    return searchStore != null ?
+    SliverToBoxAdapter(
+      child: Padding(
+        padding: EdgeInsets.only(
+          top: MediaQuery.of(context).size.height * .0,
+          left: MediaQuery.of(context).size.height * .01,
+          right: MediaQuery.of(context).size.height * .01,
+          bottom: MediaQuery.of(context).size.height * .0,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: MediaQuery.of(context).size.height * .02,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CircleAvatar(
+                  radius:
+                  MediaQuery.of(context).size.height * .06,
+                  backgroundColor: Color(0xffe4eeee),
+                  backgroundImage: Image.asset('assets/images/pic2.png').image,),
+
+                Row(
+                  children: [
+                    Column(
+                      children: [
+                        Text(
+                          searchStore?.stories.length.toString() ?? "0",
+                          style: const TextStyle(
+                            decoration: TextDecoration.none,
+                            fontSize: 15,
+                            letterSpacing: 1,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        Text(
+                          isArabic(context) ? 'العروض' : 'Offers',
+                          style: const TextStyle(
+                            decoration: TextDecoration.none,
+                            fontSize: 12,
+                            letterSpacing: .5,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.height *
+                          .05,
+                    ),
+                    Column(
+                      children: [
+                        Text(
+                          searchStore?.numOfFollowers.toString() ?? "0",
+                          style: const TextStyle(
+                            decoration: TextDecoration.none,
+                            fontSize: 15,
+                            letterSpacing: 1,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        Text(
+                          isArabic(context)
+                              ? 'المتابعون'
+                              : 'Followers',
+                          style: const TextStyle(
+                            decoration: TextDecoration.none,
+                            letterSpacing: .5,
+                            fontSize: 12,
+                          ),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.height *
+                          .08,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                SizedBox(
+                  height:
+                  MediaQuery.of(context).size.height * .0,
+                ),
+                Padding(
+                  padding:  EdgeInsets.all(MediaQuery.of(context).size.height *
+                      0.02 ,),
+                  child: Text(
+                    isArabic(context) ? searchStore?.nameAr ?? "" : searchStore?.nameEn ?? "",
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w900,
+                      decoration: TextDecoration.none,
+                      fontSize: 16,
+                      letterSpacing: .5,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding:  EdgeInsets.only(left: MediaQuery.of(context).size.height *
+                      .1 ),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      maximumSize: Size(
+                          MediaQuery.of(context).size.height *
+                              .20,
+                          MediaQuery.of(context).size.height *
+                              .04),
+                      minimumSize: Size(
+                          MediaQuery.of(context).size.height *
+                              .20,
+                          MediaQuery.of(context).size.height *
+                              .04),
+                      primary: Colors.black,
+                    ),
+                    onPressed: () {},
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment:
+                      CrossAxisAlignment.center,
+                      children: const [
+                        Text('Follow'),
+                        Icon(
+                          Icons.add,
+                          color: Colors.white,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height:
+                  MediaQuery.of(context).size.height * .005,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    )
+        : roleId == 2
         ? SliverToBoxAdapter(
             child: FutureBuilder(
               builder: (ctx, snapshot) {

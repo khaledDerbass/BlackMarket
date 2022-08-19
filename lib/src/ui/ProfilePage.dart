@@ -22,11 +22,14 @@ import 'HomeScreen.dart';
 import '../../Helpers/LoginHelper.dart';
 
 class profilepage extends StatefulWidget {
-  const profilepage({Key? key}) : super(key: key);
+  final Store? searchStore;
+
+  const profilepage({Key? key,this.searchStore}) : super(key: key);
+
 
   @override
   State<StatefulWidget> createState() {
-    return profilepageState();
+    return profilepageState(searchStore);
   }
 }
 
@@ -38,6 +41,8 @@ class profilepageState extends State<profilepage> {
   late int roleId;
   late UserStore userStore;
   String storeName = "Souq Story";
+
+  profilepageState(searchStore);
 
   @override
   void initState() {
@@ -51,7 +56,85 @@ class profilepageState extends State<profilepage> {
     print(roleId);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
+      home: widget.searchStore != null ?Scaffold(
+        body: DefaultTabController(
+          length: 1,
+          child: NestedScrollView(
+            headerSliverBuilder: (context, index) {
+              return [
+                CustomProfileAppBar(),
+                profileHeader(searchStore: widget.searchStore),
+              ];
+            },
+            body: SafeArea(
+              child: Column(
+                children: <Widget>[
+                  Material(
+                    color: Colors.white,
+                    child: TabBar(
+                      labelColor: Colors.black,
+                      unselectedLabelColor: Colors.black,
+                      indicatorWeight:MediaQuery.of(context).size.height * .002,
+                      indicatorColor: Colors.black,
+                      // ignore: prefer_const_constructors
+                      tabs: [
+                        Tab(
+                          icon: Icon(
+                            Icons.grid_on_sharp,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: TabBarView(
+                      children: [
+                        Gallery(searchStore: widget.searchStore),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        bottomNavigationBar: ConvexAppBar(
+          height: MediaQuery.of(context).size.height * 0.07,
+          style: TabStyle.fixedCircle,
+          color: CupertinoColors.white,
+          backgroundColor: Colors.deepPurpleAccent,
+          items: [
+            TabItem(
+                icon: Icons.home,
+                title: isArabic(context) ? 'الرئيسية' : 'Home'),
+            TabItem(
+                icon: Icons.camera_alt,
+                title: isArabic(context) ? 'إضافة' : 'Add'),
+            TabItem(
+                icon: Icons.people,
+                title: isArabic(context) ? 'الحساب' : 'Profile'),
+          ],
+          initialActiveIndex: 0, //optional, default as 0
+          onTap: (int i) => {
+            if (i == 0)
+              {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const HomeScreen()),
+                ),
+              }
+            else if (i == 1)
+              {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const AddPostPage()),
+                ),
+              }
+          },
+        ),
+      ) :Scaffold(
         drawer: Drawer(
           child: roleId == 1 ? FutureBuilder(
             builder: (ctx, snapshot) {
@@ -271,7 +354,8 @@ class profilepageState extends State<profilepage> {
           ),
         ),
         bottomNavigationBar: ConvexAppBar(
-          style: TabStyle.fixed,
+          height: MediaQuery.of(context).size.height * 0.07,
+          style: TabStyle.fixedCircle,
           color: CupertinoColors.white,
           backgroundColor: Colors.deepPurpleAccent,
           items: [
@@ -331,9 +415,7 @@ class profilepageState extends State<profilepage> {
       print(e);
     };
 
-
     DocumentSnapshot snap;
-
     await FirebaseFirestore.instance.collection('Store').doc(user.storeId)
         .get().then((value) => {
       snap = value,

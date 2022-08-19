@@ -1,9 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:souq/src/models/UserStore.dart';
 import '../blocs/StoreRepository.dart';
 import '../models/Store.dart';
+import '../models/UserModel.dart';
+import 'ProfilePage.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
@@ -21,9 +26,8 @@ class _SearchPageState extends State<SearchPage>{
   final myController = TextEditingController();
   StoreRepository repository = StoreRepository();
   late Stream streamQuery;
-  List<Store> storesList = [];
-  List<String> storeNames = [];
-  List<String> filteredStoreNames = [];
+  List<Store> stores = [];
+  List<Store> filteredStore = [];
   @override
   void initState() {
     super.initState();
@@ -67,12 +71,12 @@ class _SearchPageState extends State<SearchPage>{
                 child: TextField(
                     autofocus:true,
                 onChanged: (x) {
-                      storeNames.clear();
-                      filteredStoreNames.clear();
-                   repository.collection.get().then((value) => {
-                   setState(() {
-                     storeNames.addAll(value.docs.map((e) => Store.fromSnapshot(e).nameEn));
-                     filteredStoreNames.addAll(storeNames.where((element) => element.toLowerCase().startsWith(x.toLowerCase())));
+                  stores.clear();
+                  filteredStore.clear();
+                   repository.collection.get().then((value) async => {
+                   setState(()  {
+                     stores.addAll(value.docs.map((e) => Store.fromSnapshot(e)));
+                     filteredStore.addAll(stores.where((element) => element.nameAr.toLowerCase().startsWith(x.toLowerCase()) || element.nameEn.toLowerCase().startsWith(x.toLowerCase())));
                    }),
                    });
 
@@ -100,11 +104,19 @@ class _SearchPageState extends State<SearchPage>{
             height: MediaQuery.of(context).size.height,
             child: ListView.separated(
               scrollDirection: Axis.vertical,
-              itemCount: filteredStoreNames.length,
+              itemCount: filteredStore.length,
               itemBuilder: (context, index){
                 return ListTile(
-                  title:  Text(filteredStoreNames[index],style: const TextStyle(fontSize: 20),),
+                  title:  Text(isArabic(context) ? filteredStore[index].nameAr : filteredStore[index].nameEn,style: const TextStyle(fontSize: 20),),
+                  onTap: (){
 
+
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>  profilepage(searchStore: filteredStore[index])),
+                    );
+                  },
                 );
               }, separatorBuilder: (context,index) {
               return const Divider();

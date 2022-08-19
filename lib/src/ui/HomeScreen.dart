@@ -9,6 +9,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:souq/Helpers/GEnums.dart';
 import 'package:souq/src/Services/AuthenticationService.dart';
+import 'package:souq/src/Services/StoreAuthService.dart';
 import 'package:souq/src/blocs/StoreRepository.dart';
 import 'package:souq/src/models/CategoryWidget.dart';
 import 'package:souq/src/models/Store.dart';
@@ -17,9 +18,11 @@ import 'package:souq/src/ui/SearchPage.dart';
 import 'package:flutter_stories/flutter_stories.dart';
 import '../../Helpers/LoginHelper.dart';
 import '../models/ImageStoreModel.dart';
+import '../models/UserModel.dart';
 import 'AddPostScreen.dart';
 import 'SideBar Home.dart';
 import 'ProfilePage.dart';
+import 'dart:async';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -33,18 +36,21 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final myController = TextEditingController();
   PickedFile? imageFile = null;
-  late int roleId;
+  late int roleId = 0;
   final box = GetStorage();
   @override
   void initState() {
     super.initState();
+
   }
 
   String dropdownValue = 'Amman';
 
   @override
   Widget build(BuildContext context) {
+    roleId = box.read("roleID") ?? 0;
     StoreRepository repository = StoreRepository();
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
@@ -88,63 +94,147 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ),
-        body: SafeArea(
-            child: Column(
-              children: [
-                LimitedBox(
-                  maxHeight: MediaQuery.of(context).size.height * 0.25,
-                  maxWidth: MediaQuery.of(context).size.width,
-                  child: StreamBuilder<QuerySnapshot>(
-                      stream: repository.getStores(),
-                      builder: (context, snapshot) {
-                        if (!snapshot.hasData)
-                          return const LinearProgressIndicator();
-                        return _buildList(context, snapshot.data?.docs ?? []);
-                      }),
-                ),
-                Align(
-                    alignment: isArabic(context)
-                        ? Alignment.centerRight
-                        : Alignment.centerLeft,
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                        bottom: MediaQuery.of(context).size.width * 0.02,
-                          left: MediaQuery.of(context).size.width * 0.02,
-                          right: MediaQuery.of(context).size.width * 0.02),
-                      child: isArabic(context)
-                          ? const Text(
-                        "التصنيفات",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      )
-                          : const Text(
-                        "Categories",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
+        body:FutureBuilder(
+          builder: (ctx, snapshot) {
+            // Checking if future is resolved or not
+            if (snapshot.connectionState == ConnectionState.done) {
+              // If we got an error
+              if (snapshot.hasError) {
+                return Center(
+                  child: Text(
+                    '${snapshot.error} occurred',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                );
+
+                // if we got our data
+              } else if (snapshot.hasData) {
+                // Extracting data from snapshot object
+                var data = snapshot.data as UserModel;
+                print(data.email);
+                return SafeArea(
+                    child: RefreshIndicator(
+                      onRefresh: loadUser,
+                      child: Column(
+                        children: [
+                          LimitedBox(
+                            maxHeight: MediaQuery.of(context).size.height * 0.25,
+                            maxWidth: MediaQuery.of(context).size.width,
+                            child: StreamBuilder<QuerySnapshot>(
+                                stream: repository.getStores(),
+                                builder: (context, snapshot) {
+                                  if (!snapshot.hasData)
+                                    return const LinearProgressIndicator();
+                                  return _buildList(context, snapshot.data?.docs ?? [],roleId,data);
+                                }),
+                          ),
+                          Align(
+                              alignment: isArabic(context)
+                                  ? Alignment.centerRight
+                                  : Alignment.centerLeft,
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                    bottom: MediaQuery.of(context).size.width * 0.02,
+                                    left: MediaQuery.of(context).size.width * 0.02,
+                                    right: MediaQuery.of(context).size.width * 0.02),
+                                child: isArabic(context)
+                                    ? const Text(
+                                  "التصنيفات",
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                )
+                                    : const Text(
+                                  "Categories",
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              )),
+                          Expanded(
+                            child: StreamBuilder<QuerySnapshot>(
+                                stream: repository.getStores(),
+                                builder: (context, snapshot) {
+                                  if (!snapshot.hasData) {
+                                    return SizedBox(
+                                        height: MediaQuery.of(context).size.height * 0.01,
+                                        width: MediaQuery.of(context).size.width * 0.01,
+                                        child: const CircularProgressIndicator());
+                                  }
+                                  return _buildCategoryList(
+                                      context, snapshot.data?.docs ?? []);
+                                }),
+                          ),
+                        ],
                       ),
-                    )),
-                Expanded(
-                  child: StreamBuilder<QuerySnapshot>(
-                      stream: repository.getStores(),
-                      builder: (context, snapshot) {
-                        if (!snapshot.hasData) {
-                          return SizedBox(
-                             height: MediaQuery.of(context).size.height * 0.01,
-                              width: MediaQuery.of(context).size.width * 0.01,
-                              child: const CircularProgressIndicator());
-                        }
-                        return _buildCategoryList(
-                            context, snapshot.data?.docs ?? []);
-                      }),
-                ),
-              ],
-            )),
+                    ));
+              }else if(snapshot.data == null && FirebaseAuth.instance.currentUser == null){
+                return SafeArea(
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding:  EdgeInsets.all(MediaQuery.of(context).size.height * 0.06),
+                          child: Text(isArabic(context) ? "يرجى تسجيل الدخول لتتمكن من متابعة المتاجر"  : "Please Sign up/in in order to follow stores"),
+                        ),
+                        Align(
+                            alignment: isArabic(context)
+                                ? Alignment.centerRight
+                                : Alignment.centerLeft,
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                  bottom: MediaQuery.of(context).size.width * 0.02,
+                                  left: MediaQuery.of(context).size.width * 0.02,
+                                  right: MediaQuery.of(context).size.width * 0.02),
+                              child: isArabic(context)
+                                  ? const Text(
+                                "التصنيفات",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )
+                                  : const Text(
+                                "Categories",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            )),
+                        Expanded(
+                          child: StreamBuilder<QuerySnapshot>(
+                              stream: repository.getStores(),
+                              builder: (context, snapshot) {
+                                if (!snapshot.hasData) {
+                                  return SizedBox(
+                                      height: MediaQuery.of(context).size.height * 0.01,
+                                      width: MediaQuery.of(context).size.width * 0.01,
+                                      child: const CircularProgressIndicator());
+                                }
+                                return _buildCategoryList(
+                                    context, snapshot.data?.docs ?? []);
+                              }),
+                        ),
+                      ],
+                    ));
+              }
+            }
+
+            // Displaying LoadingSpinner to indicate waiting state
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          },
+
+          // Future that needs to be resolved
+          // inorder to display something on the Canvas
+          future: loadUser(),
+        ),
         bottomNavigationBar: ConvexAppBar(
-          style: TabStyle.fixed,
+          height: MediaQuery.of(context).size.height * 0.07,
+          style: TabStyle.fixedCircle,
           color: CupertinoColors.white,
           backgroundColor: Colors.deepPurpleAccent,
           items: [
@@ -223,7 +313,6 @@ Widget _buildCategoryList(
       .toList();
   print(categories);
   for (int category in categories) {
-    print(category);
     for (Store store in storesList) {
       if (store.isApprovedByAdmin) {
         for(StoryContent sc in store.stories){
@@ -375,8 +464,27 @@ Widget _buildCategoryList(
   );
 }
 
-Widget _buildList(BuildContext context, List<DocumentSnapshot>? snapshot) {
+Widget _buildList(BuildContext context, List<DocumentSnapshot>? snapshot, int roleId, UserModel userModel) {
   print(context.locale.languageCode);
+  String? loggedInStore = "";
+  bool isSignedIn = false;
+  if(roleId == 1){
+    isSignedIn = AuthenticationService.isCurrentUserLoggedIn();
+  }else if(roleId == 2){
+    isSignedIn = StoreAuthService.isCurrentUserLoggedIn();
+  }else{
+    isSignedIn = false;
+  }
+  if(isSignedIn){
+    loggedInStore = AuthenticationService.getAuthInstance().currentUser?.uid;
+    if(userModel.followedStores.isEmpty) {
+      print("True !!");
+      return Padding(
+        padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.02 , bottom: MediaQuery.of(context).size.height * 0.02 ),
+        child: Center(child: Text(isArabic(context) ? "يمكنك متابعة المتاجر لمشاهدة قصصهم" : "You can follow stores accounts to see their stories")),
+      );
+    }
+  }
   return ListView(
     scrollDirection: Axis.horizontal,
     padding: EdgeInsets.only(
@@ -384,7 +492,7 @@ Widget _buildList(BuildContext context, List<DocumentSnapshot>? snapshot) {
         left: MediaQuery.of(context).size.width * 0.01),
     children: snapshot!
         .map((data) => _buildListItem(
-        context, data, Store.fromSnapshot(data).stories.length))
+        context, data, Store.fromSnapshot(data).stories.length,roleId,userModel))
         .toList(),
   );
 }
@@ -392,12 +500,28 @@ Widget _buildList(BuildContext context, List<DocumentSnapshot>? snapshot) {
 bool isArabic(BuildContext context) {
   return context.locale.languageCode == 'ar';
 }
+Future<UserModel?> loadUser() async {
+  late UserModel? user =null;
+  if(FirebaseAuth.instance.currentUser?.email != null){
+    await FirebaseFirestore.instance
+        .collection('Users')
+        .where('email', isEqualTo: FirebaseAuth.instance.currentUser?.email)
+        .get()
+        .then((value) => value.docs.forEach((doc) async {
+      user = UserModel.fromJson(value.docs.first.data());
+      print(user?.name);
+    }));
+  }else {
+    return null;
+  }
 
+
+  return user;
+}
 Widget _buildListItem(
-    BuildContext context, DocumentSnapshot snapshot, int length) {
-  final store = Store.fromSnapshot(snapshot);
-
-  return CupertinoPageScaffold(
+    BuildContext context, DocumentSnapshot snapshot, int length, int roleId, UserModel userModel) {
+    final store = Store.fromSnapshot(snapshot);
+    return userModel.followedStores.contains(snapshot.id) ?  CupertinoPageScaffold(
     backgroundColor: CupertinoColors.white,
     child: Padding(
       padding: EdgeInsets.only(
@@ -488,5 +612,5 @@ Widget _buildListItem(
             : Container(),
       ),
     ),
-  );
+  ) : Container();
 }

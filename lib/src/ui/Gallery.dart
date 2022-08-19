@@ -4,13 +4,18 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:souq/src/models/StoryItem.dart';
 import '../models/Store.dart';
 import '../models/UserModel.dart';
 import '../models/UserStore.dart';
 
 class Gallery extends StatefulWidget {
+  final Store? searchStore;
+
+  const Gallery({Key? key,this.searchStore}) : super(key: key);
+
   @override
-  _GalleryState createState() => _GalleryState();
+  _GalleryState createState() => _GalleryState(searchStore);
 }
 
 class _GalleryState extends State<Gallery> {
@@ -19,16 +24,35 @@ class _GalleryState extends State<Gallery> {
   final box = GetStorage();
   late UserStore userStore;
   String storeName = "Souq Story";
-
+  final Store? searchStore;
   List<String> imageUrls = [
 
   ];
+  _GalleryState(this.searchStore);
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if(searchStore != null){
+      for(int i= 0; i < widget.searchStore!.stories.length; i++){
+        imageUrls.add(widget.searchStore!.stories[i].img);
+      }
+    }
+  }
   @override
   Widget build(BuildContext context) {
     roleId = box.read("roleID")?? 0;
+
     return Scaffold(
-      body: roleId == 1 ? FutureBuilder(
+      body: widget.searchStore != null ?
+      GridView.count(
+        crossAxisCount: 3,
+        childAspectRatio: .5,
+        padding: EdgeInsets.all(MediaQuery.of(context).size.height * .002),
+        children: imageUrls.map(_createGridTileWidget_search).toList(),
+      )
+      :roleId == 1 ? FutureBuilder(
         builder: (ctx, snapshot) {
           // Checking if future is resolved or not
           if (snapshot.connectionState == ConnectionState.done) {
@@ -115,11 +139,30 @@ class _GalleryState extends State<Gallery> {
     ),
   );
 
+  Widget _createGridTileWidget_search(String url) => Builder(
+    builder: (context) => GestureDetector(
+      onLongPress: () {
+        _popupDialog = _createPopupDialog_search(url);
+        Overlay.of(context)!.insert(_popupDialog);
+      },
+      onLongPressEnd: (details) => _popupDialog.remove(),
+      child: Image.memory(base64Decode(url) ,fit: BoxFit.cover),
+
+    ),
+  );
+
 
   OverlayEntry _createPopupDialog(String url) {
     return OverlayEntry(
       builder: (context) => AnimatedDialog(
         child: _createPopupContent(url),
+      ),
+    );
+  }
+  OverlayEntry _createPopupDialog_search(String url) {
+    return OverlayEntry(
+      builder: (context) => AnimatedDialog(
+        child: _createPopupContent_search(url),
       ),
     );
   }
@@ -135,27 +178,21 @@ class _GalleryState extends State<Gallery> {
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
         ),
       ));
-
+  Widget _createPhotoTitle_search() => Container(
+      width: double.infinity,
+      color: Colors.white,
+      child: ListTile(
+        leading: CircleAvatar(
+          backgroundImage: Image.asset('assets/images/pic2.png').image,
+        ),
+        title: Text(
+          storeName,
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+        ),
+      ));
   Widget _createActionBar() => Container(
     padding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.height * .01),
     color: Colors.white,
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Icon(
-          Icons.favorite_border,
-          color: Colors.black,
-        ),
-        Icon(
-          Icons.chat_bubble_outline_outlined,
-          color: Colors.black,
-        ),
-        Icon(
-          Icons.send,
-          color: Colors.black,
-        ),
-      ],
-    ),
   );
 
   Widget _createPopupContent(String url) => Container(
@@ -173,6 +210,20 @@ class _GalleryState extends State<Gallery> {
     ),
   );
 
+  Widget _createPopupContent_search(String url) => Container(
+    padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.height * .01),
+    child: ClipRRect(
+      borderRadius: BorderRadius.circular(MediaQuery.of(context).size.height * .01),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _createPhotoTitle_search(),
+          Image.memory(base64Decode(url) ,fit: BoxFit.fitWidth),
+          _createActionBar(),
+        ],
+      ),
+    ),
+  );
   Future<Store> loadStore(BuildContext context)async{
     late Store store;
     late UserModel user;
