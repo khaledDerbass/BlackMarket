@@ -40,7 +40,6 @@ class _HomeScreenState extends State<HomeScreen> {
   late int roleId = 0;
   final box = GetStorage();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
   @override
   void initState() {
     super.initState();
@@ -60,183 +59,223 @@ class _HomeScreenState extends State<HomeScreen> {
         key: _scaffoldKey,
         drawer: SideDrawer(),
         backgroundColor: CupertinoColors.white,
-        body:FutureBuilder(
-          builder: (ctx, snapshot) {
-            // Checking if future is resolved or not
-            if (snapshot.connectionState == ConnectionState.done) {
-              // If we got an error
-              if (snapshot.hasError) {
-                return Center(
-                  child: Text(
-                    '${snapshot.error} occurred',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                );
+        body:RefreshIndicator(
+          onRefresh: loadUser,
+          child: FutureBuilder(
+            builder: (ctx, snapshot) {
+              // Checking if future is resolved or not
+              if (snapshot.connectionState == ConnectionState.done) {
+                // If we got an error
+                if (snapshot.hasError) {
+                  return Center(
+                    child: Text(
+                      '${snapshot.error} occurred',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  );
 
-                // if we got our data
-              } else if (snapshot.hasData) {
-                // Extracting data from snapshot object
-                var data = snapshot.data as UserModel;
-                print(data.email);
-                return SafeArea(
-                    child: Column(
-                      children: [
-                        Container(
-                          height: MediaQuery.of(context).size.height * 0.17,
-                          child:  Stack(
-                            children: [
-                              HeaderWidget(MediaQuery.of(context).size.height * 0.17, false, Icons.account_circle_rounded),
-                              Positioned(
-                                top: 30,
-                                left: 13,
-                                child: IconButton(
-                                  onPressed: (){
-                                    _scaffoldKey.currentState?.openDrawer();
-                                  },
-                                  icon: Icon(Icons.menu_outlined,color: Colors.white,size: MediaQuery.of(context).size.height * 0.032,),
+                  // if we got our data
+                } else if (snapshot.hasData) {
+                  // Extracting data from snapshot object
+                  var data = snapshot.data as UserModel;
+                  print(data.email);
+                  return SafeArea(
+                      child: Column(
+                        children: [
+                          Container(
+                            height: MediaQuery.of(context).size.height * 0.12,
+                            child:  Stack(
+                              children: [
+                                HeaderWidget(MediaQuery.of(context).size.height * 0.12, false, Icons.account_circle_rounded),
+                                Positioned(
+                                  top: 25,
+                                  left: 13,
+                                  child: IconButton(
+                                    onPressed: (){
+                                      _scaffoldKey.currentState?.openDrawer();
+                                    },
+                                    icon: Icon(Icons.menu_outlined,color: Colors.white,size: MediaQuery.of(context).size.height * 0.032,),
+                                  ),
                                 ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(right: MediaQuery.of(context).size.width * 0.03),
-                                child: Row(
+                                Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Image.asset('assets/images/logo2.png',height: MediaQuery.of(context).size.width * 0.22,width: MediaQuery.of(context).size.width * 0.22,),
+                                    Image.asset('assets/images/logo2.png',height: MediaQuery.of(context).size.width * 0.16,width: MediaQuery.of(context).size.width * 0.16,),
 
                                   ],
                                 ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.035,right: MediaQuery.of(context).size.width * 0.03),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    IconButton(onPressed: (){
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(builder: (context) => const SearchPage()),
-                                      );
-                                    }, icon: Icon(Icons.search_rounded,color: Colors.white,size: MediaQuery.of(context).size.height * 0.032,))
+                                Padding(
+                                  padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.025,right: MediaQuery.of(context).size.width * 0.03),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      IconButton(onPressed: (){
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context) => const SearchPage()),
+                                        );
+                                      }, icon: Icon(Icons.search_rounded,color: Colors.white,size: MediaQuery.of(context).size.height * 0.032,))
 
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                        LimitedBox(
-                          maxHeight: MediaQuery.of(context).size.height * 0.25,
-                          maxWidth: MediaQuery.of(context).size.width,
-                          child: StreamBuilder<QuerySnapshot>(
-                              stream: repository.getStores(),
-                              builder: (context, snapshot) {
-                                if (!snapshot.hasData)
-                                  return const LinearProgressIndicator();
-                                return _buildList(context, snapshot.data?.docs ?? [],roleId,data);
-                              }),
-                        ),
-                        Align(
-                            alignment: isArabic(context)
-                                ? Alignment.centerRight
-                                : Alignment.centerLeft,
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                  bottom: MediaQuery.of(context).size.width * 0.02,
-                                  left: MediaQuery.of(context).size.width * 0.02,
-                                  right: MediaQuery.of(context).size.width * 0.02),
-                              child: isArabic(context)
-                                  ? const Text(
-                                "التصنيفات",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
+                          LimitedBox(
+                            maxHeight: MediaQuery.of(context).size.height * 0.25,
+                            maxWidth: MediaQuery.of(context).size.width,
+                            child: StreamBuilder<QuerySnapshot>(
+                                stream: repository.getStores(),
+                                builder: (context, snapshot) {
+                                  if (!snapshot.hasData)
+                                    return const LinearProgressIndicator();
+                                  return _buildList(context, snapshot.data?.docs ?? [],roleId,data);
+                                }),
+                          ),
+                          Align(
+                              alignment: isArabic(context)
+                                  ? Alignment.centerRight
+                                  : Alignment.centerLeft,
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                    bottom: MediaQuery.of(context).size.width * 0.02,
+                                    left: MediaQuery.of(context).size.width * 0.02,
+                                    right: MediaQuery.of(context).size.width * 0.02),
+                                child: isArabic(context)
+                                    ? const Text(
+                                  "التصنيفات",
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                )
+                                    : const Text(
+                                  "Categories",
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              )
-                                  : const Text(
-                                "Categories",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
+                              )),
+                          Expanded(
+                            child: StreamBuilder<QuerySnapshot>(
+                                stream: repository.getStores(),
+                                builder: (context, snapshot) {
+                                  if (!snapshot.hasData) {
+                                    return SizedBox(
+                                        height: MediaQuery.of(context).size.height * 0.01,
+                                        width: MediaQuery.of(context).size.width * 0.01,
+                                        child: const CircularProgressIndicator());
+                                  }
+                                  return _buildCategoryList(
+                                      context, snapshot.data?.docs ?? [],data);
+                                }),
+                          ),
+                        ],
+                      ));
+                }else if(snapshot.data == null && FirebaseAuth.instance.currentUser == null){
+                  return SafeArea(
+                      child: Column(
+                        children: [
+                          Container(
+                            height: MediaQuery.of(context).size.height * 0.12,
+                            child:  Stack(
+                              children: [
+                                HeaderWidget(MediaQuery.of(context).size.height * 0.12, false, Icons.account_circle_rounded),
+                                Positioned(
+                                  top: 25,
+                                  left: 13,
+                                  child: IconButton(
+                                    onPressed: (){
+                                      _scaffoldKey.currentState?.openDrawer();
+                                    },
+                                    icon: Icon(Icons.menu_outlined,color: Colors.white,size: MediaQuery.of(context).size.height * 0.032,),
+                                  ),
                                 ),
-                              ),
-                            )),
-                        Expanded(
-                          child: StreamBuilder<QuerySnapshot>(
-                              stream: repository.getStores(),
-                              builder: (context, snapshot) {
-                                if (!snapshot.hasData) {
-                                  return SizedBox(
-                                      height: MediaQuery.of(context).size.height * 0.01,
-                                      width: MediaQuery.of(context).size.width * 0.01,
-                                      child: const CircularProgressIndicator());
-                                }
-                                return _buildCategoryList(
-                                    context, snapshot.data?.docs ?? []);
-                              }),
-                        ),
-                      ],
-                    ));
-              }else if(snapshot.data == null && FirebaseAuth.instance.currentUser == null){
-                return SafeArea(
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding:  EdgeInsets.all(MediaQuery.of(context).size.height * 0.06),
-                          child: Text(isArabic(context) ? "يرجى تسجيل الدخول لتتمكن من متابعة المتاجر"  : "Please Sign up/in in order to follow stores"),
-                        ),
-                        Align(
-                            alignment: isArabic(context)
-                                ? Alignment.centerRight
-                                : Alignment.centerLeft,
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                  bottom: MediaQuery.of(context).size.width * 0.02,
-                                  left: MediaQuery.of(context).size.width * 0.02,
-                                  right: MediaQuery.of(context).size.width * 0.02),
-                              child: isArabic(context)
-                                  ? const Text(
-                                "التصنيفات",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image.asset('assets/images/logo2.png',height: MediaQuery.of(context).size.width * 0.16,width: MediaQuery.of(context).size.width * 0.16,),
+
+                                  ],
                                 ),
-                              )
-                                  : const Text(
-                                "Categories",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
+                                Padding(
+                                  padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.025,right: MediaQuery.of(context).size.width * 0.03),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      IconButton(onPressed: (){
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context) => const SearchPage()),
+                                        );
+                                      }, icon: Icon(Icons.search_rounded,color: Colors.white,size: MediaQuery.of(context).size.height * 0.032,))
+
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            )),
-                        Expanded(
-                          child: StreamBuilder<QuerySnapshot>(
-                              stream: repository.getStores(),
-                              builder: (context, snapshot) {
-                                if (!snapshot.hasData) {
-                                  return SizedBox(
-                                      height: MediaQuery.of(context).size.height * 0.01,
-                                      width: MediaQuery.of(context).size.width * 0.01,
-                                      child: const CircularProgressIndicator());
-                                }
-                                return _buildCategoryList(
-                                    context, snapshot.data?.docs ?? []);
-                              }),
-                        ),
-                      ],
-                    ));
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding:  EdgeInsets.all(MediaQuery.of(context).size.height * 0.06),
+                            child: Text(isArabic(context) ? "يرجى تسجيل الدخول لتتمكن من متابعة المتاجر"  : "Please Sign up/in in order to follow stores"),
+                          ),
+                          Align(
+                              alignment: isArabic(context)
+                                  ? Alignment.centerRight
+                                  : Alignment.centerLeft,
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                    bottom: MediaQuery.of(context).size.width * 0.02,
+                                    left: MediaQuery.of(context).size.width * 0.02,
+                                    right: MediaQuery.of(context).size.width * 0.02),
+                                child: isArabic(context)
+                                    ? const Text(
+                                  "التصنيفات",
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                )
+                                    : const Text(
+                                  "Categories",
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              )),
+                          Expanded(
+                            child: StreamBuilder<QuerySnapshot>(
+                                stream: repository.getStores(),
+                                builder: (context, snapshot) {
+                                  if (!snapshot.hasData) {
+                                    return SizedBox(
+                                        height: MediaQuery.of(context).size.height * 0.01,
+                                        width: MediaQuery.of(context).size.width * 0.01,
+                                        child: const CircularProgressIndicator());
+                                  }
+                                  return _buildCategoryList(
+                                      context, snapshot.data?.docs ?? []);
+                                }),
+                          ),
+                        ],
+                      ));
+                }
               }
-            }
 
-            // Displaying LoadingSpinner to indicate waiting state
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          },
+              // Displaying LoadingSpinner to indicate waiting state
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            },
 
-          // Future that needs to be resolved
-          // inorder to display something on the Canvas
-          future: loadUser(),
+            // Future that needs to be resolved
+            // inorder to display something on the Canvas
+            future: loadUser(),
+          ),
         ),
         bottomNavigationBar: ConvexAppBar(
           height: MediaQuery.of(context).size.height * 0.07,
@@ -295,13 +334,15 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-Widget _buildCategoryList(BuildContext context, List<DocumentSnapshot>? snapshot) {
+Widget _buildCategoryList(BuildContext context, List<DocumentSnapshot>? snapshot, [userData]) {
   List<Store> storesList = [];
   List<int> categories = [];
   List<CategoryWidget> categoryWidgets = [];
   List<StoryContent> storyByCategory = [];
   List<Widget> widgetsList = [];
   Store currentStore;
+  bool isFollowing = false;
+
   snapshot!
       .map((data) => {
     currentStore = Store.fromSnapshot(data),
@@ -424,7 +465,54 @@ Widget _buildCategoryList(BuildContext context, List<DocumentSnapshot>? snapshot
                                                         .04),
                                                 primary: Colors.transparent,
                                               ),
-                                              onPressed: () {},
+                                              onPressed: () async{
+                                                if(AuthenticationService.isCurrentUserLoggedIn() == false){
+                                                  LoginHelper.showLoginAlertDialog(context);
+                                                }else{
+                                                /*  if(isFollowing){
+                                                    print("Unfollow");
+                                                    UserModel user = userData;
+                                                    Store store = widget.searchStore!.store;
+                                                      isFollowing = false;
+                                                      user.followedStores.remove(store.storeId);
+                                                      store.numOfFollowers -=1;
+                                                      if(store.numOfFollowers <0){
+                                                        store.numOfFollowers = 0;
+                                                      }
+                                                    await FirebaseFirestore.instance.collection('Users').where('email' , isEqualTo: FirebaseAuth.instance.currentUser!.email).get().then((value) async => {
+                                                      print("1"),
+                                                      await FirebaseFirestore.instance.collection('Users').doc(value.docs.first.id).update(
+                                                          {
+                                                            'followedStores':FieldValue.arrayRemove([store.storeId])
+                                                          }).then((value) async => {
+                                                        print("2"),
+                                                        await FirebaseFirestore.instance.collection('Store').doc(widget.searchStore?.store.storeId.trim()).update({'numOfFollowers': store.numOfFollowers})
+                                                      }),
+                                                    });
+                                                  }
+                                                  else{
+                                                    print("follow");
+                                                    UserModel user = userData;
+                                                    Store store = widget.searchStore!.store;
+                                                      isFollowing = true;
+                                                      user.followedStores.add(store.storeId.replaceAll(" ", ""));
+                                                      store.numOfFollowers +=1;
+                                                    await FirebaseFirestore.instance.collection('Users').where('email' , isEqualTo: FirebaseAuth.instance.currentUser!.email).get().then((value) async => {
+                                                      await FirebaseFirestore.instance.collection('Users').doc(value.docs.first.id).update(
+                                                          {
+                                                            'followedStores':FieldValue.arrayUnion(user.followedStores)
+                                                          }).then((value) async => {
+
+                                                        await FirebaseFirestore.instance.collection('Store').doc(widget.searchStore?.store.storeId.trim()).update({'numOfFollowers': store.numOfFollowers})
+
+                                                      }),
+                                                    });
+
+
+                                                  }*/
+
+                                                }
+                                              },
                                               child: Row(
                                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                                 crossAxisAlignment:
@@ -482,7 +570,9 @@ Widget _buildList(BuildContext context, List<DocumentSnapshot>? snapshot, int ro
   }
   if(isSignedIn){
     loggedInStore = AuthenticationService.getAuthInstance().currentUser?.uid;
+    print("Num of followed stores " + userModel.followedStores.length.toString());
     if(userModel.followedStores.isEmpty) {
+      print("No followed stores");
       return Padding(
         padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.02 , bottom: MediaQuery.of(context).size.height * 0.02 ),
         child: Center(child: Text(isArabic(context) ? "يمكنك متابعة المتاجر لمشاهدة قصصهم" : "You can follow stores accounts to see their stories")),
