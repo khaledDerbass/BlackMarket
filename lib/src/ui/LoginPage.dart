@@ -97,21 +97,24 @@ class LoginScreenState extends State<LoginScreen> {
                                 AuthenticationService.signInWithEmailAndPassword(
                                     _emailController.text.toLowerCase().trim(),
                                     _passwordController.text,)
-                                    .then((value) => {
+                                    .then((value) async => {
                                   if (value)
                                     {
                                       ScaffoldMessenger.of(context).showSnackBar(snackBar1),
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                            const HomeScreen()),
-                                      )
+                                await LoginHelper.getUserWithEmail(_emailController.text).then((value) => {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                        const HomeScreen()),
+                                  )
+                                }),
+
                                     }else{
                                     ScaffoldMessenger.of(context).showSnackBar(snackBar2),
                                   }
                                 });
-                                await LoginHelper.getUserWithEmail(_emailController.text);
+
                               },
                               child: Row(
                                 mainAxisAlignment:

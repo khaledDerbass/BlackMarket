@@ -69,7 +69,7 @@ class LoginHelper{
 
  static Future<UserModel> getUserWithEmail(String email) async {
    late UserModel user;
-   await FirebaseFirestore.instance.collection('Users').where('email', isEqualTo: email).get().then((value) => value.docs.forEach((doc) {
+   await FirebaseFirestore.instance.collection('Users').where('email', isEqualTo: email.trim()).get().then((value) => value.docs.forEach((doc) {
      user = UserModel.fromJson(value.docs.first.data());
    }));
    print(user.email);

@@ -1,10 +1,13 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:souq/Helpers/LoginHelper.dart';
 import 'package:souq/src/Services/AuthenticationService.dart';
 import '../models/Store.dart';
@@ -32,6 +35,8 @@ class profileHeaderState extends State<profileHeader>{
   UserStore? searchStore;
   profileHeaderState(this.searchStore,currentUser);
   bool isFollowing = false;
+  XFile? imageFile;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -301,44 +306,59 @@ class profileHeaderState extends State<profileHeader>{
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        CircleAvatar(
-                          radius:
-                          MediaQuery.of(context).size.height * .06,
-                          backgroundColor: Color(0xffe4eeee),
-                          backgroundImage: userStore.userModel.profilePicture.isNotEmpty ?
-                          Image.memory(base64Decode(userStore.userModel.profilePicture)).image
-                              : Image.asset('assets/images/pic2.png').image,),
-                        Padding(
-                          padding:  EdgeInsets.only(top: 0 ),
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              maximumSize: Size(
-                                  MediaQuery.of(context).size.height *
-                                      .08,
-                                  MediaQuery.of(context).size.height *
-                                      .04),
-                              minimumSize: Size(
-                                  MediaQuery.of(context).size.height *
-                                      .08,
-                                  MediaQuery.of(context).size.height *
-                                      .04),
-                              primary: Colors.white,
-                            ),
-                            onPressed: () {},
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              crossAxisAlignment:
-                              CrossAxisAlignment.center,
-                              children: const [
-                                Text(''),
-                                Icon(
-                                  Icons.add,
-                                  color: Colors.blue,
+                        Stack(
+                          children: [
+                            CircleAvatar(
+                              radius:
+                              MediaQuery.of(context).size.height * .06,
+                              backgroundColor: Color(0xffe4eeee),
+                              backgroundImage: userStore.userModel.profilePicture.isNotEmpty ?
+                              Image.memory(base64Decode(userStore.userModel.profilePicture)).image
+                                  : Image.asset('assets/images/pic2.png').image,),
+                            Positioned(
+                              top: 75,
+                              left: 78,
+                              child: SizedBox.fromSize(
+                                size: Size(MediaQuery.of(context).size.height * .03, MediaQuery.of(context).size.height * .03), // button width and height
+                                child: ClipOval(
+                                  child: Material(
+                                    color: Colors.amber, // button color
+                                    child: InkWell(
+                                      splashColor: Colors.green, // splash color
+                                      onTap: () {
+                                        print(AuthenticationService.getAuthInstance().currentUser?.uid);
+                                        Uint8List? bytes;
+                                        String img;
+                                        _showChoiceDialog(context).then((value) async => {
+                                          bytes = await XFile(imageFile!.path).readAsBytes(),
+                                          img= base64Encode(bytes!),
+                                            userStore.userModel.profilePicture = img,
+                                            await FirebaseFirestore.instance.collection('Users').where('email' , isEqualTo: FirebaseAuth.instance.currentUser!.email).get().then((value) async => {
+                                            await FirebaseFirestore.instance.collection('Users').doc(value.docs.first.id).set(
+                                              {
+                                                'profilePicture':img
+                                              }).then((value) => {
+                                                LoginHelper.showSuccessAlertDialog(context, isArabic(context) ? "تم تغيير الصورة الشخصية بنجاح" : "Your profile photo has been changed successfully."),
+                                            }),
+                                        }),
+
+                                        });
+
+                                      }, // button pressed
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          Icon(Icons.add), // icon
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                              ],
-                            ),
-                          ),
+                              ),
+                            )
+                          ],
                         ),
+
 
                         Row(
                           children: [
@@ -588,7 +608,65 @@ class profileHeaderState extends State<profileHeader>{
   bool isArabic(BuildContext context) {
     return context.locale.languageCode == 'ar';
   }
+  Future<void> _showChoiceDialog(BuildContext context) {
+    return showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return SingleChildScrollView(
+            child: ListBody(
+              children: [
+                Divider(
+                  height: MediaQuery.of(context).size.height * .01,
+                  color: Colors.deepPurpleAccent,
+                ),
+                ListTile(
+                  onTap: () {
+                    _openGallery(context);
+                  },
+                  title: Text(isArabic(context) ? 'الاستوديو' : 'Gallery'),
+                  leading: Icon(
+                    Icons.account_box,
+                    color: Colors.deepPurpleAccent,
+                  ),
+                ),
+                Divider(
+                  height: 1,
+                  color: Colors.deepPurpleAccent,
+                ),
+                ListTile(
+                  onTap: () {
+                    _openCamera(context);
+                  },
+                  title: Text(isArabic(context) ? 'الكاميرا' : 'Camera'),
+                  leading: Icon(
+                    Icons.camera,
+                    color: Colors.deepPurpleAccent,
+                  ),
+                ),
+              ],
+            ),
+          );
+        });
+  }
+  void _openGallery(BuildContext context) async {
+    final pickedFile = await ImagePicker().pickImage(
+        source: ImageSource.gallery
+    );
+    setState(() {
+      imageFile = pickedFile!;
+    });
 
+    Navigator.pop(context);
+  }
+
+  void _openCamera(BuildContext context) async {
+    final pickedFile = await ImagePicker().pickImage(source: ImageSource.camera);
+    setState(() {
+      imageFile = pickedFile!;
+    });
+
+    Navigator.pop(context);
+  }
   Future<Store> loadStore(BuildContext context) async {
     late Store store;
     late UserModel user;

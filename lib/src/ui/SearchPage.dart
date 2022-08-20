@@ -42,58 +42,61 @@ class _SearchPageState extends State<SearchPage>{
       home: Scaffold(
           resizeToAvoidBottomInset: false,
           appBar: AppBar(
-            backgroundColor: Colors.deepPurple,
+            toolbarHeight: MediaQuery.of(context).size.height * 0.1,
+            backgroundColor: Colors.deepPurple.withOpacity(0.9),
             shape: const RoundedRectangleBorder(
-
                 borderRadius:  BorderRadius.only(
-
-                    bottomRight: Radius.circular(28),
-
-                    bottomLeft: Radius.circular(28))
-
+                    bottomRight: Radius.circular(25),
+                    bottomLeft: Radius.circular(25))
             ),
-            leading: Padding(
-              padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.01),
-              child:IconButton(
-                  onPressed:() => Navigator.of(context).pop(),
-                  icon: const Icon(Icons.arrow_back_ios,
-                  )),
-
+            leading: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                IconButton(
+                    onPressed:() => Navigator.of(context).pop(),
+                    icon: const Icon(Icons.arrow_back_ios,
+                    )),
+              ],
             ),
-            leadingWidth: MediaQuery.of(context).size.width * 0.07,
-            title: Container(
-              width: double.infinity,
-              height: MediaQuery.of(context).size.height * 0.06,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: CupertinoColors.white,
-              ),
-              child:  Center(
-                child: TextField(
-                    autofocus:true,
-                onChanged: (x) {
-                  stores.clear();
-                  filteredStore.clear();
-                   repository.collection.get().then((value) async => {
-                   setState(()  {
-                     stores.addAll(value.docs.map((e) => Store.fromSnapshot(e)));
-                     filteredStore.addAll(stores.where((element) => element.nameAr.toLowerCase().startsWith(x.toLowerCase()) || element.nameEn.toLowerCase().startsWith(x.toLowerCase())));
-                     filteredStore = filteredStore.toSet().toList();
-                   }),
-                   });
-                },
-                  controller: myController,
-                  decoration: InputDecoration(
-                    hintText: isArabic(context) ? 'إبحث عن متجر' :'Search Store',
-                    prefixIcon: Icon(Icons.search),
-                    suffixIcon: IconButton(
-                      icon: Icon(Icons.clear),
-                      onPressed: () {
-                        myController.text = "";
-                      },
-                    ),),
+            leadingWidth: MediaQuery.of(context).size.width * 0.15,
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.75,
+                  height: MediaQuery.of(context).size.height * 0.055,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: CupertinoColors.white,
+                  ),
+                  child:  Center(
+                    child: TextField(
+                        autofocus:true,
+                    onChanged: (x) {
+                      stores.clear();
+                      filteredStore.clear();
+                       repository.collection.get().then((value) async => {
+                       setState(()  {
+                         stores.addAll(value.docs.map((e) => Store.fromSnapshot(e)));
+                         filteredStore.addAll(stores.where((element) => element.nameAr.toLowerCase().startsWith(x.toLowerCase()) || element.nameEn.toLowerCase().startsWith(x.toLowerCase())));
+                         filteredStore = filteredStore.toSet().toList();
+                       }),
+                       });
+                    },
+                      controller: myController,
+                      decoration: InputDecoration(
+                        hintText: isArabic(context) ? 'إبحث عن متجر' :'Search Store',
+                        prefixIcon: Icon(Icons.search),
+                        suffixIcon: IconButton(
+                          icon: Icon(Icons.clear),
+                          onPressed: () {
+                            myController.text = "";
+                          },
+                        ),),
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
           ),
 
