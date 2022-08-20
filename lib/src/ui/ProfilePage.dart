@@ -103,7 +103,7 @@ class profilepageState extends State<profilepage> {
           height: MediaQuery.of(context).size.height * 0.07,
           style: TabStyle.fixedCircle,
           color: CupertinoColors.white,
-          backgroundColor: Colors.deepPurpleAccent,
+          backgroundColor: Colors.deepPurple.withOpacity(0.85),
           items: [
             TabItem(
                 icon: Icons.home,
@@ -357,7 +357,7 @@ class profilepageState extends State<profilepage> {
           height: MediaQuery.of(context).size.height * 0.07,
           style: TabStyle.fixedCircle,
           color: CupertinoColors.white,
-          backgroundColor: Colors.deepPurpleAccent,
+          backgroundColor: Colors.deepPurple.withOpacity(0.85),
           items: [
             TabItem(
                 icon: Icons.home,

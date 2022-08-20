@@ -63,7 +63,7 @@ class SideDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.home_filled),
             title: Text(isArabic(context) ? 'المدينة/البلد' :'Country/State'),
-            onTap: () => {Navigator.of(context).pop()},
+            onTap: () => {showCitiesAlertDialog(context)},
           ),
           isLoggedIN == true
               ? ListTile(
@@ -138,6 +138,81 @@ class SideDrawer extends StatelessWidget {
                       context.setLocale(Locale('en', 'US')),
                       Navigator.of(context, rootNavigator: true).pop('dialog')
                     }),
+          ],
+        ),
+      ),
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+  showCitiesAlertDialog(BuildContext context) {
+    Widget okButton = FlatButton(
+      child: isArabic(context) ? const Text("إلغاء") : const Text("Dismiss"),
+      onPressed: () {
+        Navigator.of(context, rootNavigator: true).pop('dialog');
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      actions: [
+        okButton,
+      ],
+      title: isArabic(context) ? const Text("المدينة") : const Text("City"),
+      content: SizedBox(
+        width: double.maxFinite,
+        height: MediaQuery.of(context).size.height / 5,
+        child: ListView(
+          children: <Widget>[
+            ListTile(
+                title: isArabic(context)
+                    ? const Text(
+                  'عمًان',
+                  style: TextStyle(fontSize: 17),
+                )
+                    : const Text(
+                  'Amman',
+                  style: TextStyle(fontSize: 17),
+                ),
+                onTap: () => {
+                  context.setLocale(Locale('en', 'US')),
+                  Navigator.of(context, rootNavigator: true).pop('dialog')
+                }),
+            const Divider(),
+            ListTile(
+                title: isArabic(context)
+                    ? const Text(
+                  'إربد',
+                  style: TextStyle(fontSize: 17),
+                )
+                    : const Text(
+                  'Irbid',
+                  style: TextStyle(fontSize: 17),
+                ),
+                onTap: () => {
+                  context.setLocale(Locale('en', 'US')),
+                  Navigator.of(context, rootNavigator: true).pop('dialog')
+                }),
+            const Divider(),
+            ListTile(
+                title: isArabic(context)
+                    ? const Text(
+                  'الزرقاء',
+                  style: TextStyle(fontSize: 17),
+                )
+                    : const Text(
+                  'Zarqa',
+                  style: TextStyle(fontSize: 17),
+                ),
+                onTap: () => {
+                  context.setLocale(Locale('en', 'US')),
+                  Navigator.of(context, rootNavigator: true).pop('dialog')
+                }),
           ],
         ),
       ),

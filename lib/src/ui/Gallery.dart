@@ -50,7 +50,7 @@ class _GalleryState extends State<Gallery> {
         crossAxisCount: 3,
         childAspectRatio: .5,
         padding: EdgeInsets.all(MediaQuery.of(context).size.height * .002),
-        children: imageUrls.map(_createGridTileWidget_search).toList(),
+        children: imageUrls.map(_createGridTileWidget).toList(),
       )
       :roleId == 1 ? FutureBuilder(
         builder: (ctx, snapshot) {
@@ -139,17 +139,7 @@ class _GalleryState extends State<Gallery> {
     ),
   );
 
-  Widget _createGridTileWidget_search(String url) => Builder(
-    builder: (context) => GestureDetector(
-      onLongPress: () {
-        _popupDialog = _createPopupDialog_search(url);
-        Overlay.of(context)!.insert(_popupDialog);
-      },
-      onLongPressEnd: (details) => _popupDialog.remove(),
-      child: Image.memory(base64Decode(url) ,fit: BoxFit.cover),
 
-    ),
-  );
 
 
   OverlayEntry _createPopupDialog(String url) {
@@ -159,31 +149,15 @@ class _GalleryState extends State<Gallery> {
       ),
     );
   }
-  OverlayEntry _createPopupDialog_search(String url) {
-    return OverlayEntry(
-      builder: (context) => AnimatedDialog(
-        child: _createPopupContent_search(url),
-      ),
-    );
-  }
+
   Widget _createPhotoTitle() => Container(
       width: double.infinity,
       color: Colors.white,
       child: ListTile(
-        leading: CircleAvatar(
+        leading: searchStore == null ? CircleAvatar(
           backgroundImage: Image.memory(base64Decode(userStore.userModel.profilePicture) ,fit: BoxFit.fitWidth).image,
-        ),
-        title: Text(
-          storeName,
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
-        ),
-      ));
-  Widget _createPhotoTitle_search() => Container(
-      width: double.infinity,
-      color: Colors.white,
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundImage: Image.asset('assets/images/pic2.png').image,
+        ) : CircleAvatar(
+          backgroundImage: Image.memory(base64Decode(searchStore!.userModel.profilePicture) ,fit: BoxFit.fitWidth).image,
         ),
         title: Text(
           storeName,
@@ -210,20 +184,6 @@ class _GalleryState extends State<Gallery> {
     ),
   );
 
-  Widget _createPopupContent_search(String url) => Container(
-    padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.height * .01),
-    child: ClipRRect(
-      borderRadius: BorderRadius.circular(MediaQuery.of(context).size.height * .01),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _createPhotoTitle_search(),
-          Image.memory(base64Decode(url) ,fit: BoxFit.fitWidth),
-          _createActionBar(),
-        ],
-      ),
-    ),
-  );
   Future<Store> loadStore(BuildContext context)async{
     late Store store;
     late UserModel user;

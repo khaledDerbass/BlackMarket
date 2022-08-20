@@ -20,6 +20,7 @@ import '../../Helpers/LoginHelper.dart';
 import '../models/ImageStoreModel.dart';
 import '../models/UserModel.dart';
 import 'AddPostScreen.dart';
+import 'HeaderWidget.dart';
 import 'SideBar Home.dart';
 import 'ProfilePage.dart';
 import 'dart:async';
@@ -38,6 +39,8 @@ class _HomeScreenState extends State<HomeScreen> {
   PickedFile? imageFile = null;
   late int roleId = 0;
   final box = GetStorage();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     super.initState();
@@ -54,46 +57,9 @@ class _HomeScreenState extends State<HomeScreen> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
+        key: _scaffoldKey,
         drawer: SideDrawer(),
         backgroundColor: CupertinoColors.white,
-        appBar: AppBar(
-          backgroundColor: Colors.deepPurpleAccent,
-          shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                  bottomRight: Radius.circular(35),
-                  bottomLeft: Radius.circular(35))),
-          title: Container(
-            width: double.infinity,
-            height: MediaQuery.of(context).size.height * 0.05,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              color: CupertinoColors.white,
-            ),
-            child: Center(
-              child: TextField(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const SearchPage()),
-                  );
-                },
-                controller: myController,
-                showCursor: false,
-                readOnly: true,
-                decoration: InputDecoration(
-                  hintText: isArabic(context) ? 'إبحث عن متجر' : 'Search Store',
-                  prefixIcon: const Icon(Icons.search),
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.clear),
-                    onPressed: () {
-                      myController.text = "";
-                    },
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
         body:FutureBuilder(
           builder: (ctx, snapshot) {
             // Checking if future is resolved or not
@@ -113,62 +79,102 @@ class _HomeScreenState extends State<HomeScreen> {
                 var data = snapshot.data as UserModel;
                 print(data.email);
                 return SafeArea(
-                    child: RefreshIndicator(
-                      onRefresh: loadUser,
-                      child: Column(
-                        children: [
-                          LimitedBox(
-                            maxHeight: MediaQuery.of(context).size.height * 0.25,
-                            maxWidth: MediaQuery.of(context).size.width,
-                            child: StreamBuilder<QuerySnapshot>(
-                                stream: repository.getStores(),
-                                builder: (context, snapshot) {
-                                  if (!snapshot.hasData)
-                                    return const LinearProgressIndicator();
-                                  return _buildList(context, snapshot.data?.docs ?? [],roleId,data);
-                                }),
-                          ),
-                          Align(
-                              alignment: isArabic(context)
-                                  ? Alignment.centerRight
-                                  : Alignment.centerLeft,
-                              child: Padding(
-                                padding: EdgeInsets.only(
-                                    bottom: MediaQuery.of(context).size.width * 0.02,
-                                    left: MediaQuery.of(context).size.width * 0.02,
-                                    right: MediaQuery.of(context).size.width * 0.02),
-                                child: isArabic(context)
-                                    ? const Text(
-                                  "التصنيفات",
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                )
-                                    : const Text(
-                                  "Categories",
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                    child: Column(
+                      children: [
+                        Container(
+                          height: MediaQuery.of(context).size.height * 0.17,
+                          child:  Stack(
+                            children: [
+                              HeaderWidget(MediaQuery.of(context).size.height * 0.17, false, Icons.account_circle_rounded),
+                              Positioned(
+                                top: 30,
+                                left: 13,
+                                child: IconButton(
+                                  onPressed: (){
+                                    _scaffoldKey.currentState?.openDrawer();
+                                  },
+                                  icon: Icon(Icons.menu_outlined,color: Colors.white,size: MediaQuery.of(context).size.height * 0.032,),
                                 ),
-                              )),
-                          Expanded(
-                            child: StreamBuilder<QuerySnapshot>(
-                                stream: repository.getStores(),
-                                builder: (context, snapshot) {
-                                  if (!snapshot.hasData) {
-                                    return SizedBox(
-                                        height: MediaQuery.of(context).size.height * 0.01,
-                                        width: MediaQuery.of(context).size.width * 0.01,
-                                        child: const CircularProgressIndicator());
-                                  }
-                                  return _buildCategoryList(
-                                      context, snapshot.data?.docs ?? []);
-                                }),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(right: MediaQuery.of(context).size.width * 0.03),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image.asset('assets/images/logo2.png',height: MediaQuery.of(context).size.width * 0.22,width: MediaQuery.of(context).size.width * 0.22,),
+
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.035,right: MediaQuery.of(context).size.width * 0.03),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    IconButton(onPressed: (){
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => const SearchPage()),
+                                      );
+                                    }, icon: Icon(Icons.search_rounded,color: Colors.white,size: MediaQuery.of(context).size.height * 0.032,))
+
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                        LimitedBox(
+                          maxHeight: MediaQuery.of(context).size.height * 0.25,
+                          maxWidth: MediaQuery.of(context).size.width,
+                          child: StreamBuilder<QuerySnapshot>(
+                              stream: repository.getStores(),
+                              builder: (context, snapshot) {
+                                if (!snapshot.hasData)
+                                  return const LinearProgressIndicator();
+                                return _buildList(context, snapshot.data?.docs ?? [],roleId,data);
+                              }),
+                        ),
+                        Align(
+                            alignment: isArabic(context)
+                                ? Alignment.centerRight
+                                : Alignment.centerLeft,
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                  bottom: MediaQuery.of(context).size.width * 0.02,
+                                  left: MediaQuery.of(context).size.width * 0.02,
+                                  right: MediaQuery.of(context).size.width * 0.02),
+                              child: isArabic(context)
+                                  ? const Text(
+                                "التصنيفات",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )
+                                  : const Text(
+                                "Categories",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            )),
+                        Expanded(
+                          child: StreamBuilder<QuerySnapshot>(
+                              stream: repository.getStores(),
+                              builder: (context, snapshot) {
+                                if (!snapshot.hasData) {
+                                  return SizedBox(
+                                      height: MediaQuery.of(context).size.height * 0.01,
+                                      width: MediaQuery.of(context).size.width * 0.01,
+                                      child: const CircularProgressIndicator());
+                                }
+                                return _buildCategoryList(
+                                    context, snapshot.data?.docs ?? []);
+                              }),
+                        ),
+                      ],
                     ));
               }else if(snapshot.data == null && FirebaseAuth.instance.currentUser == null){
                 return SafeArea(
@@ -236,7 +242,7 @@ class _HomeScreenState extends State<HomeScreen> {
           height: MediaQuery.of(context).size.height * 0.07,
           style: TabStyle.fixedCircle,
           color: CupertinoColors.white,
-          backgroundColor: Colors.deepPurpleAccent,
+          backgroundColor: Colors.deepPurple.withOpacity(0.85),
           items: [
             TabItem(
                 icon: Icons.home,
