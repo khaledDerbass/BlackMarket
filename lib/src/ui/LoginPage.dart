@@ -101,7 +101,7 @@ class LoginScreenState extends State<LoginScreen> {
                                   if (value)
                                     {
                                       ScaffoldMessenger.of(context).showSnackBar(snackBar1),
-                                await LoginHelper.getUserWithEmail(_emailController.text).then((value) => {
+                                await LoginHelper.getUserWithEmail(_emailController.text.toLowerCase().trim()).then((value) => {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
