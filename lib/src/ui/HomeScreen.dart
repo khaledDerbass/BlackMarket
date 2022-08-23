@@ -342,7 +342,6 @@ Widget _buildCategoryList(BuildContext context, List<DocumentSnapshot>? snapshot
   List<Widget> widgetsList = [];
   Store currentStore;
   bool isFollowing = false;
-  UserModel user = userData;
 
   snapshot!
       .map((data) => {
@@ -453,7 +452,7 @@ Widget _buildCategoryList(BuildContext context, List<DocumentSnapshot>? snapshot
                                           ),
                                           SizedBox(width: MediaQuery.of(context).size.width * 0.02,),
                                           Text(cw.images[index].storeName,style: const TextStyle(color: Colors.white,fontSize: 17),),
-                                         userData != null && !user.followedStores.contains(cw.images[index].storeId)? Padding(
+                                         userData != null && !userData.followedStores.contains(cw.images[index].storeId)? Padding(
                                             padding:  EdgeInsets.only(left: MediaQuery.of(context).size.height *
                                                 .02 ),
                                             child: ElevatedButton(

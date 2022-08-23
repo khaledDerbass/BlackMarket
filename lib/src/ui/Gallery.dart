@@ -50,7 +50,7 @@ class _GalleryState extends State<Gallery> {
         crossAxisCount: 3,
         childAspectRatio: .5,
         padding: EdgeInsets.all(MediaQuery.of(context).size.height * .002),
-        children: imageUrls.map(_createGridTileWidget).toList(),
+        children: imageUrls.map(_createGridTileWidget).toList().reversed.toList(),
       )
       :roleId == 1 ? FutureBuilder(
         builder: (ctx, snapshot) {
@@ -109,7 +109,7 @@ class _GalleryState extends State<Gallery> {
                 crossAxisCount: 3,
                 childAspectRatio: .5,
                 padding: EdgeInsets.all(MediaQuery.of(context).size.height * .002),
-                children: data.stories.length > 0 ? imageUrls.map(_createGridTileWidget).toList() : [Container()],
+                children: data.stories.length > 0 ? imageUrls.map(_createGridTileWidget).toList().reversed.toList() : [Container()],
               );
             }
           }
