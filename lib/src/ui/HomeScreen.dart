@@ -24,6 +24,7 @@ import 'HeaderWidget.dart';
 import 'SideBar Home.dart';
 import 'ProfilePage.dart';
 import 'dart:async';
+import 'package:story/story.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -332,9 +333,440 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+
+  Widget _buildList(BuildContext context, List<DocumentSnapshot>? snapshot, int roleId, UserModel userModel) {
+    print(context.locale.languageCode);
+    String? loggedInStore = "";
+    bool isSignedIn = false;
+    if(roleId == 1){
+      isSignedIn = AuthenticationService.isCurrentUserLoggedIn();
+    }else if(roleId == 2){
+      isSignedIn = StoreAuthService.isCurrentUserLoggedIn();
+    }else{
+      isSignedIn = false;
+    }
+    if(isSignedIn){
+      loggedInStore = AuthenticationService.getAuthInstance().currentUser?.uid;
+      print("Num of followed stores " + userModel.followedStores.length.toString());
+      if(userModel.followedStores.isEmpty) {
+        print("No followed stores");
+        return Padding(
+          padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.02 , bottom: MediaQuery.of(context).size.height * 0.02 ),
+          child: Center(child: Text(isArabic(context) ? "يمكنك متابعة المتاجر لمشاهدة قصصهم" : "You can follow stores accounts to see their stories")),
+        );
+      }
+      return ListView(
+        scrollDirection: Axis.horizontal,
+        padding: EdgeInsets.only(
+            right: MediaQuery.of(context).size.width * 0.01,
+            left: MediaQuery.of(context).size.width * 0.01),
+        children: snapshot!
+            .map((data) => _buildListItem(
+            context, data, Store.fromSnapshot(data).stories.length,roleId,userModel))
+            .toList(),
+      );
+    }
+    return Container();
+  }
+
+  bool isArabic(BuildContext context) {
+    return context.locale.languageCode == 'ar';
+  }
+  Future<UserModel?> loadUser() async {
+    late UserModel? user =null;
+    if(FirebaseAuth.instance.currentUser?.email != null){
+      await FirebaseFirestore.instance
+          .collection('Users')
+          .where('email', isEqualTo: FirebaseAuth.instance.currentUser?.email)
+          .get()
+          .then((value) => value.docs.forEach((doc) async {
+        user = UserModel.fromJson(value.docs.first.data());
+        print(user?.name);
+      }));
+    }else {
+      return null;
+    }
+
+
+    return user;
+  }
+  Widget _buildListItem(BuildContext context, DocumentSnapshot snapshot, int length, int roleId, UserModel userModel) {
+    final store = Store.fromSnapshot(snapshot);
+    return userModel.followedStores.contains(store.storeId.trim()) ?  CupertinoPageScaffold(
+      backgroundColor: CupertinoColors.white,
+      child: Padding(
+        padding: EdgeInsets.only(
+            left: MediaQuery.of(context).size.width * 0.004,
+            right: MediaQuery.of(context).size.width * 0.004),
+        child: Center(
+          child: store.stories.isNotEmpty
+              ? Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(60.0),
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image:
+                    Image.memory(base64Decode(store.stories.last.img))
+                        .image,
+                  ),
+                  border: Border.all(
+                    color: CupertinoColors.activeOrange,
+                    width: 2.0,
+                    style: BorderStyle.solid,
+                  ),
+                ),
+                width: MediaQuery.of(context).size.height * 0.12,
+                height: MediaQuery.of(context).size.height * 0.12,
+                child: GestureDetector(
+                  onTap: () {
+                    showCupertinoDialog(
+                      context: context,
+                      builder: (context) {
+                        return CupertinoPageScaffold(
+                          child: Story(
+                            fullscreen: false,
+                            topOffset:
+                            MediaQuery.of(context).size.height * 0.06,
+                            onFlashForward: Navigator.of(context).pop,
+                            onFlashBack: Navigator.of(context).pop,
+                            momentCount: store.stories.length,
+                            momentDurationGetter: (idx) => const Duration(seconds: 5),
+                            momentBuilder: (context, index) => Scaffold(
+                              body: Stack(
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: CupertinoColors.darkBackgroundGray,
+                                      image: DecorationImage(
+                                        fit: BoxFit.contain,
+                                        image: Image.memory(base64Decode(
+                                            store.stories[index].img))
+                                            .image,
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    top: 70,
+                                    left: 20,
+                                    child: Row(
+                                      children: [
+                                        ClipOval(
+                                          child: Image(image: Image.memory(base64Decode(store.stories.last.img)).image, height: 25,width: 25,),
+                                        ),
+                                        SizedBox(width: MediaQuery.of(context).size.width * 0.02,),
+                                        Text(isArabic(context) ? store.nameAr : store.nameEn,style: const TextStyle(color: Colors.white,fontSize: 17),),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.005),
+                child: isArabic(context)
+                    ? Text(store.nameAr)
+                    : Text(store.nameEn),
+              ),
+            ],
+          )
+              : Container(),
+        ),
+      ),
+    ) : Container();
+  }
+
+
+  Widget _buildCategoryList(BuildContext context, List<DocumentSnapshot>? snapshot, [userData]) {
+    List<Store> storesList = [];
+    List<int> categories = [];
+    List<CategoryWidget> categoryWidgets = [];
+    List<StoryContent> storyByCategory = [];
+    List<Widget> widgetsList = [];
+    Store currentStore;
+    bool isFollowing = false;
+
+    snapshot!
+        .map((data) => {
+      currentStore = Store.fromSnapshot(data),
+      storesList.add(currentStore),
+      if (!categories.contains(Store.fromSnapshot(data).category))
+        {categories.add(Store.fromSnapshot(data).category)},
+      if(currentStore.stories.length > 0)
+        for(int i = 0; i< currentStore.stories.length ; i++){
+          if(!categories.contains(currentStore.stories[i].category)){
+            {categories.add(currentStore.stories[i].category)},
+          }
+        }
+    })
+        .toList();
+    print(categories);
+    for (int category in categories) {
+      for (Store store in storesList) {
+        if (store.isApprovedByAdmin) {
+          for(StoryContent sc in store.stories){
+            sc.storeName = isArabic(context) ? store.nameAr : store.nameEn;
+            sc.storeId = store.storeId;
+          }
+          storyByCategory.addAll(store.stories.where((e) => e.category == category).toList());
+
+        }
+      }
+      if (storyByCategory.isEmpty) {
+        continue;
+      }
+      List<ImageStoreModel> imgs = [];
+      for (StoryContent sc in storyByCategory) {
+        imgs.add(ImageStoreModel(sc.img,sc.storeName,sc.storeId));
+      }
+      CategoryWidget categoryWidget = CategoryWidget(storyByCategory.first.img, Category.fromId(category).name, imgs);
+      categoryWidgets.add(categoryWidget);
+      storyByCategory.clear();
+    }
+
+    for (CategoryWidget cw in categoryWidgets) {
+      widgetsList.add(CupertinoPageScaffold(
+        backgroundColor: CupertinoColors.white,
+        child: Padding(
+          padding: EdgeInsets.only(
+              left: MediaQuery.of(context).size.width * 0.004,
+              right: MediaQuery.of(context).size.width * 0.004),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: Image.memory(
+                        base64Decode(cw.thumbnailImage),
+
+                      ).image,
+                    ),
+                    border: Border.all(
+                      color: CupertinoColors.activeOrange,
+                      width: 2.0,
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                  width: MediaQuery.of(context).size.height * 0.12,
+                  height: MediaQuery.of(context).size.height * 0.12,
+                  child: GestureDetector(
+                    onTap: () {
+                      showCupertinoDialog(
+                        context: context,
+                        builder: (context) {
+                          return SafeArea(
+                            child: Scaffold(
+                              body: GestureDetector(
+                                onVerticalDragUpdate: (details) {
+                                  int sensitivity = 8;
+                                  if (details.delta.dy > sensitivity) {
+                                    Navigator.pop(context);
+                                  } else if(details.delta.dy < -sensitivity){
+                                    Navigator.pop(context);
+                                  }
+                                },
+                                child: StoryPageView(
+                                  itemBuilder: (context, pageIndex, storyIndex) {
+                                    return Stack(
+                                      children: [
+                                        Positioned.fill(
+                                          child: Container(color: Colors.black),
+                                        ),
+                                        Positioned.fill(
+                                          child: Image.memory(
+                                            base64Decode(cw.images[storyIndex].img),
+                                            fit: BoxFit.contain,
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(top: 44, left: 8),
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                height: 32,
+                                                width: 32,
+                                                decoration: BoxDecoration(
+                                                  image: DecorationImage(
+                                                    image: Image.memory(
+                                                      base64Decode(cw.thumbnailImage),
+                                                      fit: BoxFit.cover,
+                                                    ).image,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                  shape: BoxShape.circle,
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                width: 8,
+                                              ),
+                                              Text(
+                                                cw.images[storyIndex].storeName,
+                                                style: TextStyle(
+                                                  fontSize: 17,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                  gestureItemBuilder: (context, pageIndex, storyIndex) {
+
+                                    return Align(
+                                      alignment: Alignment.topRight,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(top: 35),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          children: [
+                                            userData != null && !userData.followedStores.contains(cw.images[storyIndex].storeId)? ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                maximumSize: Size(
+                                                    MediaQuery.of(context).size.height *
+                                                        .1,
+                                                    MediaQuery.of(context).size.height *
+                                                        .04),
+                                                minimumSize: Size(
+                                                    MediaQuery.of(context).size.height *
+                                                        .1,
+                                                    MediaQuery.of(context).size.height *
+                                                        .04),
+                                                primary: Colors.pinkAccent.withOpacity(0.3),
+                                              ),
+                                              onPressed: () async{
+                                                print("Try to follow");
+                                                if(AuthenticationService.isCurrentUserLoggedIn() == false){
+                                                  LoginHelper.showLoginAlertDialog(context);
+                                                }else{
+                                                  if(isFollowing){
+                                                    print("Unfollow");
+                                                    UserModel user = userData;
+                                                    Store store = Store.fromSnapshot(await FirebaseFirestore.instance.collection('Store').doc(cw.images[storyIndex].storeId.replaceAll(" ", "")).get());
+                                                    setState(() {
+                                                      isFollowing = false;
+                                                      user.followedStores.remove(store.storeId);
+                                                      store.numOfFollowers -=1;
+                                                      if(store.numOfFollowers <0){
+                                                        store.numOfFollowers = 0;
+                                                      }
+                                                    });
+                                                    await FirebaseFirestore.instance.collection('Users').where('email' , isEqualTo: FirebaseAuth.instance.currentUser!.email).get().then((value) async => {
+                                                      await FirebaseFirestore.instance.collection('Users').doc(value.docs.first.id).update(
+                                                          {
+                                                            'followedStores':FieldValue.arrayRemove([store.storeId])
+                                                          }).then((value) async => {
+                                                        await FirebaseFirestore.instance.collection('Store').doc(store.storeId.trim()).update({'numOfFollowers': store.numOfFollowers})
+                                                      }),
+                                                    });
+                                                  }
+                                                  else{
+                                                    print("follow");
+                                                    UserModel user = userData;
+                                                    Store store = Store.fromSnapshot(await FirebaseFirestore.instance.collection('Store').doc(cw.images[storyIndex].storeId.replaceAll(" ", "")).get());
+                                                    setState(() {
+                                                      isFollowing = true;
+                                                      user.followedStores.add(cw.images[storyIndex].storeId.replaceAll(" ", ""));
+                                                      store.numOfFollowers +=1;
+                                                    });
+                                                    await FirebaseFirestore.instance.collection('Users').where('email' , isEqualTo: FirebaseAuth.instance.currentUser!.email).get().then((value) async => {
+                                                      await FirebaseFirestore.instance.collection('Users').doc(value.docs.first.id).update(
+                                                          {
+                                                            'followedStores':FieldValue.arrayUnion(user.followedStores)
+                                                          }).then((value) async => {
+
+                                                        await FirebaseFirestore.instance.collection('Store').doc(store.storeId.trim()).update({'numOfFollowers': store.numOfFollowers})
+
+                                                      }),
+                                                    });
+
+
+                                                  }}
+
+                                              },
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.end,
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                                children: const [
+                                                  Text('Follow'),
+                                                ],
+                                              ),
+                                            ) : Container(),
+                                            const SizedBox(
+                                              width: 8,
+                                            ),
+                                            IconButton(
+                                              padding: EdgeInsets.zero,
+                                              color: Colors.white,
+                                              icon: Icon(Icons.close),
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  pageLength: cw.images.length,
+                                  storyLength: (int pageIndex) {
+                                    return cw.images.length;
+                                  },
+                                  onPageLimitReached: () {
+                                    Navigator.pop(context);
+                                  },
+                                  onPageChanged: (_) {
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * 0.005),
+                  child: Text(cw.categoryName),
+
+                ),
+              ],
+            ),
+          ),
+        ),
+      ));
+    }
+    return GridView.count(
+      // Create a grid with 2 columns. If you change the scrollDirection to
+      // horizontal, this produces 2 rows.
+      crossAxisCount: 3,
+      // Generate 100 widgets that display their index in the List.
+      children: List.of(widgetsList),
+    );
+  }
 }
 
-Widget _buildCategoryList(BuildContext context, List<DocumentSnapshot>? snapshot, [userData]) {
+/*Widget _buildCategoryList(BuildContext context, List<DocumentSnapshot>? snapshot, [userData]) {
   List<Store> storesList = [];
   List<int> categories = [];
   List<CategoryWidget> categoryWidgets = [];
@@ -557,156 +989,5 @@ Widget _buildCategoryList(BuildContext context, List<DocumentSnapshot>? snapshot
     // Generate 100 widgets that display their index in the List.
     children: List.of(widgetsList),
   );
-}
+}*/
 
-Widget _buildList(BuildContext context, List<DocumentSnapshot>? snapshot, int roleId, UserModel userModel) {
-  print(context.locale.languageCode);
-  String? loggedInStore = "";
-  bool isSignedIn = false;
-  if(roleId == 1){
-    isSignedIn = AuthenticationService.isCurrentUserLoggedIn();
-  }else if(roleId == 2){
-    isSignedIn = StoreAuthService.isCurrentUserLoggedIn();
-  }else{
-    isSignedIn = false;
-  }
-  if(isSignedIn){
-    loggedInStore = AuthenticationService.getAuthInstance().currentUser?.uid;
-    print("Num of followed stores " + userModel.followedStores.length.toString());
-    if(userModel.followedStores.isEmpty) {
-      print("No followed stores");
-      return Padding(
-        padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.02 , bottom: MediaQuery.of(context).size.height * 0.02 ),
-        child: Center(child: Text(isArabic(context) ? "يمكنك متابعة المتاجر لمشاهدة قصصهم" : "You can follow stores accounts to see their stories")),
-      );
-    }
-    return ListView(
-      scrollDirection: Axis.horizontal,
-      padding: EdgeInsets.only(
-          right: MediaQuery.of(context).size.width * 0.01,
-          left: MediaQuery.of(context).size.width * 0.01),
-      children: snapshot!
-          .map((data) => _buildListItem(
-          context, data, Store.fromSnapshot(data).stories.length,roleId,userModel))
-          .toList(),
-    );
-  }
-  return Container();
-}
-
-bool isArabic(BuildContext context) {
-  return context.locale.languageCode == 'ar';
-}
-Future<UserModel?> loadUser() async {
-  late UserModel? user =null;
-  if(FirebaseAuth.instance.currentUser?.email != null){
-    await FirebaseFirestore.instance
-        .collection('Users')
-        .where('email', isEqualTo: FirebaseAuth.instance.currentUser?.email)
-        .get()
-        .then((value) => value.docs.forEach((doc) async {
-      user = UserModel.fromJson(value.docs.first.data());
-      print(user?.name);
-    }));
-  }else {
-    return null;
-  }
-
-
-  return user;
-}
-Widget _buildListItem(BuildContext context, DocumentSnapshot snapshot, int length, int roleId, UserModel userModel) {
-    final store = Store.fromSnapshot(snapshot);
-    return userModel.followedStores.contains(store.storeId.trim()) ?  CupertinoPageScaffold(
-    backgroundColor: CupertinoColors.white,
-    child: Padding(
-      padding: EdgeInsets.only(
-          left: MediaQuery.of(context).size.width * 0.004,
-          right: MediaQuery.of(context).size.width * 0.004),
-      child: Center(
-        child: store.stories.isNotEmpty
-            ? Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(60.0),
-                image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image:
-                  Image.memory(base64Decode(store.stories.last.img))
-                      .image,
-                ),
-                border: Border.all(
-                  color: CupertinoColors.activeOrange,
-                  width: 2.0,
-                  style: BorderStyle.solid,
-                ),
-              ),
-              width: MediaQuery.of(context).size.height * 0.12,
-              height: MediaQuery.of(context).size.height * 0.12,
-              child: GestureDetector(
-                onTap: () {
-                  showCupertinoDialog(
-                    context: context,
-                    builder: (context) {
-                      return CupertinoPageScaffold(
-                        child: Story(
-                          fullscreen: false,
-                          topOffset:
-                          MediaQuery.of(context).size.height * 0.06,
-                          onFlashForward: Navigator.of(context).pop,
-                          onFlashBack: Navigator.of(context).pop,
-                          momentCount: store.stories.length,
-                          momentDurationGetter: (idx) => const Duration(seconds: 5),
-                          momentBuilder: (context, index) => Scaffold(
-                            body: Stack(
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: CupertinoColors.darkBackgroundGray,
-                                    image: DecorationImage(
-                                      fit: BoxFit.contain,
-                                      image: Image.memory(base64Decode(
-                                          store.stories[index].img))
-                                          .image,
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  top: 70,
-                                  left: 20,
-                                  child: Row(
-                                    children: [
-                                      ClipOval(
-                                        child: Image(image: Image.memory(base64Decode(store.stories.last.img)).image, height: 25,width: 25,),
-                                      ),
-                                      SizedBox(width: MediaQuery.of(context).size.width * 0.02,),
-                                      Text(isArabic(context) ? store.nameAr : store.nameEn,style: const TextStyle(color: Colors.white,fontSize: 17),),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  );
-                },
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).size.height * 0.005),
-              child: isArabic(context)
-                  ? Text(store.nameAr)
-                  : Text(store.nameEn),
-            ),
-          ],
-        )
-            : Container(),
-      ),
-    ),
-  ) : Container();
-}
