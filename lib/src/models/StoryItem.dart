@@ -9,6 +9,7 @@ class StoryContent {
   int createdAt;
 
   late String storeName;
+  late String storeId;
 
   // 2
   StoryContent(this.img,this.category,this.description,this.duration,this.createdAt);

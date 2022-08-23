@@ -342,6 +342,7 @@ Widget _buildCategoryList(BuildContext context, List<DocumentSnapshot>? snapshot
   List<Widget> widgetsList = [];
   Store currentStore;
   bool isFollowing = false;
+  UserModel user = userData;
 
   snapshot!
       .map((data) => {
@@ -363,6 +364,7 @@ Widget _buildCategoryList(BuildContext context, List<DocumentSnapshot>? snapshot
       if (store.isApprovedByAdmin) {
         for(StoryContent sc in store.stories){
           sc.storeName = isArabic(context) ? store.nameAr : store.nameEn;
+          sc.storeId = store.storeId;
         }
         storyByCategory.addAll(store.stories.where((e) => e.category == category).toList());
 
@@ -373,7 +375,7 @@ Widget _buildCategoryList(BuildContext context, List<DocumentSnapshot>? snapshot
     }
     List<ImageStoreModel> imgs = [];
     for (StoryContent sc in storyByCategory) {
-      imgs.add(ImageStoreModel(sc.img,sc.storeName));
+      imgs.add(ImageStoreModel(sc.img,sc.storeName,sc.storeId));
     }
     CategoryWidget categoryWidget = CategoryWidget(storyByCategory.first.img, Category.fromId(category).name, imgs);
     categoryWidgets.add(categoryWidget);
@@ -426,6 +428,7 @@ Widget _buildCategoryList(BuildContext context, List<DocumentSnapshot>? snapshot
                             momentBuilder: (context, index) => Scaffold(
                                 body: Stack(
                                   children: [
+
                                     Container(
                                       decoration: BoxDecoration(
                                         color: CupertinoColors.darkBackgroundGray,
@@ -436,7 +439,9 @@ Widget _buildCategoryList(BuildContext context, List<DocumentSnapshot>? snapshot
                                               .image,
                                         ),
                                       ),
+
                                     ),
+                                   
                                     Positioned(
                                       top: 70,
                                       left: 20,
@@ -448,81 +453,79 @@ Widget _buildCategoryList(BuildContext context, List<DocumentSnapshot>? snapshot
                                           ),
                                           SizedBox(width: MediaQuery.of(context).size.width * 0.02,),
                                           Text(cw.images[index].storeName,style: const TextStyle(color: Colors.white,fontSize: 17),),
-                                          Padding(
+                                         userData != null && !user.followedStores.contains(cw.images[index].storeId)? Padding(
                                             padding:  EdgeInsets.only(left: MediaQuery.of(context).size.height *
                                                 .02 ),
                                             child: ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                maximumSize: Size(
+                                                style: ElevatedButton.styleFrom(
+                                                    maximumSize: Size(
                                                     MediaQuery.of(context).size.height *
-                                                        .15,
+                                                    .15,
                                                     MediaQuery.of(context).size.height *
-                                                        .04),
-                                                minimumSize: Size(
+                                                    .04),
+                                                    minimumSize: Size(
                                                     MediaQuery.of(context).size.height *
-                                                        .15,
+                                                    .15,
                                                     MediaQuery.of(context).size.height *
-                                                        .04),
-                                                primary: Colors.transparent,
-                                              ),
-                                              onPressed: () async{
-                                                if(AuthenticationService.isCurrentUserLoggedIn() == false){
-                                                  LoginHelper.showLoginAlertDialog(context);
-                                                }else{
-                                                /*  if(isFollowing){
-                                                    print("Unfollow");
-                                                    UserModel user = userData;
-                                                    Store store = widget.searchStore!.store;
-                                                      isFollowing = false;
-                                                      user.followedStores.remove(store.storeId);
-                                                      store.numOfFollowers -=1;
-                                                      if(store.numOfFollowers <0){
-                                                        store.numOfFollowers = 0;
-                                                      }
-                                                    await FirebaseFirestore.instance.collection('Users').where('email' , isEqualTo: FirebaseAuth.instance.currentUser!.email).get().then((value) async => {
-                                                      print("1"),
-                                                      await FirebaseFirestore.instance.collection('Users').doc(value.docs.first.id).update(
-                                                          {
-                                                            'followedStores':FieldValue.arrayRemove([store.storeId])
-                                                          }).then((value) async => {
-                                                        print("2"),
-                                                        await FirebaseFirestore.instance.collection('Store').doc(widget.searchStore?.store.storeId.trim()).update({'numOfFollowers': store.numOfFollowers})
-                                                      }),
-                                                    });
-                                                  }
-                                                  else{
-                                                    print("follow");
-                                                    UserModel user = userData;
-                                                    Store store = widget.searchStore!.store;
-                                                      isFollowing = true;
-                                                      user.followedStores.add(store.storeId.replaceAll(" ", ""));
-                                                      store.numOfFollowers +=1;
-                                                    await FirebaseFirestore.instance.collection('Users').where('email' , isEqualTo: FirebaseAuth.instance.currentUser!.email).get().then((value) async => {
-                                                      await FirebaseFirestore.instance.collection('Users').doc(value.docs.first.id).update(
-                                                          {
-                                                            'followedStores':FieldValue.arrayUnion(user.followedStores)
-                                                          }).then((value) async => {
+                                                    .04),
+                                                    primary: Colors.transparent,
+                                                    ),
+                                                    onPressed: () async{
+                                                      print("Try to follow");
+                                                      if(AuthenticationService.isCurrentUserLoggedIn() == false){
+                                                        LoginHelper.showLoginAlertDialog(context);
+                                                      }else{
+                                                        if(isFollowing){
+                                                          print("Unfollow");
+                                                          UserModel user = userData;
+                                                          Store store = userData.searchStore!.store;
+                                                          isFollowing = false;
+                                                          user.followedStores.remove(store.storeId);
+                                                          store.numOfFollowers -=1;
+                                                          if(store.numOfFollowers <0){
+                                                            store.numOfFollowers = 0;
+                                                          }
+                                                          await FirebaseFirestore.instance.collection('Users').where('email' , isEqualTo: FirebaseAuth.instance.currentUser!.email).get().then((value) async => {
+                                                            await FirebaseFirestore.instance.collection('Users').doc(value.docs.first.id).update(
+                                                                {
+                                                                  'followedStores':FieldValue.arrayRemove([store.storeId])
+                                                                }).then((value) async => {
+                                                              await FirebaseFirestore.instance.collection('Store').doc(store.storeId.trim()).update({'numOfFollowers': store.numOfFollowers})
+                                                            }),
+                                                          });
+                                                        }
+                                                        else{
+                                                          print("follow");
+                                                          UserModel user = userData;
+                                                          Store store = userData.searchStore!.store;
+                                                          isFollowing = true;
+                                                          user.followedStores.add(store.storeId.replaceAll(" ", ""));
+                                                          store.numOfFollowers +=1;
+                                                          await FirebaseFirestore.instance.collection('Users').where('email' , isEqualTo: FirebaseAuth.instance.currentUser!.email).get().then((value) async => {
+                                                            await FirebaseFirestore.instance.collection('Users').doc(value.docs.first.id).update(
+                                                                {
+                                                                  'followedStores':FieldValue.arrayUnion(user.followedStores)
+                                                                }).then((value) async => {
 
-                                                        await FirebaseFirestore.instance.collection('Store').doc(widget.searchStore?.store.storeId.trim()).update({'numOfFollowers': store.numOfFollowers})
+                                                              await FirebaseFirestore.instance.collection('Store').doc(store.storeId.trim()).update({'numOfFollowers': store.numOfFollowers})
 
-                                                      }),
-                                                    });
+                                                            }),
+                                                          });
 
 
-                                                  }*/
+                                                        }}
 
-                                                }
-                                              },
-                                              child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                                children: const [
-                                                  Text('Follow'),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
+                                                    },
+                                                    child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                    crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                    children: const [
+                                                    Text('Follow'),
+                                                    ],
+                                                    ),
+                                                    ),
+                                                    ) : Container(),
                                         ],
                                       ),
                                     ),

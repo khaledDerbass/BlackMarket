@@ -6,6 +6,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:souq/Helpers/LoginHelper.dart';
@@ -316,10 +317,10 @@ class profileHeaderState extends State<profileHeader>{
                               Image.memory(base64Decode(userStore.userModel.profilePicture)).image
                                   : Image.asset('assets/images/pic2.png').image,),
                             Positioned(
-                              top: 75,
-                              left: 78,
+                              top: 65,
+                              left: 70,
                               child: SizedBox.fromSize(
-                                size: Size(MediaQuery.of(context).size.height * .03, MediaQuery.of(context).size.height * .03), // button width and height
+                                size: Size(MediaQuery.of(context).size.height * .03, MediaQuery.of(context).size.height * .04), // button width and height
                                 child: ClipOval(
                                   child: Material(
                                     color: Colors.amber, // button color
@@ -329,12 +330,18 @@ class profileHeaderState extends State<profileHeader>{
                                         print(AuthenticationService.getAuthInstance().currentUser?.uid);
                                         Uint8List? bytes;
                                         String img;
+                                        File? file;
+                                        XFile compressedImage;
                                         _showChoiceDialog(context).then((value) async => {
-                                          bytes = await XFile(imageFile!.path).readAsBytes(),
+                                        file = await compressFile(File(imageFile!.path)),
+                                          print("Size before : ${File(imageFile!.path).lengthSync()}"),
+                                          print("Size After : ${File(file!.path).lengthSync()}"),
+                                          compressedImage = XFile(file!.path),
+                                           bytes = await compressedImage.readAsBytes(),
                                           img= base64Encode(bytes!),
                                             userStore.userModel.profilePicture = img,
                                             await FirebaseFirestore.instance.collection('Users').where('email' , isEqualTo: FirebaseAuth.instance.currentUser!.email).get().then((value) async => {
-                                            await FirebaseFirestore.instance.collection('Users').doc(value.docs.first.id).set(
+                                            await FirebaseFirestore.instance.collection('Users').doc(value.docs.first.id).update(
                                               {
                                                 'profilePicture':img
                                               }).then((value) => {
@@ -608,6 +615,25 @@ class profileHeaderState extends State<profileHeader>{
   bool isArabic(BuildContext context) {
     return context.locale.languageCode == 'ar';
   }
+  Future<File?> compressFile(File file) async {
+    final filePath = file.absolute.path;
+
+    final lastIndex = filePath.lastIndexOf(RegExp(r'.jp'));
+    final splitted = filePath.substring(0, (lastIndex));
+    final outPath = "${splitted}_out${filePath.substring(lastIndex)}";
+    var result = await FlutterImageCompress.compressAndGetFile(
+        file.absolute.path, outPath,
+        quality: 50,
+        minHeight: 700,
+        minWidth: 700
+    );
+
+    print(file.lengthSync());
+    print(result?.lengthSync());
+
+    return result;
+  }
+
   Future<void> _showChoiceDialog(BuildContext context) {
     return showModalBottomSheet(
         context: context,
