@@ -99,7 +99,32 @@ class profilepageState extends State<profilepage> {
             ),
           ),
         ),
-        bottomNavigationBar: ConvexAppBar(
+        bottomNavigationBar:  roleId == 1 ? ConvexAppBar(
+          height: MediaQuery.of(context).size.height * 0.07,
+          style: TabStyle.textIn,
+          color: CupertinoColors.white,
+          backgroundColor: Colors.deepPurple.withOpacity(0.85),
+          items: [
+            TabItem(
+                icon: Icons.home,
+                title: isArabic(context) ? 'الرئيسية' : 'Home'),
+
+            TabItem(
+                icon: Icons.people,
+                title: isArabic(context) ? 'الحساب' : 'Profile'),
+          ],
+          initialActiveIndex: 1, //optional, default as 0
+          onTap: (int i) => {
+            if (i == 0)
+              {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const HomeScreen()),
+                ),
+              }
+
+          },
+        ) :ConvexAppBar(
           height: MediaQuery.of(context).size.height * 0.07,
           style: TabStyle.fixedCircle,
           color: CupertinoColors.white,
@@ -353,7 +378,32 @@ class profilepageState extends State<profilepage> {
             ),
           ),
         ),
-        bottomNavigationBar: ConvexAppBar(
+        bottomNavigationBar: roleId == 1 ? ConvexAppBar(
+          height: MediaQuery.of(context).size.height * 0.07,
+          style: TabStyle.textIn,
+          color: CupertinoColors.white,
+          backgroundColor: Colors.deepPurple.withOpacity(0.85),
+          items: [
+            TabItem(
+                icon: Icons.home,
+                title: isArabic(context) ? 'الرئيسية' : 'Home'),
+
+            TabItem(
+                icon: Icons.people,
+                title: isArabic(context) ? 'الحساب' : 'Profile'),
+          ],
+          initialActiveIndex: 1, //optional, default as 0
+          onTap: (int i) => {
+            if (i == 0)
+              {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const HomeScreen()),
+                ),
+              }
+
+          },
+        ) :ConvexAppBar(
           height: MediaQuery.of(context).size.height * 0.07,
           style: TabStyle.fixedCircle,
           color: CupertinoColors.white,
