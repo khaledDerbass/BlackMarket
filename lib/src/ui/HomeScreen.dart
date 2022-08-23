@@ -655,28 +655,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 if(AuthenticationService.isCurrentUserLoggedIn() == false){
                                                   LoginHelper.showLoginAlertDialog(context);
                                                 }else{
-                                                  if(isFollowing){
-                                                    print("Unfollow");
-                                                    UserModel user = userData;
-                                                    Store store = Store.fromSnapshot(await FirebaseFirestore.instance.collection('Store').doc(cw.images[storyIndex].storeId.replaceAll(" ", "")).get());
-                                                    setState(() {
-                                                      isFollowing = false;
-                                                      user.followedStores.remove(store.storeId);
-                                                      store.numOfFollowers -=1;
-                                                      if(store.numOfFollowers <0){
-                                                        store.numOfFollowers = 0;
-                                                      }
-                                                    });
-                                                    await FirebaseFirestore.instance.collection('Users').where('email' , isEqualTo: FirebaseAuth.instance.currentUser!.email).get().then((value) async => {
-                                                      await FirebaseFirestore.instance.collection('Users').doc(value.docs.first.id).update(
-                                                          {
-                                                            'followedStores':FieldValue.arrayRemove([store.storeId])
-                                                          }).then((value) async => {
-                                                        await FirebaseFirestore.instance.collection('Store').doc(store.storeId.trim()).update({'numOfFollowers': store.numOfFollowers})
-                                                      }),
-                                                    });
-                                                  }
-                                                  else{
+
                                                     print("follow");
                                                     UserModel user = userData;
                                                     Store store = Store.fromSnapshot(await FirebaseFirestore.instance.collection('Store').doc(cw.images[storyIndex].storeId.replaceAll(" ", "")).get());
@@ -697,7 +676,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     });
 
 
-                                                  }}
+                                                  }
+
 
                                               },
                                               child: Row(
