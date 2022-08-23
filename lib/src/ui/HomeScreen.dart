@@ -632,7 +632,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     return Align(
                                       alignment: Alignment.topRight,
                                       child: Padding(
-                                        padding: const EdgeInsets.only(top: 35),
+                                        padding: const EdgeInsets.only(top: 35,left: 10,right: 10),
                                         child: Row(
                                           mainAxisAlignment: MainAxisAlignment.end,
                                           children: [
@@ -684,22 +684,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 mainAxisAlignment: MainAxisAlignment.end,
                                                 crossAxisAlignment:
                                                 CrossAxisAlignment.center,
-                                                children: const [
-                                                  Text('Follow'),
+                                                children:  [
+                                                  Text(isArabic(context) ? 'متابعة' :'Follow'),
                                                 ],
                                               ),
                                             ) : Container(),
-                                            const SizedBox(
-                                              width: 8,
-                                            ),
-                                            IconButton(
-                                              padding: EdgeInsets.zero,
-                                              color: Colors.white,
-                                              icon: Icon(Icons.close),
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                              },
-                                            ),
                                           ],
                                         ),
                                       ),
