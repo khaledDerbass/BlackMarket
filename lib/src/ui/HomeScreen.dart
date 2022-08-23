@@ -732,7 +732,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       primary: Colors.pinkAccent.withOpacity(0.3),
                                                     ),
                                                     onPressed: () async{
-
                                                       print("Try to follow");
                                                       if(AuthenticationService.isCurrentUserLoggedIn() == false){
                                                         LoginHelper.showLoginAlertDialog(context);
