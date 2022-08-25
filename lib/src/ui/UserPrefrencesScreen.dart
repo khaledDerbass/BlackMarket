@@ -96,10 +96,10 @@ class _UserPrefrencesScreenState extends State<UserPrefrencesScreen>{
                               isExpanded: true, //make true to take width of parent widget
                               underline: Container(), //empty line
                               style: TextStyle(fontSize: 18, color: Colors.white),
-                              dropdownColor: Colors.deepPurpleAccent,
+                              dropdownColor: Colors.transparent,
                               iconEnabledColor: Colors.white, //Icon color
-                            )
-                        )
+                            ),
+                        ),
                     ),
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.3,),
@@ -107,7 +107,7 @@ class _UserPrefrencesScreenState extends State<UserPrefrencesScreen>{
                     style: ElevatedButton.styleFrom(
                         primary: Colors.black,
                         fixedSize: Size(MediaQuery.of(context).size.width * 0.4,
-                          MediaQuery.of(context).size.height * 0.08,)
+                          MediaQuery.of(context).size.height * 0.05,)
                     ),
                     onPressed: ()=> {
                       _saveUserCity(),
@@ -118,11 +118,11 @@ class _UserPrefrencesScreenState extends State<UserPrefrencesScreen>{
                     }, child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       maximumSize: Size(
-                          MediaQuery.of(context).size.height * .20,
-                          MediaQuery.of(context).size.height * .05),
+                          MediaQuery.of(context).size.height * .15,
+                          MediaQuery.of(context).size.height * .03),
                       minimumSize: Size(
-                          MediaQuery.of(context).size.height * .20,
-                          MediaQuery.of(context).size.height * .05),
+                          MediaQuery.of(context).size.height * .15,
+                          MediaQuery.of(context).size.height * .03),
                       primary: Colors.black,
                       shape: StadiumBorder(),
                     ),

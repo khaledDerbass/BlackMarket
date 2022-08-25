@@ -320,10 +320,10 @@ class profileHeaderState extends State<profileHeader>{
                               top: 65,
                               left: 70,
                               child: SizedBox.fromSize(
-                                size: Size(MediaQuery.of(context).size.height * .03, MediaQuery.of(context).size.height * .04), // button width and height
+                                size: Size(MediaQuery.of(context).size.height * .03, MediaQuery.of(context).size.height * .03), // button width and height
                                 child: ClipOval(
                                   child: Material(
-                                    color: Colors.amber, // button color
+                                    color: Colors.black, // button color
                                     child: InkWell(
                                       splashColor: Colors.green, // splash color
                                       onTap: () {
@@ -355,7 +355,7 @@ class profileHeaderState extends State<profileHeader>{
                                       child: Column(
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         children: <Widget>[
-                                          Icon(Icons.add), // icon
+                                          Icon(Icons.add, color: Colors.white,), // icon
                                         ],
                                       ),
                                     ),

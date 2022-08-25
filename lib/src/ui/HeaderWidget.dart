@@ -34,7 +34,7 @@ class _HeaderWidgetState extends State<HeaderWidget> {
                 gradient: new LinearGradient(
                     colors: [
                       Colors.deepPurpleAccent.withOpacity(0.4),
-                      Colors.deepPurple.withOpacity(0.4),
+                      Colors.deepPurpleAccent.withOpacity(0.4),
                     ],
                     begin: const FractionalOffset(0.0, 0.0),
                     end: const FractionalOffset(1.0, 0.0),
@@ -81,7 +81,7 @@ class _HeaderWidgetState extends State<HeaderWidget> {
               decoration: new BoxDecoration(
                 gradient: new LinearGradient(
                     colors: [
-                      Colors.deepPurple,
+                      Colors.deepPurpleAccent,
                       Colors.deepPurple,
                     ],
                     begin: const FractionalOffset(0.0, 0.0),

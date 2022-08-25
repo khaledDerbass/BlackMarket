@@ -6,7 +6,8 @@ import '../models/UserModel.dart';
 import 'CustomProfileAppBar.dart';
 import 'changePasswordUi.dart';
 
-class AccountPage extends StatefulWidget {
+class AccountPage extends StatefulWidget
+{
   const AccountPage({Key? key}) : super(key: key);
 
   @override
@@ -17,8 +18,6 @@ class AccountPageState extends State<AccountPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _newpasswordController = TextEditingController();
   final GlobalKey<FormState> _form = GlobalKey<FormState>();
 
   @override
@@ -49,7 +48,8 @@ class AccountPageState extends State<AccountPage> {
                   );
 
                   // if we got our data
-                } else if (snapshot.hasData) {
+                }
+                else if (snapshot.hasData) {
                   // Extracting data from snapshot object
                   var data = snapshot.data as UserModel;
                   _usernameController.text = data.name;
@@ -110,10 +110,6 @@ class AccountPageState extends State<AccountPage> {
                                     isArabic(context) ? 'رقم الهاتف' : 'Phone',
                                   ),
                                 ),
-                                SizedBox(
-                                    height:
-                                    MediaQuery.of(context).size.height * .03),
-
                                 SizedBox(
                                     height:
                                     MediaQuery.of(context).size.height * .10),

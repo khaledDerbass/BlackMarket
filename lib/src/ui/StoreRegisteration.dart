@@ -6,8 +6,7 @@ import '../Services/StoreAuthService.dart';
 import '../blocs/CategoriesRepoitory.dart';
 import '../models/CategoryList.dart';
 import '../models/CategoryModel.dart';
-import 'CustomProfileAppBar.dart';
-import 'HomeScreen.dart';
+
 
 class StoreRegisteration extends StatefulWidget {
   const StoreRegisteration({Key? key}) : super(key: key);
@@ -25,6 +24,7 @@ class StoreRegisterationState extends State<StoreRegisteration> {
   final TextEditingController _categoryController = TextEditingController();
   CategoriesRepository repository = CategoriesRepository();
   int dropdownvalue = 1;
+  String dropdownValueCity = 'Amman';
 
   @override
   Widget build(BuildContext context) {
@@ -101,6 +101,46 @@ class StoreRegisterationState extends State<StoreRegisteration> {
                       filled: true,
                       labelText: isArabic(context) ? 'كلمة السر' : 'Password',
                     ),
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.height * .05),
+                  Align(
+                    alignment: isArabic(context)
+                        ? Alignment.centerRight
+                        : Alignment.centerLeft,
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                          top: MediaQuery.of(context).size.width * 0.02,
+                          left: MediaQuery.of(context).size.width * 0.02,
+                          right: MediaQuery.of(context).size.width * 0.02,
+                          bottom: MediaQuery.of(context).size.width * 0.04),
+                      child: isArabic(context)
+                          ? const Text(
+                        ": اختر المدينة",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+
+                        ),
+                      )
+                          : const Text(
+                        "Choose City :",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+
+                        ),
+                      ),
+                    ),),
+                  LimitedBox(
+                    maxHeight: MediaQuery.of(context).size.height * 0.25,
+                    maxWidth: MediaQuery.of(context).size.width,
+                    child: StreamBuilder<QuerySnapshot>(
+                        builder: (context, snapshot) {
+
+                          if (!snapshot.hasData)
+                            return const LinearProgressIndicator();
+                          return _buildCitiesList(context, snapshot.data?.docs ?? []);
+                        }),
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height * .05),
                   Align(
@@ -249,6 +289,40 @@ class StoreRegisterationState extends State<StoreRegisteration> {
             dropdownvalue = newValue!;
           });
         });
+  }
+  Widget _buildCitiesList(BuildContext context, List<DocumentSnapshot>? snapshot) {
+
+    return DropdownButton(
+      // Down Arrow Icon
+        icon: const Icon(Icons.keyboard_arrow_down),
+        value:  dropdownValueCity,
+
+        items:  const [
+      DropdownMenuItem(
+      value: "Amman",
+      child: Text("Amman"),
+    ),
+    DropdownMenuItem(
+    value: "Irbid",
+    child: Text("Irbid"),
+    ),
+    DropdownMenuItem(
+    value: "Zarqa",
+    child: Text("Zarqa"),
+    )
+    ],
+
+      onChanged: (value){
+        setState(() {
+          dropdownValueCity = value.toString();
+        });
+      },
+    //  isExpanded: true, //make true to take width of parent widget
+     underline: Container(), //empty line
+      style: TextStyle(fontSize: 18,color: Colors.black),
+     // dropdownColor: Colors.transparent,
+     // iconEnabledColor: Colors.white, //Icon color
+    );
   }
   bool isArabic(BuildContext context) {
     return context.locale.languageCode == 'ar';

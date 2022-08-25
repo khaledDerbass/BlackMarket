@@ -29,16 +29,23 @@ class LoginScreenState extends State<LoginScreen> {
   print(FirebaseAuth.instance.currentUser?.email);
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.deepPurpleAccent,
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                bottomRight: Radius.circular(25),
-                bottomLeft: Radius.circular(25))),
-        title: Center(
-          child: Text(isArabic(context) ? 'تسجيل دخول' : 'Login'),
-        ),
-      ),
+      toolbarHeight: MediaQuery.of(context).size.height * 0.1,
+    backgroundColor: Colors.deepPurple.withOpacity(0.9),
+    shape: const RoundedRectangleBorder(
+    borderRadius:  BorderRadius.only(
+    bottomRight: Radius.circular(25),
+    bottomLeft: Radius.circular(25))
+    ),
+    leading: Row(
+    mainAxisAlignment: MainAxisAlignment.end,
+    children: [
+    IconButton(
+    onPressed:() => Navigator.of(context).pop(),
+    icon: const Icon(Icons.arrow_back_ios,
+    )),
+    ],
+    ),),
+
           body: Stack(
             children: [
               SingleChildScrollView(

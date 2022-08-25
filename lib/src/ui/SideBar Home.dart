@@ -180,8 +180,7 @@ class SideDrawer extends StatelessWidget {
                   style: TextStyle(fontSize: 17),
                 ),
                 onTap: () => {
-                  context.setLocale(Locale('en', 'US')),
-                  Navigator.of(context, rootNavigator: true).pop('dialog')
+
                 }),
             const Divider(),
             ListTile(
@@ -195,8 +194,7 @@ class SideDrawer extends StatelessWidget {
                   style: TextStyle(fontSize: 17),
                 ),
                 onTap: () => {
-                  context.setLocale(Locale('en', 'US')),
-                  Navigator.of(context, rootNavigator: true).pop('dialog')
+
                 }),
             const Divider(),
             ListTile(
@@ -210,8 +208,7 @@ class SideDrawer extends StatelessWidget {
                   style: TextStyle(fontSize: 17),
                 ),
                 onTap: () => {
-                  context.setLocale(Locale('en', 'US')),
-                  Navigator.of(context, rootNavigator: true).pop('dialog')
+
                 }),
           ],
         ),
