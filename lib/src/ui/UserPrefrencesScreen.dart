@@ -52,7 +52,7 @@ class _UserPrefrencesScreenState extends State<UserPrefrencesScreen>{
 
                   SizedBox(height: MediaQuery.of(context).size.height * 0.05,),
                   Container(
-                    width: MediaQuery.of(context).size.width * 0.7,
+                    width: MediaQuery.of(context).size.width * 0.5,
                     child: DecoratedBox(
                         decoration: BoxDecoration(
                             gradient: const LinearGradient(
@@ -106,8 +106,8 @@ class _UserPrefrencesScreenState extends State<UserPrefrencesScreen>{
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                         primary: Colors.black,
-                        fixedSize: Size(MediaQuery.of(context).size.width * 0.4,
-                          MediaQuery.of(context).size.height * 0.05,)
+                        fixedSize: Size(MediaQuery.of(context).size.width * 0.31,
+                          MediaQuery.of(context).size.height * 0.03,)
                     ),
                     onPressed: ()=> {
                       _saveUserCity(),
@@ -118,10 +118,10 @@ class _UserPrefrencesScreenState extends State<UserPrefrencesScreen>{
                     }, child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       maximumSize: Size(
-                          MediaQuery.of(context).size.height * .15,
+                          MediaQuery.of(context).size.height * .12,
                           MediaQuery.of(context).size.height * .03),
                       minimumSize: Size(
-                          MediaQuery.of(context).size.height * .15,
+                          MediaQuery.of(context).size.height * .12,
                           MediaQuery.of(context).size.height * .03),
                       primary: Colors.black,
                       shape: StadiumBorder(),
