@@ -141,7 +141,8 @@ class AccountPageState extends State<AccountPage> {
                                           children: [
                                             Text(isArabic(context)
                                                 ? 'تغيير كلمة السر'
-                                                : "Change Password"),
+                                                : "Change Password",style: TextStyle(
+              fontFamily:'SouqFont')),
                                             Icon(
                                               Icons.refresh,
                                               color: Colors.white,

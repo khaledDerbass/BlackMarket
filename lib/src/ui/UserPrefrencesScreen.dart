@@ -45,11 +45,11 @@ class _UserPrefrencesScreenState extends State<UserPrefrencesScreen>{
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text("Select state or province",style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 22,
                     fontWeight: FontWeight.bold,
+                      fontFamily:'SouqFont'
                   ),
                   ),
-
                   SizedBox(height: MediaQuery.of(context).size.height * 0.05,),
                   Container(
                     width: MediaQuery.of(context).size.width * 0.5,
@@ -95,7 +95,7 @@ class _UserPrefrencesScreenState extends State<UserPrefrencesScreen>{
                               },
                               isExpanded: true, //make true to take width of parent widget
                               underline: Container(), //empty line
-                              style: TextStyle(fontSize: 18, color: Colors.white),
+                              style: TextStyle(fontSize: 18, color: Colors.white,fontFamily:'SouqFont'),
                               dropdownColor: Colors.transparent,
                               iconEnabledColor: Colors.white, //Icon color
                             ),

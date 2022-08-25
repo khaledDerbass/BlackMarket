@@ -101,10 +101,12 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                           onPressed: () {
                             final snackBar1 = SnackBar(
-                              content: Text( isArabic(context) ? 'تم التسجيل بنجاح ' : 'Your account has been created successfully'),
+                              content: Text( isArabic(context) ? 'تم التسجيل بنجاح ' : 'Your account has been created successfully',style: TextStyle(
+                                  fontFamily:'SouqFont')),
                             );
                             final snackBar2 = SnackBar(
-                              content: Text( isArabic(context) ? 'حدث خطأ اثناء عملية التسجيل' : 'Error during sign up'),
+                              content: Text( isArabic(context) ? 'حدث خطأ اثناء عملية التسجيل' : 'Error during sign up',style: TextStyle(
+                                  fontFamily:'SouqFont')),
 
                             );
 
@@ -135,7 +137,8 @@ class _RegisterPageState extends State<RegisterPage> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             //crossAxisAlignment: CrossAxisAlignment.center,
                             children:  [
-                             Text( isArabic(context) ? 'التسجيل' : 'REGISTER'),
+                             Text( isArabic(context) ? 'التسجيل' : 'REGISTER',style: TextStyle(
+    fontFamily:'SouqFont')),
                               Icon(
                                 Icons.content_paste_rounded,
                                 color: Colors.white,
@@ -159,7 +162,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         },
                         child:  Text(
                          isArabic(context) ? ' التسجيل كمتجر' : 'Register as Store',
-                          style: TextStyle(color: Colors.black),
+                          style: TextStyle(color: Colors.black,    fontFamily:'SouqFont'),
                         ),
                       )
                     ],

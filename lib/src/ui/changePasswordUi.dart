@@ -114,7 +114,8 @@ class ChangePasswordUiState extends State<ChangePasswordUi> {
                                   //crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Text(
-                                        isArabic(context) ? 'تعديل' : "Modify"),
+                                        isArabic(context) ? 'تعديل' : "Modify",style: TextStyle(
+    fontFamily:'SouqFont'),),
                                     Icon(
                                       Icons.refresh,
                                       color: Colors.white,

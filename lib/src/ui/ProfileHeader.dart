@@ -103,7 +103,7 @@ class profileHeaderState extends State<profileHeader>{
                           style: const TextStyle(
                             decoration: TextDecoration.none,
                             fontSize: 12,
-                            letterSpacing: .5,
+                            letterSpacing: .5,fontFamily: 'SouqFont'
                           ),
                         ),
                       ],
@@ -130,7 +130,7 @@ class profileHeaderState extends State<profileHeader>{
                           style: const TextStyle(
                             decoration: TextDecoration.none,
                             letterSpacing: .5,
-                            fontSize: 12,
+                            fontSize: 12,fontFamily: 'SouqFont'
                           ),
                         )
                       ],
@@ -158,7 +158,7 @@ class profileHeaderState extends State<profileHeader>{
                       fontWeight: FontWeight.w900,
                       decoration: TextDecoration.none,
                       fontSize: 16,
-                      letterSpacing: .5,
+                      letterSpacing: .5,fontFamily: 'SouqFont'
                     ),
                   ),
                 ),
@@ -239,7 +239,9 @@ class profileHeaderState extends State<profileHeader>{
                       CrossAxisAlignment.center,
                       children:  [
 
-                        Text(isArabic(context) ? 'متابعة':'Follow'),
+                        Text(isArabic(context) ? 'متابعة':'Follow',style: TextStyle(
+                            fontFamily:'SouqFont'
+                        ),),
                         const Icon(
                           Icons.add,
                           color: Colors.white,
@@ -252,7 +254,9 @@ class profileHeaderState extends State<profileHeader>{
                       CrossAxisAlignment.center,
                       children:  [
 
-                        Text(isArabic(context) ? 'إلغاء المتابعة':'Unfollow'),
+                        Text(isArabic(context) ? 'إلغاء المتابعة':'Unfollow',style: TextStyle(
+                            fontFamily:'SouqFont'
+                        ),),
                         const Icon(
                           Icons.remove_circle_outline,
                           color: Colors.white,
@@ -385,7 +389,7 @@ class profileHeaderState extends State<profileHeader>{
                                   style: TextStyle(
                                     decoration: TextDecoration.none,
                                     fontSize: 12,
-                                    letterSpacing: .5,
+                                    letterSpacing: .5,fontFamily: 'SouqFont'
                                   ),
                                 ),
                               ],
@@ -412,7 +416,7 @@ class profileHeaderState extends State<profileHeader>{
                                   style: TextStyle(
                                     decoration: TextDecoration.none,
                                     letterSpacing: .5,
-                                    fontSize: 12,
+                                    fontSize: 12,fontFamily: 'SouqFont'
                                   ),
                                 )
                               ],
@@ -467,7 +471,10 @@ class profileHeaderState extends State<profileHeader>{
                               crossAxisAlignment:
                               CrossAxisAlignment.center,
                               children: const [
-                                Text('Follow'),
+                                Text('Follow',style: TextStyle(
+          fontFamily:'SouqFont'
+          ),
+          ),
                                 Icon(
                                   Icons.add,
                                   color: Colors.white,
@@ -509,7 +516,7 @@ class profileHeaderState extends State<profileHeader>{
               return Center(
                 child: Text(
                   '${snapshot.error} occurred',
-                  style: TextStyle(fontSize: 18),
+                  style: TextStyle(fontSize: 18,fontFamily: 'SouqFont'),
                 ),
               );
 
@@ -565,7 +572,7 @@ class profileHeaderState extends State<profileHeader>{
                                   style: TextStyle(
                                     decoration: TextDecoration.none,
                                     letterSpacing: .5,
-                                    fontSize: 12,
+                                    fontSize: 12,fontFamily: 'SouqFont'
                                   ),
                                 )
                               ],
@@ -589,7 +596,7 @@ class profileHeaderState extends State<profileHeader>{
                           fontWeight: FontWeight.w600,
                           decoration: TextDecoration.none,
                           fontSize: 13,
-                          letterSpacing: 0.5,
+                          letterSpacing: 0.5,fontFamily: 'SouqFont'
                         ),
                       ),
                     ),

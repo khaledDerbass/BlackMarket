@@ -18,7 +18,8 @@ class SideDrawer extends StatelessWidget {
               child: Text(
                 'Souq Story',
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.white, fontSize: 25),
+                style: TextStyle(color: Colors.white, fontSize: 25,
+                    fontFamily:'SouqFont'),
               ),
             ),
             decoration: BoxDecoration(
@@ -31,7 +32,8 @@ class SideDrawer extends StatelessWidget {
                   leading: Icon(Icons.app_registration),
                   title: Text(isArabic(context)
                       ? 'تسجيل'
-                      : 'Sign up'), //Text('Sign up'),
+                      : 'Sign up',style: TextStyle(
+                      fontFamily:'SouqFont'),), //Text('Sign up'),
                   onTap: () => {
                     Navigator.push(
                       context,
@@ -44,7 +46,8 @@ class SideDrawer extends StatelessWidget {
           isLoggedIN == false
               ? ListTile(
                   leading: Icon(Icons.login),
-                  title: Text(isArabic(context) ? 'تسجيل دخول' : 'Sign in'),
+                  title: Text(isArabic(context) ? 'تسجيل دخول' : 'Sign in',style: TextStyle(
+                      fontFamily:'SouqFont')),
                   onTap: () => {
                     Navigator.push(
                       context,
@@ -56,19 +59,22 @@ class SideDrawer extends StatelessWidget {
               : Container(),
           ListTile(
               leading: Icon(Icons.language),
-              title: Text(isArabic(context) ? 'اللغة' : 'Language'),
+              title: Text(isArabic(context) ? 'اللغة' : 'Language',style: TextStyle(
+    fontFamily:'SouqFont'),),
               onTap: () => {
                     showLanguageAlertDialog(context),
                   }),
           ListTile(
             leading: Icon(Icons.home_filled),
-            title: Text(isArabic(context) ? 'المدينة/البلد' :'Country/State'),
+            title: Text(isArabic(context) ? 'المدينة/البلد' :'Country/State',style: TextStyle(
+    fontFamily:'SouqFont'),),
             onTap: () => {showCitiesAlertDialog(context)},
           ),
           isLoggedIN == true
               ? ListTile(
                   leading: Icon(Icons.logout),
-                  title: Text(isArabic(context) ? 'تسجيل خروج' : 'Sign out'),
+                  title: Text(isArabic(context) ? 'تسجيل خروج' : 'Sign out',style: TextStyle(
+                      fontFamily:'SouqFont'),),
                   onTap: () => {
                     AuthenticationService.signOut().then((value) => {
                           Navigator.pushReplacement(
@@ -90,7 +96,9 @@ class SideDrawer extends StatelessWidget {
 
   showLanguageAlertDialog(BuildContext context) {
     Widget okButton = FlatButton(
-      child: isArabic(context) ? const Text("إلغاء") : const Text("Dismiss"),
+      child: isArabic(context) ? const Text("إلغاء",style: TextStyle(
+          fontFamily:'SouqFont'),) : const Text("Dismiss",style: TextStyle(
+          fontFamily:'SouqFont'),),
       onPressed: () {
         Navigator.of(context, rootNavigator: true).pop('dialog');
       },
@@ -100,7 +108,9 @@ class SideDrawer extends StatelessWidget {
       actions: [
         okButton,
       ],
-      title: isArabic(context) ? const Text("اللغة") : const Text("Language"),
+      title: isArabic(context) ? const Text("اللغة",style: TextStyle(
+          fontFamily:'SouqFont'),) : const Text("Language",style: TextStyle(
+          fontFamily:'SouqFont'),),
       content: SizedBox(
         width: double.maxFinite,
         height: MediaQuery.of(context).size.height / 5,
@@ -124,11 +134,13 @@ class SideDrawer extends StatelessWidget {
                 title: isArabic(context)
                     ? const Text(
                         'الإنجليزية',
-                        style: TextStyle(fontSize: 17),
+                        style: TextStyle(fontSize: 17,
+                            fontFamily:'SouqFont'),
                       )
                     : const Text(
                         'English',
-                        style: TextStyle(fontSize: 17),
+                        style: TextStyle(fontSize: 17,
+                            fontFamily:'SouqFont'),
                       ),
                 trailing: Image(
                     width: MediaQuery.of(context).size.width * 0.09,
@@ -153,7 +165,9 @@ class SideDrawer extends StatelessWidget {
   }
   showCitiesAlertDialog(BuildContext context) {
     Widget okButton = FlatButton(
-      child: isArabic(context) ? const Text("إلغاء") : const Text("Dismiss"),
+      child: isArabic(context) ? const Text("إلغاء",style: TextStyle(
+          fontFamily:'SouqFont')) : const Text("Dismiss",style: TextStyle(
+          fontFamily:'SouqFont'),),
       onPressed: () {
         Navigator.of(context, rootNavigator: true).pop('dialog');
       },
@@ -163,7 +177,9 @@ class SideDrawer extends StatelessWidget {
       actions: [
         okButton,
       ],
-      title: isArabic(context) ? const Text("المدينة") : const Text("City"),
+      title: isArabic(context) ? const Text("المدينة",style: TextStyle(
+          fontFamily:'SouqFont',),) : const Text("City",style: TextStyle(
+          fontFamily:'SouqFont'),),
       content: SizedBox(
         width: double.maxFinite,
         height: MediaQuery.of(context).size.height / 5,
@@ -173,11 +189,13 @@ class SideDrawer extends StatelessWidget {
                 title: isArabic(context)
                     ? const Text(
                   'عمًان',
-                  style: TextStyle(fontSize: 17),
+                  style: TextStyle(fontSize: 17,
+                      fontFamily:'SouqFont'),
                 )
                     : const Text(
                   'Amman',
-                  style: TextStyle(fontSize: 17),
+                  style: TextStyle(fontSize: 17,
+                      fontFamily:'SouqFont'),
                 ),
                 onTap: () => {
 
@@ -187,11 +205,13 @@ class SideDrawer extends StatelessWidget {
                 title: isArabic(context)
                     ? const Text(
                   'إربد',
-                  style: TextStyle(fontSize: 17),
+                  style: TextStyle(fontSize: 17,
+                      fontFamily:'SouqFont'),
                 )
                     : const Text(
                   'Irbid',
-                  style: TextStyle(fontSize: 17),
+                  style: TextStyle(fontSize: 17,
+                      fontFamily:'SouqFont'),
                 ),
                 onTap: () => {
 
@@ -201,11 +221,13 @@ class SideDrawer extends StatelessWidget {
                 title: isArabic(context)
                     ? const Text(
                   'الزرقاء',
-                  style: TextStyle(fontSize: 17),
+                  style: TextStyle(fontSize: 17,
+                      fontFamily:'SouqFont'),
                 )
                     : const Text(
                   'Zarqa',
-                  style: TextStyle(fontSize: 17),
+                  style: TextStyle(fontSize: 17,
+                      fontFamily:'SouqFont'),
                 ),
                 onTap: () => {
 

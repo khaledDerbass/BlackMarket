@@ -39,6 +39,7 @@ class SettingPageState extends State<SettingPage> {
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
+                                  fontFamily:'SouqFont'
                               ),
                             )
                                 : const Text(
@@ -46,6 +47,7 @@ class SettingPageState extends State<SettingPage> {
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
+                                  fontFamily:'SouqFont'
                               ),
                             ),
                             trailing: Icon(
@@ -68,12 +70,14 @@ class SettingPageState extends State<SettingPage> {
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
+                                  fontFamily:'SouqFont'
                               ),                )
                                 : const Text(
                               'Notifications',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
+                                  fontFamily:'SouqFont'
                               ),                ),
                             /*trailing: Icon(
                               Icons.notification_add
@@ -109,6 +113,7 @@ class SettingPageState extends State<SettingPage> {
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
+                                  fontFamily:'SouqFont'
                               ),
                             ),
                             trailing: Icon(
@@ -131,12 +136,14 @@ class SettingPageState extends State<SettingPage> {
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
+                                  fontFamily:'SouqFont'
                               ),                )
                                 :  Text(
                               'Ads',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
+                                  fontFamily:'SouqFont'
                               ),                ),
                             trailing: Icon(
                               Icons.ads_click

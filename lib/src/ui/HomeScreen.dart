@@ -149,6 +149,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
+                                      fontFamily:'SouqFont'
                                   ),
                                 )
                                     : const Text(
@@ -156,6 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
+                                      fontFamily:'SouqFont'
                                   ),
                                 ),
                               )),
@@ -221,7 +223,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           Padding(
                             padding:  EdgeInsets.all(MediaQuery.of(context).size.height * 0.06),
-                            child: Text(isArabic(context) ? "يرجى تسجيل الدخول لتتمكن من متابعة المتاجر"  : "Please Sign up/in in order to follow stores"),
+                            child: Text(isArabic(context) ? "يرجى تسجيل الدخول لتتمكن من متابعة المتاجر"  : "Please Sign up/in in order to follow stores",style: TextStyle(
+              fontFamily:'SouqFont')),
                           ),
                           Align(
                               alignment: isArabic(context)
@@ -238,6 +241,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
+                                      fontFamily:'SouqFont'
                                   ),
                                 )
                                     : const Text(
@@ -245,6 +249,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
+                                      fontFamily:'SouqFont'
                                   ),
                                 ),
                               )),

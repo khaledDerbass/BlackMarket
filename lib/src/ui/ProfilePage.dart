@@ -290,14 +290,16 @@ class profilepageState extends State<profilepage> {
                       ),
                       ListTile(
                         leading: Icon(Icons.info_outline),
-                        title: Text(isArabic(context) ? 'تواصل معنا' : 'Contact us'),
+                        title: Text(isArabic(context) ? 'تواصل معنا' : 'Contact us',style: TextStyle(
+              fontFamily:'SouqFont')),
                         onTap: () => {
                           Navigator.push(context,MaterialPageRoute(builder: (context) => const ContactUs())),
                         },
                       ),
                       ListTile(
                         leading: Icon(Icons.contact_support_outlined),
-                        title: Text(isArabic(context) ? 'من نحن' : 'About us'),
+                        title: Text(isArabic(context) ? 'من نحن' : 'About us',style: TextStyle(
+              fontFamily:'SouqFont')),
                         onTap: () => {
                           Navigator.push(context,MaterialPageRoute(builder: (context) => const AboutUs())),
                         },
@@ -305,14 +307,16 @@ class profilepageState extends State<profilepage> {
                       ListTile(
                         leading: Icon(Icons.settings
                         ),
-                        title: Text(isArabic(context) ? 'الإعدادات' : 'Settings'),
+                        title: Text(isArabic(context) ? 'الإعدادات' : 'Settings',style: TextStyle(
+              fontFamily:'SouqFont')),
                         onTap: () => {
                           Navigator.push(context,MaterialPageRoute(builder: (context) => const SettingPage())),
                         },
                       ),
                       isLoggedIN == true  ? ListTile(
                         leading: Icon(Icons.logout),
-                        title: Text(isArabic(context) ? 'تسجيل خروج' : 'Sign out'),
+                        title: Text(isArabic(context) ? 'تسجيل خروج' : 'Sign out',style: TextStyle(
+                            fontFamily:'SouqFont')),
                         onTap: () => {
                           AuthenticationService.signOut().then((value) => {
                             Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()))

@@ -128,7 +128,8 @@ class LoginScreenState extends State<LoginScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children:  [
-                                  Text(isArabic(context) ? 'تسجيل الدخول' : 'Sign in'),
+                                  Text(isArabic(context) ? 'تسجيل الدخول' : 'Sign in',style: TextStyle(
+                  fontFamily:'SouqFont')),
                                   Icon(
                                     Icons.lock,
                                     color: Colors.white,
@@ -148,7 +149,8 @@ class LoginScreenState extends State<LoginScreen> {
                               },
                             child:
                               Text(isArabic(context) ? 'التسجيل' : 'Register',
-                  style: TextStyle(color: Colors.black),
+                  style: TextStyle(color: Colors.black,
+                      fontFamily:'SouqFont'),
                             ),
                           ),
                           TextButton(
@@ -158,7 +160,8 @@ class LoginScreenState extends State<LoginScreen> {
                               },
                             child:
                             Text(isArabic(context) ? 'نسيت كلمة المرور؟' : 'Forgot password?',
-                              style: TextStyle(color: Colors.black),
+                              style: TextStyle(color: Colors.black,
+                                  fontFamily:'SouqFont'),
                             ),
                           ),
                         ],

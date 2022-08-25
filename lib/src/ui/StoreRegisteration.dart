@@ -38,7 +38,9 @@ class StoreRegisterationState extends State<StoreRegisteration> {
                 bottomLeft: Radius.circular(25))),
         title: Center(
           child: Text(
-              isArabic(context) ? 'التسجيل كمتجر' : "Registration as Store"),
+              isArabic(context) ? 'التسجيل كمتجر' : "Registration as Store",style: TextStyle(
+              fontFamily:'SouqFont'
+          ),),
         ),
       ),
       body: Stack(
@@ -127,7 +129,7 @@ class StoreRegisterationState extends State<StoreRegisteration> {
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-
+fontFamily: 'SouqFont'
                         ),
                       ),
                     ),),
@@ -159,7 +161,7 @@ class StoreRegisterationState extends State<StoreRegisteration> {
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-
+fontFamily: 'SouqFont'
                         ),
                       )
                           : const Text(
@@ -167,6 +169,7 @@ class StoreRegisterationState extends State<StoreRegisteration> {
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
+                            fontFamily: 'SouqFont'
 
                         ),
                       ),
@@ -203,13 +206,15 @@ class StoreRegisterationState extends State<StoreRegisteration> {
                             final snackBar1 = SnackBar(
                               content: Text(isArabic(context)
                                   ? 'تم التسجيل بنجاح '
-                                  : 'Your account has been created successfully'),
+                                  : 'Your account has been created successfully',style: TextStyle(
+                                  fontFamily:'SouqFont'),)
                             );
                             final snackBar2 = SnackBar(
                               content: Text(isArabic(context)
                                   ? 'حدث خطأ اثناء عملية التسجيل'
-                                  : 'Error during sign up'),
-                            );
+                                  : 'Error during sign up',style: TextStyle(
+                                  fontFamily:'SouqFont'),
+                            ),);
 
                             // Find the ScaffoldMessenger in the widget tree
                             // and use it to show a SnackBar.
@@ -244,7 +249,8 @@ class StoreRegisterationState extends State<StoreRegisteration> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             //crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text(isArabic(context) ? 'التسجيل' : 'REGISTER'),
+                              Text(isArabic(context) ? 'التسجيل' : 'REGISTER',style: TextStyle(
+              fontFamily:'SouqFont')),
                               Icon(
                                 Icons.content_paste_rounded,
                                 color: Colors.white,

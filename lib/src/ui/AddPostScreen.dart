@@ -63,7 +63,8 @@ class _AddPostPageState extends State<AddPostPage> {
                   bottomRight: Radius.circular(25),
                   bottomLeft: Radius.circular(25))),
           title: Center(
-            child: Text(isArabic(context) ? 'إضافة منشور' : "Add Post"),
+            child: Text(isArabic(context) ? 'إضافة منشور' : "Add Post",style: TextStyle(
+    fontFamily:'SouqFont')),
           ),
         ),
         body: Stack(
@@ -87,6 +88,7 @@ class _AddPostPageState extends State<AddPostPage> {
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
+                                  fontFamily:'SouqFont'
                               ),
                             )
                           : const Text(
@@ -94,6 +96,7 @@ class _AddPostPageState extends State<AddPostPage> {
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
+                                  fontFamily:'SouqFont'
                               ),
                             ),
                     ),
@@ -139,7 +142,8 @@ class _AddPostPageState extends State<AddPostPage> {
                                       MainAxisAlignment.spaceBetween,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Text('إضافة صور'),
+                                    Text('إضافة صور',style: TextStyle(
+                                    fontFamily:'SouqFont')),
                                     Icon(
                                       Icons.add_photo_alternate_outlined,
                                       color: Colors.white,
@@ -164,7 +168,8 @@ class _AddPostPageState extends State<AddPostPage> {
                                       MainAxisAlignment.spaceBetween,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: const [
-                                    Text('Add Photos'),
+                                    Text('Add Photos',style: TextStyle(
+                                        fontFamily:'SouqFont')),
                                     Icon(
                                       Icons.add_photo_alternate_outlined,
                                       color: Colors.white,
@@ -210,6 +215,7 @@ class _AddPostPageState extends State<AddPostPage> {
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
+                            fontFamily:'SouqFont'
                         ),
                       )
                           : const Text(
@@ -217,6 +223,7 @@ class _AddPostPageState extends State<AddPostPage> {
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
+                            fontFamily:'SouqFont'
                         ),
                       ),
                     ),
@@ -247,6 +254,7 @@ class _AddPostPageState extends State<AddPostPage> {
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
+                                  fontFamily:'SouqFont'
                               ),
                             )
                           : const Text(
@@ -254,6 +262,7 @@ class _AddPostPageState extends State<AddPostPage> {
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
+                                  fontFamily:'SouqFont'
                               ),
                             ),
                     ),
@@ -329,7 +338,8 @@ class _AddPostPageState extends State<AddPostPage> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                                isArabic(context) ? 'إضافة الإعلان' : 'Submit'),
+                                isArabic(context) ? 'إضافة الإعلان' : 'Submit',style: TextStyle(
+                          fontFamily:'SouqFont')),
                             isLoading ? CircularProgressIndicator() :Icon(
                               Icons.done_outline,
                               color: Colors.white,
@@ -423,7 +433,8 @@ class _AddPostPageState extends State<AddPostPage> {
                   onTap: () {
                     _openGallery(context);
                   },
-                  title: Text(isArabic(context) ? 'الاستوديو' : 'Gallery'),
+                  title: Text(isArabic(context) ? 'الاستوديو' : 'Gallery',style: TextStyle(
+          fontFamily:'SouqFont')),
                   leading: Icon(
                     Icons.account_box,
                     color: Colors.deepPurpleAccent,
@@ -437,7 +448,8 @@ class _AddPostPageState extends State<AddPostPage> {
                   onTap: () {
                     _openCamera(context);
                   },
-                  title: Text(isArabic(context) ? 'الكاميرا' : 'Camera'),
+                  title: Text(isArabic(context) ? 'الكاميرا' : 'Camera',style: TextStyle(
+          fontFamily:'SouqFont')),
                   leading: Icon(
                     Icons.camera,
                     color: Colors.deepPurpleAccent,
