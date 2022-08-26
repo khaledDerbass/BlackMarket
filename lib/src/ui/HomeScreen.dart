@@ -42,7 +42,6 @@ class _HomeScreenState extends State<HomeScreen> {
   late int roleId = 0;
   final box = GetStorage();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  ValueNotifier<bool> _isFollowButtonVisible = ValueNotifier(true);
 
   bool isLoading = false;
   @override
@@ -536,6 +535,7 @@ class _HomeScreenState extends State<HomeScreen> {
     List<Widget> widgetsList = [];
     Store currentStore;
     bool isDoFollowing = false;
+    ValueNotifier<bool> _isFollowButtonVisible = ValueNotifier(true);
 
     snapshot!
         .map((data) => {
