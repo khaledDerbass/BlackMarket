@@ -394,7 +394,8 @@ class _HomeScreenState extends State<HomeScreen> {
         print("No followed stores");
         return Padding(
           padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.02 , bottom: MediaQuery.of(context).size.height * 0.02 ),
-          child: Center(child: Text(isArabic(context) ? "يمكنك متابعة المتاجر لمشاهدة قصصهم" : "You can follow stores accounts to see their stories")),
+          child: Center(child: Text(isArabic(context) ? "يمكنك متابعة المتاجر لمشاهدة قصصهم" : "You can follow stores accounts to see their stories", style: TextStyle(
+              fontFamily:'SouqFont'))),
         );
       }
       return ListView(
@@ -523,8 +524,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: EdgeInsets.only(
                     top: MediaQuery.of(context).size.height * 0.005),
                 child: isArabic(context)
-                    ? Text(store.nameAr)
-                    : Text(store.nameEn),
+                    ? Text(store.nameAr,style: TextStyle(
+                    fontFamily:'SouqFont'))
+                    : Text(store.nameEn,style: TextStyle(
+                    fontFamily:'SouqFont')),
               ),
             ],
           )
@@ -786,7 +789,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           crossAxisAlignment:
                                                           CrossAxisAlignment.center,
                                                           children:  [
-                                                            Text(isArabic(context) ? 'متابعة' :'Follow'),
+                                                            Text(isArabic(context) ? 'متابعة' :'Follow' , style: TextStyle(
+                                                        fontFamily:'SouqFont')),
                                                           ],
                                                         )
                                                     ),
@@ -822,7 +826,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 Container(
                   padding: EdgeInsets.only(
                       top: MediaQuery.of(context).size.height * 0.005),
-                  child: Text(cw.categoryName),
+                  child: Text(cw.categoryName,style: TextStyle(
+                      fontFamily:'SouqFont')),
 
                 ),
               ],
