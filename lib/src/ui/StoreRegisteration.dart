@@ -269,14 +269,13 @@ fontFamily: 'SouqFont'
   }
   Widget _buildCategoriesList(BuildContext context, List<DocumentSnapshot>? snapshot) {
     var snapshots = snapshot?.first;
-    var list = snapshot!
-        .map((data) => CategoryList.fromJson(snapshots!['CategoryList']))
-        .toList();
+    var list = isArabic(context) ? CategoryList.categoryListFromJson(snapshots!['CategoryListAr'] as Map<String, dynamic>)
+        : CategoryList.categoryListFromJson(snapshots!['CategoryList'] as Map<String, dynamic>);
+    print(list.first.name);
     print("lwngth "   + list.length.toString());
     List<CategoryModel> listOfCategories = [];
-    for(int i =0 ;i < list.first.toJson().entries.length; i++){
-      if(list.first.toJson().entries.toList().elementAt(i).value != null)
-        listOfCategories.add(CategoryModel(list.first.toJson().entries.toList().elementAt(i).key,list.first.toJson().entries.toList().elementAt(i).value));
+    for(int i =0 ;i < list.length; i++){
+      listOfCategories.add(CategoryModel(list[i].name,list[i].value));
     }
     return DropdownButton(
       // Down Arrow Icon

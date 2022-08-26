@@ -17,6 +17,7 @@ import 'package:souq/src/models/StoryItem.dart';
 import 'package:souq/src/ui/SearchPage.dart';
 import 'package:flutter_stories/flutter_stories.dart';
 import '../../Helpers/LoginHelper.dart';
+import '../models/CategoryList.dart';
 import '../models/ImageStoreModel.dart';
 import '../models/UserModel.dart';
 import '../models/UserStore.dart';
@@ -42,6 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
   late int roleId = 0;
   final box = GetStorage();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  var categoryList = [];
 
   bool isLoading = false;
   @override
@@ -414,6 +416,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
   Future<UserModel?> loadUser() async {
     late UserModel? user =null;
+    await FirebaseFirestore.instance.collection('Categories').get().then((value) => value.docs.forEach((doc) async {
+      categoryList = isArabic(context) ? CategoryList.categoryListFromJson(doc['CategoryListAr'] as Map<String, dynamic>)
+          : CategoryList.categoryListFromJson(doc['CategoryList'] as Map<String, dynamic>);
+      print(categoryList.length);
+    }));
     if(FirebaseAuth.instance.currentUser?.email != null){
       await FirebaseFirestore.instance
           .collection('Users')
@@ -423,6 +430,7 @@ class _HomeScreenState extends State<HomeScreen> {
         user = UserModel.fromJson(value.docs.first.data());
         print(user?.name);
       }));
+
     }else {
       return null;
     }
@@ -569,7 +577,8 @@ class _HomeScreenState extends State<HomeScreen> {
       for (StoryContent sc in storyByCategory) {
         imgs.add(ImageStoreModel(sc.img,sc.storeName,sc.storeId));
       }
-      CategoryWidget categoryWidget = CategoryWidget(storyByCategory.first.img, Category.fromId(category).name, imgs);
+      String cateName =  categoryList.where((e) => e.value == category).first.name ?? "-";
+      CategoryWidget categoryWidget = CategoryWidget(storyByCategory.first.img,cateName, imgs);
       categoryWidgets.add(categoryWidget);
       storyByCategory.clear();
     }

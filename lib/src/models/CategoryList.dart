@@ -1,66 +1,21 @@
-class CategoryClass {
-  CategoryList? categoryList;
-
-  CategoryClass({this.categoryList});
-
-  CategoryClass.fromJson(Map<String, dynamic> json) {
-    categoryList = json['CategoryList'] != null
-        ? new CategoryList.fromJson(json['CategoryList'])
-        : null;
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.categoryList != null) {
-      data['CategoryList'] = this.categoryList!.toJson();
-    }
-    return data;
-  }
-}
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:convert';
 class CategoryList {
-  int? grocery;
-  int? mobiles;
-  int? health;
-  int? clothes;
-  int? flowers;
-  int? cars;
-  int? buildings;
-  int? electronics;
-  int? games;
-  int? services;
 
+  String name;
+  dynamic value;
 
-  CategoryList(
-      {this.grocery, this.mobiles, this.health, this.clothes, this.flowers,
-      this.cars, this.services, this.buildings, this.electronics, this.games});
+  // 2
+  CategoryList(this.name,this.value);
 
-  CategoryList.fromJson(Map<String, dynamic> json) {
-    grocery = json['grocery'];
-    mobiles = json['Mobiles'];
-    health = json['health'];
-    clothes = json['clothes'];
-    flowers = json['flowers'];
-    cars = json['cars'];
-    buildings = json['buildings'];
-    electronics = json['electronics'];
-    games = json['games'];
-    services = json['services'];
+  static List<CategoryList> categoryListFromJson(Map<String, dynamic> json) {
+    List<CategoryList> list = [];
+    for (var entry in json.entries) { list.add(CategoryList(entry.key,entry.value)); }
+    print(list.first.name);
+    return list;
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['grocery'] = this.grocery;
-    data['Mobiles'] = this.mobiles;
-    data['health'] = this.health;
-    data['clothes'] = this.clothes;
-    data['flowers'] = this.flowers;
-    data['cars'] = this.cars;
-    data['buildings'] = this.buildings;
-    data['services'] = this.services;
-    data['electronics'] = this.electronics;
-    data['games'] = this.games;
-
-    return data;
-  }
 }
+
+
+

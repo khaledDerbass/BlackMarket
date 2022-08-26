@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>807083502684-5v90tlet47t6kvo21pguvje6ue1sjgnb.apps.googleusercontent.com</string>
+	<string>664105166585-tq65sg9j46g48q8hm9ms4eh136lvkhug.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.807083502684-5v90tlet47t6kvo21pguvje6ue1sjgnb</string>
+	<string>com.googleusercontent.apps.664105166585-tq65sg9j46g48q8hm9ms4eh136lvkhug</string>
 	<key>API_KEY</key>
-	<string>AIzaSyB3C_mSPeJ1SxjcFjTjbnaWG2BXA-zCjBI</string>
+	<string>AIzaSyBeHvdI-mTiiicmB4IeY-wnH1uANrzia40</string>
 	<key>GCM_SENDER_ID</key>
-	<string>807083502684</string>
+	<string>664105166585</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.souq.app.souq</string>
 	<key>PROJECT_ID</key>
-	<string>souq-7654b</string>
+	<string>souq-story</string>
 	<key>STORAGE_BUCKET</key>
-	<string>souq-7654b.appspot.com</string>
+	<string>souq-story.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:807083502684:ios:0e7fb153632451f4604a99</string>
+	<string>1:664105166585:ios:f38e5b085aabb00ddd6428</string>
 </dict>
 </plist>
