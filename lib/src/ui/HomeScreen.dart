@@ -535,7 +535,6 @@ class _HomeScreenState extends State<HomeScreen> {
     List<Widget> widgetsList = [];
     Store currentStore;
     bool isDoFollowing = false;
-    ValueNotifier<bool> _isFollowButtonVisible = ValueNotifier(true);
 
     snapshot!
         .map((data) => {
@@ -638,6 +637,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     );
                                   },
                                   gestureItemBuilder: (context, pageIndex, storyIndex) {
+                                    print(cw.images[storyIndex].storeName + " -- " + cw.images[storyIndex].isFollowButtonVisible.value.toString());
                                     return ValueListenableBuilder(builder: (BuildContext context, value, Widget? child)
                                     {
                                       return Row(
@@ -722,7 +722,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 mainAxisAlignment: MainAxisAlignment.end,
                                                 children: [
                                                   userData != null && !userData.followedStores.contains(cw.images[storyIndex].storeId)? Visibility(
-                                                    visible: _isFollowButtonVisible.value && !userData.followedStores.contains(cw.images[storyIndex].storeId),
+                                                    visible: cw.images[storyIndex].isFollowButtonVisible.value && !userData.followedStores.contains(cw.images[storyIndex].storeId),
                                                     child: ElevatedButton(
                                                         style: ElevatedButton.styleFrom(
                                                           maximumSize: Size(
@@ -742,11 +742,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           if(AuthenticationService.isCurrentUserLoggedIn() == false){
                                                             LoginHelper.showLoginAlertDialog(context);
                                                           }else{
-                                                            _isFollowButtonVisible.value = false;
+
                                                             print("follow");
                                                             UserModel user = userData;
                                                             WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
                                                               isDoFollowing = true;
+                                                              cw.images[storyIndex].isFollowButtonVisible.value = false;
                                                               user.followedStores.add(cw.images[storyIndex].storeId.replaceAll(" ", ""));
                                                             },));
                                                             Store store = Store.fromSnapshot(await FirebaseFirestore.instance.collection('Store').doc(cw.images[storyIndex].storeId.replaceAll(" ", "")).get());
@@ -787,7 +788,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ),
                                         ],
                                       );
-                                    }, valueListenable: _isFollowButtonVisible,
+                                    }, valueListenable: cw.images[storyIndex].isFollowButtonVisible,
                                     );
                                   },
                                   pageLength: cw.images.length,
