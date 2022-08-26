@@ -42,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
   late int roleId = 0;
   final box = GetStorage();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  ValueNotifier<bool> _focusLocationVisible = ValueNotifier(true);
+  ValueNotifier<bool> _isFollowButtonVisible = ValueNotifier(true);
 
   bool isLoading = false;
   @override
@@ -722,7 +722,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 mainAxisAlignment: MainAxisAlignment.end,
                                                 children: [
                                                   userData != null && !userData.followedStores.contains(cw.images[storyIndex].storeId)? Visibility(
-                                                    visible: _focusLocationVisible.value && !userData.followedStores.contains(cw.images[storyIndex].storeId),
+                                                    visible: _isFollowButtonVisible.value && !userData.followedStores.contains(cw.images[storyIndex].storeId),
                                                     child: ElevatedButton(
                                                         style: ElevatedButton.styleFrom(
                                                           maximumSize: Size(
@@ -742,7 +742,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           if(AuthenticationService.isCurrentUserLoggedIn() == false){
                                                             LoginHelper.showLoginAlertDialog(context);
                                                           }else{
-                                                            _focusLocationVisible.value = false;
+                                                            _isFollowButtonVisible.value = false;
                                                             print("follow");
                                                             UserModel user = userData;
                                                             WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
@@ -787,7 +787,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ),
                                         ],
                                       );
-                                    }, valueListenable: _focusLocationVisible,
+                                    }, valueListenable: _isFollowButtonVisible,
                                     );
                                   },
                                   pageLength: cw.images.length,
