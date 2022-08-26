@@ -42,6 +42,8 @@ class _HomeScreenState extends State<HomeScreen> {
   late int roleId = 0;
   final box = GetStorage();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  ValueNotifier<bool> _focusLocationVisible = ValueNotifier(true);
+
   bool isLoading = false;
   @override
   void initState() {
@@ -636,153 +638,156 @@ class _HomeScreenState extends State<HomeScreen> {
                                     );
                                   },
                                   gestureItemBuilder: (context, pageIndex, storyIndex) {
-                                    return Row(
-                                      children: [
-                                        GestureDetector(
-                                          child: Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(top: 44, left: 8),
-                                              child: Row(
-                                                children: [
-                                                  Container(
-                                                    height: 32,
-                                                    width: 32,
-                                                    decoration: BoxDecoration(
-                                                      image: DecorationImage(
-                                                        image: Image.memory(
-                                                          base64Decode(cw.thumbnailImage),
+                                    return ValueListenableBuilder(builder: (BuildContext context, value, Widget? child)
+                                    {
+                                      return Row(
+                                        children: [
+                                          GestureDetector(
+                                            child: Align(
+                                              alignment: Alignment.topLeft,
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(top: 44, left: 8),
+                                                child: Row(
+                                                  children: [
+                                                    Container(
+                                                      height: 32,
+                                                      width: 32,
+                                                      decoration: BoxDecoration(
+                                                        image: DecorationImage(
+                                                          image: Image.memory(
+                                                            base64Decode(cw.thumbnailImage),
+                                                            fit: BoxFit.cover,
+                                                          ).image,
                                                           fit: BoxFit.cover,
-                                                        ).image,
-                                                        fit: BoxFit.cover,
+                                                        ),
+                                                        shape: BoxShape.circle,
                                                       ),
-                                                      shape: BoxShape.circle,
                                                     ),
-                                                  ),
-                                                  const SizedBox(
-                                                    width: 8,
-                                                  ),
-                                                  Text(
-                                                    cw.images[storyIndex].storeName,
-                                                    style: TextStyle(
-                                                      fontSize: 17,
-                                                      color: Colors.white,
-                                                      fontWeight: FontWeight.bold,
+                                                    const SizedBox(
+                                                      width: 8,
                                                     ),
-                                                  ),
+                                                    Text(
+                                                      cw.images[storyIndex].storeName,
+                                                      style: TextStyle(
+                                                        fontSize: 17,
+                                                        color: Colors.white,
+                                                        fontWeight: FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            onTap: () async{
+                                              if(AuthenticationService.isCurrentUserLoggedIn()){
+                                                late UserModel user;
+                                                late UserModel currentUser;
+                                                await FirebaseFirestore.instance.collection('Users').where(
+                                                    'storeId', isEqualTo:cw.images[storyIndex].storeId.replaceAll(" ", ""))
+                                                    .get()
+                                                    .then((value) =>
+                                                    value.docs.forEach((doc) {
+                                                      user = UserModel.fromJson(value.docs.first.data());
+                                                      print(user.name);
+                                                    }));
+
+                                                await FirebaseFirestore.instance.collection('Users').where(
+                                                    'email', isEqualTo:AuthenticationService.getAuthInstance().currentUser!.email)
+                                                    .get()
+                                                    .then((value) =>
+                                                    value.docs.forEach((doc) {
+                                                      currentUser = UserModel.fromJson(value.docs.first.data());
+                                                      print(user.name);
+                                                    }));
+
+                                                if (user != null) {
+                                                  Navigator.pushReplacement(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>  profilepage(searchStore: UserStore(user,storesList.where((element) => element.storeId == cw.images[storyIndex].storeId).first,),currentUser: currentUser,)),
+                                                  );
+                                                }else{
+                                                  LoginHelper.showErrorAlertDialog(context, "Error");
+                                                }
+                                              }else{
+                                                LoginHelper.showLoginAlertDialog(context);
+                                              }
+                                            },
+                                          ),
+                                          Align(
+                                            alignment: Alignment.topRight,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(top: 35,left: 10,right: 10),
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.end,
+                                                children: [
+                                                  userData != null && !userData.followedStores.contains(cw.images[storyIndex].storeId)? Visibility(
+                                                    visible: _focusLocationVisible.value && !userData.followedStores.contains(cw.images[storyIndex].storeId),
+                                                    child: ElevatedButton(
+                                                        style: ElevatedButton.styleFrom(
+                                                          maximumSize: Size(
+                                                              MediaQuery.of(context).size.height *
+                                                                  .1,
+                                                              MediaQuery.of(context).size.height *
+                                                                  .04),
+                                                          minimumSize: Size(
+                                                              MediaQuery.of(context).size.height *
+                                                                  .1,
+                                                              MediaQuery.of(context).size.height *
+                                                                  .04),
+                                                          primary: Colors.pinkAccent.withOpacity(0.3),
+                                                        ),
+                                                        onPressed: () async{
+                                                          print("Try to follow");
+                                                          if(AuthenticationService.isCurrentUserLoggedIn() == false){
+                                                            LoginHelper.showLoginAlertDialog(context);
+                                                          }else{
+                                                            _focusLocationVisible.value = false;
+                                                            print("follow");
+                                                            UserModel user = userData;
+                                                            WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
+                                                              isDoFollowing = true;
+                                                              user.followedStores.add(cw.images[storyIndex].storeId.replaceAll(" ", ""));
+                                                            },));
+                                                            Store store = Store.fromSnapshot(await FirebaseFirestore.instance.collection('Store').doc(cw.images[storyIndex].storeId.replaceAll(" ", "")).get());
+                                                            store.numOfFollowers +=1;
+                                                            await FirebaseFirestore.instance.collection('Users').where('email' , isEqualTo: FirebaseAuth.instance.currentUser!.email).get().then((value) async => {
+                                                              await FirebaseFirestore.instance.collection('Users').doc(value.docs.first.id).update(
+                                                                  {
+                                                                    'followedStores':FieldValue.arrayUnion(user.followedStores)
+                                                                  }).then((value) async => {
+
+                                                                await FirebaseFirestore.instance.collection('Store').doc(store.storeId.trim()).update({'numOfFollowers': store.numOfFollowers}).then((value) => {
+                                                                  setState(() {
+                                                                    isDoFollowing = false;
+                                                                  })
+                                                                })
+
+                                                              }),
+                                                            });
+
+
+                                                          }
+
+
+                                                        },
+                                                        child: Row(
+                                                          mainAxisAlignment: MainAxisAlignment.center,
+                                                          crossAxisAlignment:
+                                                          CrossAxisAlignment.center,
+                                                          children:  [
+                                                            Text(isArabic(context) ? 'متابعة' :'Follow'),
+                                                          ],
+                                                        )
+                                                    ),
+                                                  ) : Container(),
                                                 ],
                                               ),
                                             ),
                                           ),
-                                          onTap: () async{
-                                            if(AuthenticationService.isCurrentUserLoggedIn()){
-                                              late UserModel user;
-                                              late UserModel currentUser;
-                                              await FirebaseFirestore.instance.collection('Users').where(
-                                                  'storeId', isEqualTo:cw.images[storyIndex].storeId.replaceAll(" ", ""))
-                                                  .get()
-                                                  .then((value) =>
-                                                  value.docs.forEach((doc) {
-                                                    user = UserModel.fromJson(value.docs.first.data());
-                                                    print(user.name);
-                                                  }));
-
-                                              await FirebaseFirestore.instance.collection('Users').where(
-                                                  'email', isEqualTo:AuthenticationService.getAuthInstance().currentUser!.email)
-                                                  .get()
-                                                  .then((value) =>
-                                                  value.docs.forEach((doc) {
-                                                    currentUser = UserModel.fromJson(value.docs.first.data());
-                                                    print(user.name);
-                                                  }));
-
-                                              if (user != null) {
-                                                Navigator.pushReplacement(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>  profilepage(searchStore: UserStore(user,storesList.where((element) => element.storeId == cw.images[storyIndex].storeId).first,),currentUser: currentUser,)),
-                                                );
-                                              }else{
-                                                LoginHelper.showErrorAlertDialog(context, "Error");
-                                              }
-                                            }else{
-                                              LoginHelper.showLoginAlertDialog(context);
-                                            }
-
-
-                                          },
-                                        ),
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(top: 35,left: 10,right: 10),
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.end,
-                                              children: [
-                                                userData != null && !userData.followedStores.contains(cw.images[storyIndex].storeId)? Visibility(
-                                                  visible: !userData.followedStores.contains(cw.images[storyIndex].storeId),
-                                                  child: ElevatedButton(
-                                                    style: ElevatedButton.styleFrom(
-                                                      maximumSize: Size(
-                                                          MediaQuery.of(context).size.height *
-                                                              .1,
-                                                          MediaQuery.of(context).size.height *
-                                                              .04),
-                                                      minimumSize: Size(
-                                                          MediaQuery.of(context).size.height *
-                                                              .1,
-                                                          MediaQuery.of(context).size.height *
-                                                              .04),
-                                                      primary: Colors.pinkAccent.withOpacity(0.3),
-                                                    ),
-                                                    onPressed: () async{
-                                                      print("Try to follow");
-                                                      if(AuthenticationService.isCurrentUserLoggedIn() == false){
-                                                        LoginHelper.showLoginAlertDialog(context);
-                                                      }else{
-                                                          print("follow");
-                                                          UserModel user = userData;
-                                                          WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
-                                                            isDoFollowing = true;
-                                                            user.followedStores.add(cw.images[storyIndex].storeId.replaceAll(" ", ""));
-                                                          },));
-                                                          Store store = Store.fromSnapshot(await FirebaseFirestore.instance.collection('Store').doc(cw.images[storyIndex].storeId.replaceAll(" ", "")).get());
-                                                          store.numOfFollowers +=1;
-                                                          await FirebaseFirestore.instance.collection('Users').where('email' , isEqualTo: FirebaseAuth.instance.currentUser!.email).get().then((value) async => {
-                                                            await FirebaseFirestore.instance.collection('Users').doc(value.docs.first.id).update(
-                                                                {
-                                                                  'followedStores':FieldValue.arrayUnion(user.followedStores)
-                                                                }).then((value) async => {
-
-                                                              await FirebaseFirestore.instance.collection('Store').doc(store.storeId.trim()).update({'numOfFollowers': store.numOfFollowers}).then((value) => {
-                                                              setState(() {
-                                                                isDoFollowing = false;
-                                                              })
-                                                              })
-
-                                                            }),
-                                                          });
-
-
-                                                        }
-
-
-                                                    },
-                                                    child: Row(
-                                                      mainAxisAlignment: MainAxisAlignment.center,
-                                                      crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                      children:  [
-                                                        Text(isArabic(context) ? 'متابعة' :'Follow'),
-                                                      ],
-                                                    )
-                                                  ),
-                                                ) : Container(),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                                        ],
+                                      );
+                                    }, valueListenable: _focusLocationVisible,
                                     );
                                   },
                                   pageLength: cw.images.length,
