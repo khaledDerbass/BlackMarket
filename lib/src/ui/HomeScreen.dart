@@ -584,7 +584,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Store currentStore;
     bool isDoFollowing = false;
 
-    snapshot?.reversed!
+    snapshot?.reversed
         .map((data) => {
       currentStore = Store.fromSnapshot(data),
       storesList.add(currentStore),
