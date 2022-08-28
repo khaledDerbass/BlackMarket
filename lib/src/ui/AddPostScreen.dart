@@ -1,24 +1,25 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:souq/src/blocs/StoreRepository.dart';
-import 'package:stories_for_flutter/stories_for_flutter.dart';
+import 'package:overlay_support/overlay_support.dart';
 import '../../Helpers/LoginHelper.dart';
 import '../blocs/CategoriesRepoitory.dart';
 import '../blocs/StoryTimeRepo.dart';
 import '../models/CategoryList.dart';
 import '../models/CategoryModel.dart';
+import '../models/PushNotification.dart';
 import '../models/Store.dart';
 import '../models/StoryItem.dart';
 import '../models/StoryTimeList.dart';
@@ -26,6 +27,7 @@ import '../models/StoryTimeModel.dart';
 import '../models/UserModel.dart';
 import '../models/UserStore.dart';
 import 'HomeScreen.dart';
+import 'NotificationBadge.dart';
 import 'ProfilePage.dart';
 
 class AddPostPage extends StatefulWidget {
@@ -34,6 +36,8 @@ class AddPostPage extends StatefulWidget {
   @override
   _AddPostPageState createState() => _AddPostPageState();
 }
+late final FirebaseMessaging _messaging;
+PushNotification? _notificationInfo;
 
 class _AddPostPageState extends State<AddPostPage> {
   XFile? imageFile;
@@ -41,15 +45,24 @@ class _AddPostPageState extends State<AddPostPage> {
   CategoriesRepository repository = CategoriesRepository();
   StoryTimeRepo repositoryStoryTimeRepo = StoryTimeRepo();
   final TextEditingController _descriptionController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
   int dropdownvalue = 1;
   int dropdownDaysvalue = 1;
   bool isLoading = false;
+  @override
+  void initState() {
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      PushNotification notification = PushNotification(
+        title: message.notification?.title,
+        body: message.notification?.body,
+      );
+      setState(() {
+        _notificationInfo = notification;
+      });
+    });
+    checkForInitialMessage();
+
+    super.initState();
+  }
 
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -331,7 +344,10 @@ class _AddPostPageState extends State<AddPostPage> {
                             setState(() {
                               isLoading = false;
                             });
-                          }
+
+
+                             }  // show a notification at top of screen.
+
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -625,5 +641,55 @@ class _AddPostPageState extends State<AddPostPage> {
         return alert;
       },
     );
+  }
+}
+////////////////////////
+void registerNotification() async {
+  // 1. Initialize the Firebase app
+  await Firebase.initializeApp();
+
+  // 2. Instantiate Firebase Messaging
+  _messaging = FirebaseMessaging.instance;
+
+  // 3. On iOS, this helps to take the user permissions
+  NotificationSettings settings = await _messaging.requestPermission(
+    alert: true,
+    badge: true,
+    provisional: false,
+    sound: true,
+  );
+
+  if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+    print('User granted permission');
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      // ...
+      if (_notificationInfo != null) {
+        // For displaying the notification as an overlay
+        showSimpleNotification(
+          Text("this is a message from simple notification"),
+          //leading: NotificationBadge(totalNotifications: _totalNotifications),
+          subtitle: Text("this is a message from simple notification"),
+          background: Colors.cyan.shade700,
+          duration: Duration(seconds: 3),
+        );
+      }
+    });
+  }
+  else
+  {
+    print('User declined or has not accepted permission');
+  }
+}
+checkForInitialMessage() async {
+  await Firebase.initializeApp();
+  RemoteMessage? initialMessage =
+  await FirebaseMessaging.instance.getInitialMessage();
+
+  if (initialMessage != null) {
+    PushNotification notification = PushNotification(
+      title: initialMessage.notification?.title,
+      body: initialMessage.notification?.body,
+    );
+
   }
 }
