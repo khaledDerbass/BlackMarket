@@ -584,7 +584,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Store currentStore;
     bool isDoFollowing = false;
 
-    snapshot!
+    snapshot?.reversed!
         .map((data) => {
       currentStore = Store.fromSnapshot(data),
       storesList.add(currentStore),
@@ -598,6 +598,7 @@ class _HomeScreenState extends State<HomeScreen> {
         }
     })
         .toList();
+
     for (int category in categories) {
       for (Store store in storesList) {
         if (store.isApprovedByAdmin) {
@@ -617,6 +618,7 @@ class _HomeScreenState extends State<HomeScreen> {
         imgs.add(ImageStoreModel(sc.img,sc.storeName,sc.storeId,sc.seenBy.contains(AuthenticationService.getAuthInstance().currentUser?.uid),sc.id,sc.seenBy));
       }
       String cateName =  categoryList.where((e) => e.value == category).first.name ?? "-";
+
       CategoryWidget categoryWidget = CategoryWidget(storyByCategory.first.img,cateName, imgs);
       categoryWidgets.add(categoryWidget);
       storyByCategory.clear();
@@ -624,6 +626,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
     for (CategoryWidget cw in categoryWidgets) {
       int startIndex = getLastSeenImage(cw);
+      bool isSeen = isAllCategoryStoriesSeen(cw);
+      Color circleColor = activeColor;
+      if(isSeen){
+        circleColor = seenColor;
+      }
+
       widgetsList.add(CupertinoPageScaffold(
         backgroundColor: CupertinoColors.white,
         child: Padding(
@@ -641,11 +649,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       fit: BoxFit.cover,
                       image: Image.memory(
                         base64Decode(cw.thumbnailImage),
-
                       ).image,
+
                     ),
                     border: Border.all(
-                      color: activeColor,
+                      color: circleColor,
                       width: 2.0,
                       style: BorderStyle.solid,
                     ),
@@ -779,7 +787,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               child: Row(
                                                 mainAxisAlignment: MainAxisAlignment.end,
                                                 children: [
-                                                  userData != null && !userData.followedStores.contains(cw.images[storyIndex].storeId)? Visibility(
+                                                  userData != null && userData.storeId != cw.images[storyIndex].storeId && !userData.followedStores.contains(cw.images[storyIndex].storeId)? Visibility(
                                                     visible: cw.images[storyIndex].isFollowButtonVisible.value && !userData.followedStores.contains(cw.images[storyIndex].storeId),
                                                     child: ElevatedButton(
                                                         style: ElevatedButton.styleFrom(
@@ -961,7 +969,6 @@ void markStoriesAsSeen(List<SeenImageModel> seenImagesIndexList) async{
           sc.seenBy.add(AuthenticationService.getAuthInstance().currentUser!.uid);
         }
 
-
         await FirebaseFirestore.instance
             .collection('Store')
             .doc(sim.storeId)
@@ -983,6 +990,16 @@ int getLastSeenImage(CategoryWidget cw) {
     }
 
     return index;
+}
+
+bool isAllCategoryStoriesSeen(CategoryWidget cw) {
+
+  var image = cw.images.where((element) => element.isSeen == false);
+  if(image.isNotEmpty){
+    return false;
+  }
+
+  return true;
 }
 
 

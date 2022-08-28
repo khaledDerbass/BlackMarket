@@ -238,6 +238,7 @@ class _GalleryState extends State<Gallery> {
 
     print(store.stories.length);
     imageUrls.clear();
+    store.stories.sort((a, b) => a.createdAt.compareTo(b.createdAt));
     for(int i = 0 ; i < store.stories.length ; i++){
       imageUrls.add(store.stories[i].img);
     }
