@@ -5,6 +5,9 @@ class ImageStoreModel{
   String storeName;
   String storeId;
   ValueNotifier<bool> isFollowButtonVisible = ValueNotifier(true);
+  bool isSeen;
+  String imageId;
+  List<String> seenbyUserIds;
 
-  ImageStoreModel(this.img,this.storeName,this.storeId);
+  ImageStoreModel(this.img,this.storeName,this.storeId,this.isSeen,this.imageId,this.seenbyUserIds);
 }

@@ -15,4 +15,9 @@ class ImageHelper {
   static String base64String(Uint8List data) {
     return base64Encode(data);
   }
+
+  static String idGenerator() {
+    final now = DateTime.now();
+    return now.microsecondsSinceEpoch.toString();
+  }
 }

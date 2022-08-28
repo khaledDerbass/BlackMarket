@@ -14,6 +14,7 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:souq/Helpers/ImageHelper.dart';
 import '../../Helpers/LoginHelper.dart';
 import '../blocs/CategoriesRepoitory.dart';
 import '../blocs/StoryTimeRepo.dart';
@@ -320,7 +321,7 @@ class _AddPostPageState extends State<AddPostPage> {
                           XFile compressedImage = XFile(file.path);
                           Uint8List? bytes = await compressedImage.readAsBytes();
                           String img = base64Encode(bytes);
-                          StoryContent storyContent = StoryContent(img, dropdownvalue, _descriptionController.text, dropdownDaysvalue, DateTime.now().millisecondsSinceEpoch);
+                          StoryContent storyContent = StoryContent(ImageHelper.idGenerator(),img, dropdownvalue, _descriptionController.text, dropdownDaysvalue, DateTime.now().millisecondsSinceEpoch,[]);
                           List<dynamic> list = [];
                           list.add(storyContent.toJson());
                           print(storyContent.toJson());

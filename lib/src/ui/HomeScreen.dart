@@ -23,6 +23,7 @@ import '../../Helpers/LoginHelper.dart';
 import '../models/CategoryList.dart';
 import '../models/ImageStoreModel.dart';
 import '../models/PushNotification.dart';
+import '../models/SeenImageModel.dart';
 import '../models/UserModel.dart';
 import '../models/UserStore.dart';
 import 'AddPostScreen.dart';
@@ -303,7 +304,8 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
 
         ),
-        bottomNavigationBar: roleId == 1 ? ConvexAppBar(
+        bottomNavigationBar: roleId == 1 ?
+        ConvexAppBar(
           height: MediaQuery.of(context).size.height * 0.07,
           style: TabStyle.textIn,
           color: CupertinoColors.white,
@@ -336,7 +338,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   }
               }
           },
-        ) :ConvexAppBar(
+        ) :
+        ConvexAppBar(
           height: MediaQuery.of(context).size.height * 0.07,
           style: TabStyle.fixedCircle,
           color: CupertinoColors.white,
@@ -594,7 +597,7 @@ class _HomeScreenState extends State<HomeScreen> {
       }
       List<ImageStoreModel> imgs = [];
       for (StoryContent sc in storyByCategory) {
-        imgs.add(ImageStoreModel(sc.img,sc.storeName,sc.storeId));
+        imgs.add(ImageStoreModel(sc.img,sc.storeName,sc.storeId,sc.seenBy.contains(AuthenticationService.getAuthInstance().currentUser?.uid),sc.id,sc.seenBy));
       }
       String cateName =  categoryList.where((e) => e.value == category).first.name ?? "-";
       CategoryWidget categoryWidget = CategoryWidget(storyByCategory.first.img,cateName, imgs);
@@ -603,6 +606,8 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     for (CategoryWidget cw in categoryWidgets) {
+      int startIndex = getLastSeenImage(cw);
+      print("Start Index " + " " + startIndex.toString());
       widgetsList.add(CupertinoPageScaffold(
         backgroundColor: CupertinoColors.white,
         child: Padding(
@@ -632,8 +637,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   width: MediaQuery.of(context).size.height * 0.12,
                   height: MediaQuery.of(context).size.height * 0.12,
                   child: GestureDetector(
-                    onTap: () {
-                      showCupertinoDialog(
+                    onTap: () async{
+                      List<SeenImageModel> seenImagesIndexList = [];
+                      await showCupertinoDialog(
                         context: context,
                         builder: (context) {
                           return SafeArea(
@@ -648,7 +654,20 @@ class _HomeScreenState extends State<HomeScreen> {
                                   }
                                 },
                                 child: StoryPageView(
+                                  initialStoryIndex: (_)=> startIndex,
                                   itemBuilder: (context, pageIndex, storyIndex) {
+                                    print("Story Index " + storyIndex.toString());
+                                    SeenImageModel img = SeenImageModel(storyIndex,cw,cw.images[storyIndex].storeId,cw.images[storyIndex].imageId);
+                                    try{
+                                      var list = seenImagesIndexList.where((a) => a.imageId == cw.images[storyIndex].imageId);
+                                      if(list.isEmpty && !cw.images[storyIndex].seenbyUserIds.contains(AuthenticationService.getAuthInstance().currentUser!.uid)) {
+                                        print("Add Add");
+                                        seenImagesIndexList.add(img);
+                                      }
+                                    }catch (e) {
+                                      print(e.toString());
+                                    }
+
                                     return Stack(
                                       children: [
                                         Positioned.fill(
@@ -665,7 +684,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                     );
                                   },
                                   gestureItemBuilder: (context, pageIndex, storyIndex) {
-                                    print(cw.images[storyIndex].storeName + " -- " + cw.images[storyIndex].isFollowButtonVisible.value.toString());
                                     return ValueListenableBuilder(builder: (BuildContext context, value, Widget? child)
                                     {
                                       return Row(
@@ -825,9 +843,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                     return cw.images.length;
                                   },
                                   onPageLimitReached: () {
+
                                     Navigator.pop(context);
                                   },
-                                  onPageChanged: (_) {
+                                  onPageChanged: (_) async{
                                     Navigator.pop(context);
                                   },
                                 ),
@@ -835,7 +854,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           );
                         },
-                      );
+                      ).whenComplete(() => {
+                        if(seenImagesIndexList.isNotEmpty)
+                          markStoriesAsSeen(seenImagesIndexList),
+                          print(seenImagesIndexList),
+                      });
                     },
                   ),
                 ),
@@ -860,6 +883,55 @@ class _HomeScreenState extends State<HomeScreen> {
       children: List.of(widgetsList),
     );
   }
+}
+
+void markStoriesAsSeen(List<SeenImageModel> seenImagesIndexList) async{
+  try {
+    for(SeenImageModel sim in seenImagesIndexList){
+
+      var s = await FirebaseFirestore.instance
+          .collection('Store')
+          .doc(sim.storeId)
+          .get();
+      DocumentSnapshot snapshot = s;
+      Store store = Store.fromSnapshot(snapshot);
+      print(store.nameAr);
+      StoryContent sc = store.stories.where((element) => element.id == sim.imageId).first;
+      List<dynamic> sList = [];
+        sList.add(sc.toJson());
+        for(StoryContent s in store.stories){
+          if(s.id != sc.id) {
+            sList.add(s.toJson());
+          }
+        }
+      if(sc != null){
+        int index = store.stories.indexOf(sc);
+        if(!sc.seenBy.contains(AuthenticationService.getAuthInstance().currentUser!.uid)) {
+          sc.seenBy.add(AuthenticationService.getAuthInstance().currentUser!.uid);
+        }
+
+
+        await FirebaseFirestore.instance
+            .collection('Store')
+            .doc(sim.storeId)
+            .update(
+            {'Stories': sList});
+      }
+    }
+  }on FirebaseException catch  (e) {
+    print(e.message);
+  }
+}
+
+int getLastSeenImage(CategoryWidget cw) {
+
+    var image = cw.images.where((element) => element.isSeen == false);
+    int index = 0;
+    if(image.isNotEmpty){
+      index = cw.images.indexOf(image.first);
+    }
+
+    return index;
 }
 /////////////////////////////////////////////////////////////
 void registerNotification() async {
