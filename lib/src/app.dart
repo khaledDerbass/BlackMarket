@@ -17,6 +17,7 @@ class App extends StatelessWidget {
       locale: context.locale,
       theme: ThemeData(
         primaryColor: CupertinoColors.systemIndigo,
+          fontFamily:'SouqFont',
       ),
       home: const Scaffold(
         body: UserPrefrencesScreen(),
