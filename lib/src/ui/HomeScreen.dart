@@ -855,7 +855,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         },
                       ).whenComplete(() => {
-                        if(seenImagesIndexList.isNotEmpty)
+                        if(AuthenticationService.isCurrentUserLoggedIn() && seenImagesIndexList.isNotEmpty)
                           markStoriesAsSeen(seenImagesIndexList),
                           print(seenImagesIndexList),
                       });
