@@ -129,11 +129,11 @@ class _GalleryState extends State<Gallery> {
 
   Widget _createGridTileWidget(String url) => Builder(
     builder: (context) => GestureDetector(
-      onLongPress: () {
+      onTap: () {
         _popupDialog = _createPopupDialog(url);
         Overlay.of(context)!.insert(_popupDialog);
       },
-      onLongPressEnd: (details) => _popupDialog.remove(),
+
       child: Image.memory(base64Decode(url) ,fit: BoxFit.cover),
 
     ),
@@ -146,14 +146,25 @@ class _GalleryState extends State<Gallery> {
     return OverlayEntry(
       builder: (context) => AnimatedDialog(
         child: _createPopupContent(url),
+
       ),
     );
   }
 
   Widget _createPhotoTitle() => Container(
-      width: double.infinity,
+     // width: double.infinity ,
       color: Colors.white,
-      child: ListTile(
+      child: Column(
+       mainAxisAlignment: MainAxisAlignment.spaceAround,
+       crossAxisAlignment:
+       CrossAxisAlignment.end,
+
+        children:[
+          IconButton(onPressed: (){
+            _popupDialog.remove();
+          },
+              icon: Icon(Icons.close, size: MediaQuery.of(context).size.height * 0.032,)),
+          ListTile(
         leading: searchStore == null ? CircleAvatar(
           backgroundImage: Image.memory(base64Decode(userStore.userModel.profilePicture) ,fit: BoxFit.fitWidth).image,
         ) : CircleAvatar(
@@ -163,11 +174,11 @@ class _GalleryState extends State<Gallery> {
           storeName,
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
         ),
-      ));
-  Widget _createActionBar() => Container(
-    padding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.height * .01),
-    color: Colors.white,
-  );
+
+
+        ) ,
+        ],),);
+
 
   Widget _createPopupContent(String url) => Container(
     padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.height * .01),
@@ -181,6 +192,22 @@ class _GalleryState extends State<Gallery> {
           _createActionBar(),
         ],
       ),
+    ),
+  );
+  Widget _createActionBar() => Container(
+    width: double.infinity ,
+    padding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.height * .01),
+    color: Colors.white,
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text("Remove Post", style: TextStyle(fontWeight: FontWeight.bold ),),
+        IconButton(onPressed: (){
+
+        },
+            icon: Icon(Icons.delete_forever, size: MediaQuery.of(context).size.height * 0.032,))
+
+      ],
     ),
   );
 

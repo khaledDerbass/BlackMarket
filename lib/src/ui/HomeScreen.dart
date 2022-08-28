@@ -3,10 +3,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:souq/Helpers/GEnums.dart';
 import 'package:souq/src/Services/AuthenticationService.dart';
 import 'package:souq/src/Services/StoreAuthService.dart';
@@ -19,6 +22,7 @@ import 'package:flutter_stories/flutter_stories.dart';
 import '../../Helpers/LoginHelper.dart';
 import '../models/CategoryList.dart';
 import '../models/ImageStoreModel.dart';
+import '../models/PushNotification.dart';
 import '../models/UserModel.dart';
 import '../models/UserStore.dart';
 import 'AddPostScreen.dart';
@@ -36,7 +40,8 @@ class HomeScreen extends StatefulWidget {
     return _HomeScreenState();
   }
 }
-
+late final FirebaseMessaging _messaging;
+PushNotification? _notificationInfo;
 class _HomeScreenState extends State<HomeScreen> {
   final myController = TextEditingController();
   PickedFile? imageFile = null;
@@ -48,6 +53,17 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isLoading = false;
   @override
   void initState() {
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      PushNotification notification = PushNotification(
+        title: message.notification?.title,
+        body: message.notification?.body,
+      );
+      setState(() {
+        _notificationInfo = notification;
+      });
+    });
+    checkForInitialMessage();
+
     super.initState();
 
   }
@@ -843,5 +859,55 @@ class _HomeScreenState extends State<HomeScreen> {
       // Generate 100 widgets that display their index in the List.
       children: List.of(widgetsList),
     );
+  }
+}
+/////////////////////////////////////////////////////////////
+void registerNotification() async {
+  // 1. Initialize the Firebase app
+  await Firebase.initializeApp();
+
+  // 2. Instantiate Firebase Messaging
+  _messaging = FirebaseMessaging.instance;
+
+  // 3. On iOS, this helps to take the user permissions
+  NotificationSettings settings = await _messaging.requestPermission(
+    alert: true,
+    badge: true,
+    provisional: false,
+    sound: true,
+  );
+
+  if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+    print('User granted permission');
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      // ...
+      if (_notificationInfo != null) {
+        // For displaying the notification as an overlay
+        showSimpleNotification(
+          Text("this is a message from simple notification"),
+          //leading: NotificationBadge(totalNotifications: _totalNotifications),
+          subtitle: Text("this is a message from simple notification"),
+          background: Colors.cyan.shade700,
+          duration: Duration(seconds: 3),
+        );
+      }
+    });
+  }
+  else
+  {
+    print('User declined or has not accepted permission');
+  }
+}
+checkForInitialMessage() async {
+  await Firebase.initializeApp();
+  RemoteMessage? initialMessage =
+  await FirebaseMessaging.instance.getInitialMessage();
+
+  if (initialMessage != null) {
+    PushNotification notification = PushNotification(
+      title: initialMessage.notification?.title,
+      body: initialMessage.notification?.body,
+    );
+
   }
 }

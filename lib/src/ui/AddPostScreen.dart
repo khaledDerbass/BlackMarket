@@ -36,8 +36,8 @@ class AddPostPage extends StatefulWidget {
   @override
   _AddPostPageState createState() => _AddPostPageState();
 }
-late final FirebaseMessaging _messaging;
-PushNotification? _notificationInfo;
+// late final FirebaseMessaging _messaging;
+// PushNotification? _notificationInfo;
 
 class _AddPostPageState extends State<AddPostPage> {
   XFile? imageFile;
@@ -50,16 +50,16 @@ class _AddPostPageState extends State<AddPostPage> {
   bool isLoading = false;
   @override
   void initState() {
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      PushNotification notification = PushNotification(
-        title: message.notification?.title,
-        body: message.notification?.body,
-      );
-      setState(() {
-        _notificationInfo = notification;
-      });
-    });
-    checkForInitialMessage();
+    // FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    //   PushNotification notification = PushNotification(
+    //     title: message.notification?.title,
+    //     body: message.notification?.body,
+    //   );
+    //   setState(() {
+    //     _notificationInfo = notification;
+    //   });
+    // });
+    // checkForInitialMessage();
 
     super.initState();
   }
@@ -644,52 +644,3 @@ class _AddPostPageState extends State<AddPostPage> {
   }
 }
 ////////////////////////
-void registerNotification() async {
-  // 1. Initialize the Firebase app
-  await Firebase.initializeApp();
-
-  // 2. Instantiate Firebase Messaging
-  _messaging = FirebaseMessaging.instance;
-
-  // 3. On iOS, this helps to take the user permissions
-  NotificationSettings settings = await _messaging.requestPermission(
-    alert: true,
-    badge: true,
-    provisional: false,
-    sound: true,
-  );
-
-  if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-    print('User granted permission');
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      // ...
-      if (_notificationInfo != null) {
-        // For displaying the notification as an overlay
-        showSimpleNotification(
-          Text("this is a message from simple notification"),
-          //leading: NotificationBadge(totalNotifications: _totalNotifications),
-          subtitle: Text("this is a message from simple notification"),
-          background: Colors.cyan.shade700,
-          duration: Duration(seconds: 3),
-        );
-      }
-    });
-  }
-  else
-  {
-    print('User declined or has not accepted permission');
-  }
-}
-checkForInitialMessage() async {
-  await Firebase.initializeApp();
-  RemoteMessage? initialMessage =
-  await FirebaseMessaging.instance.getInitialMessage();
-
-  if (initialMessage != null) {
-    PushNotification notification = PushNotification(
-      title: initialMessage.notification?.title,
-      body: initialMessage.notification?.body,
-    );
-
-  }
-}
