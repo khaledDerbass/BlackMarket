@@ -50,7 +50,8 @@ class _HomeScreenState extends State<HomeScreen> {
   final box = GetStorage();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   var categoryList = [];
-
+  Color activeColor = CupertinoColors.activeOrange;
+  Color seenColor = CupertinoColors.darkBackgroundGray;
   bool isLoading = false;
   @override
   void initState() {
@@ -408,9 +409,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     if(isSignedIn){
       loggedInStore = AuthenticationService.getAuthInstance().currentUser?.uid;
-      print("Num of followed stores " + userModel.followedStores.length.toString());
       if(userModel.followedStores.isEmpty) {
-        print("No followed stores");
         return Padding(
           padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.02 , bottom: MediaQuery.of(context).size.height * 0.02 ),
           child: Center(child: Text(isArabic(context) ? "يمكنك متابعة المتاجر لمشاهدة قصصهم" : "You can follow stores accounts to see their stories", style: TextStyle(
@@ -439,7 +438,6 @@ class _HomeScreenState extends State<HomeScreen> {
     await FirebaseFirestore.instance.collection('Categories').get().then((value) => value.docs.forEach((doc) async {
       categoryList = isArabic(context) ? CategoryList.categoryListFromJson(doc['CategoryListAr'] as Map<String, dynamic>)
           : CategoryList.categoryListFromJson(doc['CategoryList'] as Map<String, dynamic>);
-      print(categoryList.length);
     }));
     if(FirebaseAuth.instance.currentUser?.email != null){
       await FirebaseFirestore.instance
@@ -448,7 +446,6 @@ class _HomeScreenState extends State<HomeScreen> {
           .get()
           .then((value) => value.docs.forEach((doc) async {
         user = UserModel.fromJson(value.docs.first.data());
-        print(user?.name);
       }));
 
     }else {
@@ -460,6 +457,14 @@ class _HomeScreenState extends State<HomeScreen> {
   }
   Widget _buildListItem(BuildContext context, DocumentSnapshot snapshot, int length, int roleId, UserModel userModel) {
     final store = Store.fromSnapshot(snapshot);
+    Color circleColor = activeColor;
+    bool isSeen = isAllSeen(store);
+    if(isSeen){
+      circleColor = seenColor;
+    }
+    int startIndex = getLastSeenImageByStore(store);
+
+    List<String> seenImgIds = [];
     return userModel.followedStores.contains(store.storeId.trim()) ?  CupertinoPageScaffold(
       backgroundColor: CupertinoColors.white,
       child: Padding(
@@ -481,7 +486,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         .image,
                   ),
                   border: Border.all(
-                    color: CupertinoColors.activeOrange,
+                    color: circleColor,
                     width: 2.0,
                     style: BorderStyle.solid,
                   ),
@@ -489,8 +494,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 width: MediaQuery.of(context).size.height * 0.12,
                 height: MediaQuery.of(context).size.height * 0.12,
                 child: GestureDetector(
-                  onTap: () {
-                    showCupertinoDialog(
+                  onTap: () async {
+                    await showCupertinoDialog(
                       context: context,
                       builder: (context) {
                         return CupertinoPageScaffold(
@@ -502,40 +507,53 @@ class _HomeScreenState extends State<HomeScreen> {
                             onFlashBack: Navigator.of(context).pop,
                             momentCount: store.stories.length,
                             momentDurationGetter: (idx) => const Duration(seconds: 5),
-                            momentBuilder: (context, index) => Scaffold(
-                              body: Stack(
-                                children: [
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      color: CupertinoColors.darkBackgroundGray,
-                                      image: DecorationImage(
-                                        fit: BoxFit.contain,
-                                        image: Image.memory(base64Decode(
-                                            store.stories[index].img))
-                                            .image,
+                            startAt: startIndex,
+                            momentBuilder: (context, index) {
+                              print("user story index " + index.toString());
+                              if(!seenImgIds.contains(store.stories[index].id)) {
+                                seenImgIds.add(store.stories[index].id);
+                              }
+                              return Scaffold(
+                                body: Stack(
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: CupertinoColors.darkBackgroundGray,
+                                        image: DecorationImage(
+                                          fit: BoxFit.contain,
+                                          image: Image.memory(base64Decode(
+                                              store.stories[index].img))
+                                              .image,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  Positioned(
-                                    top: 70,
-                                    left: 20,
-                                    child: Row(
-                                      children: [
-                                        ClipOval(
-                                          child: Image(image: Image.memory(base64Decode(store.stories.last.img)).image, height: 25,width: 25,),
-                                        ),
-                                        SizedBox(width: MediaQuery.of(context).size.width * 0.02,),
-                                        Text(isArabic(context) ? store.nameAr : store.nameEn,style: const TextStyle(color: Colors.white,fontSize: 17),),
-                                      ],
+                                    Positioned(
+                                      top: 70,
+                                      left: 20,
+                                      child: Row(
+                                        children: [
+                                          ClipOval(
+                                            child: Image(image: Image.memory(base64Decode(store.stories.last.img)).image, height: 25,width: 25,),
+                                          ),
+                                          SizedBox(width: MediaQuery.of(context).size.width * 0.02,),
+                                          Text(isArabic(context) ? store.nameAr : store.nameEn,style: const TextStyle(color: Colors.white,fontSize: 17),),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                                  ],
+                                ),
+                              );
+                            },
                           ),
                         );
                       },
-                    );
+                    ).whenComplete(() => {
+                      if(AuthenticationService.isCurrentUserLoggedIn()){
+                        print(seenImgIds),
+                        markStoriesAsSeenUserStory(store,seenImgIds),
+                      }
+
+                    });
                   },
                 ),
               ),
@@ -580,7 +598,6 @@ class _HomeScreenState extends State<HomeScreen> {
         }
     })
         .toList();
-    print(categories);
     for (int category in categories) {
       for (Store store in storesList) {
         if (store.isApprovedByAdmin) {
@@ -607,7 +624,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
     for (CategoryWidget cw in categoryWidgets) {
       int startIndex = getLastSeenImage(cw);
-      print("Start Index " + " " + startIndex.toString());
       widgetsList.add(CupertinoPageScaffold(
         backgroundColor: CupertinoColors.white,
         child: Padding(
@@ -629,7 +645,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ).image,
                     ),
                     border: Border.all(
-                      color: CupertinoColors.activeOrange,
+                      color: activeColor,
                       width: 2.0,
                       style: BorderStyle.solid,
                     ),
@@ -656,12 +672,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: StoryPageView(
                                   initialStoryIndex: (_)=> startIndex,
                                   itemBuilder: (context, pageIndex, storyIndex) {
-                                    print("Story Index " + storyIndex.toString());
                                     SeenImageModel img = SeenImageModel(storyIndex,cw,cw.images[storyIndex].storeId,cw.images[storyIndex].imageId);
                                     try{
                                       var list = seenImagesIndexList.where((a) => a.imageId == cw.images[storyIndex].imageId);
                                       if(list.isEmpty && !cw.images[storyIndex].seenbyUserIds.contains(AuthenticationService.getAuthInstance().currentUser!.uid)) {
-                                        print("Add Add");
                                         seenImagesIndexList.add(img);
                                       }
                                     }catch (e) {
@@ -734,7 +748,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     .then((value) =>
                                                     value.docs.forEach((doc) {
                                                       user = UserModel.fromJson(value.docs.first.data());
-                                                      print(user.name);
                                                     }));
 
                                                 await FirebaseFirestore.instance.collection('Users').where(
@@ -743,7 +756,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     .then((value) =>
                                                     value.docs.forEach((doc) {
                                                       currentUser = UserModel.fromJson(value.docs.first.data());
-                                                      print(user.name);
                                                     }));
 
                                                 if (user != null) {
@@ -784,12 +796,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           primary: Colors.pinkAccent.withOpacity(0.3),
                                                         ),
                                                         onPressed: () async{
-                                                          print("Try to follow");
                                                           if(AuthenticationService.isCurrentUserLoggedIn() == false){
                                                             LoginHelper.showLoginAlertDialog(context);
                                                           }else{
-
-                                                            print("follow");
                                                             UserModel user = userData;
                                                             WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
                                                               isDoFollowing = true;
@@ -883,6 +892,49 @@ class _HomeScreenState extends State<HomeScreen> {
       children: List.of(widgetsList),
     );
   }
+  int getLastSeenImageByStore(Store store) {
+
+    var image = store.stories.where((element) => !element.seenBy.contains(AuthenticationService.getAuthInstance().currentUser!.uid));
+    int index = 0;
+    if(image.isNotEmpty){
+      print("image.isNotEmpty " + AuthenticationService.getAuthInstance().currentUser!.uid);
+      index = store.stories.indexOf(image.first);
+    }
+
+    return index;
+  }
+
+  bool isAllSeen(Store store){
+
+      var image = store.stories.where((element) => !element.seenBy.contains(AuthenticationService.getAuthInstance().currentUser!.uid));
+      if(image.isNotEmpty){
+        print("Not all seen");
+        return false;
+      }
+
+      return true;
+
+  }
+
+  void markStoriesAsSeenUserStory(Store store, List<String> seenImgIds) async{
+    var storeId = store.storeId;
+    List<dynamic> sList = [];
+    try {
+      for(StoryContent sc in store.stories){
+        if(seenImgIds.contains(sc.id)){
+          sc.seenBy.add(AuthenticationService.getAuthInstance().currentUser!.uid);
+        }
+        sList.add(sc.toJson());
+      }
+      await FirebaseFirestore.instance
+          .collection('Store')
+          .doc(storeId)
+          .update(
+          {'Stories': sList});
+    }on FirebaseException catch  (e) {
+      print(e.message);
+    }
+  }
 }
 
 void markStoriesAsSeen(List<SeenImageModel> seenImagesIndexList) async{
@@ -895,7 +947,6 @@ void markStoriesAsSeen(List<SeenImageModel> seenImagesIndexList) async{
           .get();
       DocumentSnapshot snapshot = s;
       Store store = Store.fromSnapshot(snapshot);
-      print(store.nameAr);
       StoryContent sc = store.stories.where((element) => element.id == sim.imageId).first;
       List<dynamic> sList = [];
         sList.add(sc.toJson());
@@ -933,6 +984,8 @@ int getLastSeenImage(CategoryWidget cw) {
 
     return index;
 }
+
+
 /////////////////////////////////////////////////////////////
 void registerNotification() async {
   // 1. Initialize the Firebase app

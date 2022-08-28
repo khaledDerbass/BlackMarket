@@ -149,16 +149,19 @@ class profileHeaderState extends State<profileHeader>{
                   height:
                   MediaQuery.of(context).size.height * .0,
                 ),
-                Padding(
-                  padding:  EdgeInsets.all(MediaQuery.of(context).size.height *
-                      0.02 ,),
-                  child: Text(
-                    isArabic(context) ? widget.searchStore?.store.nameAr ?? "" : widget.searchStore?.store.nameEn ?? "",
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w900,
-                      decoration: TextDecoration.none,
-                      fontSize: 16,
-                      letterSpacing: .5,fontFamily: 'SouqFont'
+                LimitedBox(
+                  maxWidth: MediaQuery.of(context).size.width * 0.3,
+                  child: Padding(
+                    padding:  EdgeInsets.all(MediaQuery.of(context).size.height *
+                        0.02 ,),
+                    child: Text(
+                      isArabic(context) ? widget.searchStore?.store.nameAr ?? "" : widget.searchStore?.store.nameEn ?? "",
+                      style:  TextStyle(
+                        fontWeight: FontWeight.w900,
+                        decoration: TextDecoration.none,
+                        fontSize: MediaQuery.of(context).size.width * 0.035,
+                        letterSpacing: .5,fontFamily: 'SouqFont'
+                      ),
                     ),
                   ),
                 ),
@@ -435,20 +438,23 @@ class profileHeaderState extends State<profileHeader>{
                           height:
                           MediaQuery.of(context).size.height * .0,
                         ),
-                        Padding(
-                          padding:  EdgeInsets.all(MediaQuery.of(context).size.height *
-                              0.02 ,),
-                          child: Text(
-                            storeName,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w900,
-                              decoration: TextDecoration.none,
-                              fontSize: 16,
-                              letterSpacing: .5,
+                        LimitedBox(
+                          maxWidth: MediaQuery.of(context).size.width * 0.3,
+                          child: Padding(
+                            padding:  EdgeInsets.all(MediaQuery.of(context).size.height *
+                                0.02 ,),
+                            child: Text(
+                              storeName,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w900,
+                                decoration: TextDecoration.none,
+                                fontSize: MediaQuery.of(context).size.width * 0.035,
+                                letterSpacing: .5,
+                              ),
                             ),
                           ),
                         ),
-                        Padding(
+                        userStore.userModel.storeId != userStore.store.storeId ? Padding(
                           padding:  EdgeInsets.only(left: MediaQuery.of(context).size.height *
                               .1 ),
                           child: ElevatedButton(
@@ -482,7 +488,7 @@ class profileHeaderState extends State<profileHeader>{
                               ],
                             ),
                           ),
-                        ),
+                        ) : Container(),
                         SizedBox(
                           height:
                           MediaQuery.of(context).size.height * .005,
@@ -588,15 +594,18 @@ class profileHeaderState extends State<profileHeader>{
                     SizedBox(
                       height: MediaQuery.of(context).size.height * .02,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        data.name,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          decoration: TextDecoration.none,
-                          fontSize: 13,
-                          letterSpacing: 0.5,fontFamily: 'SouqFont'
+                    LimitedBox(
+                      maxWidth: MediaQuery.of(context).size.width * 0.3,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          data.name,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            decoration: TextDecoration.none,
+                            fontSize:MediaQuery.of(context).size.width * 0.035,
+                            letterSpacing: 0.5,fontFamily: 'SouqFont'
+                          ),
                         ),
                       ),
                     ),
