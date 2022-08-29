@@ -43,11 +43,11 @@ class _SearchPageState extends State<SearchPage>{
           resizeToAvoidBottomInset: false,
           appBar: AppBar(
             toolbarHeight: MediaQuery.of(context).size.height * 0.1,
-            backgroundColor: Colors.deepPurple.withOpacity(0.9),
+            backgroundColor: Colors.deepPurpleAccent,
             shape: const RoundedRectangleBorder(
                 borderRadius:  BorderRadius.only(
-                    bottomRight: Radius.circular(25),
-                    bottomLeft: Radius.circular(25))
+                    bottomRight: Radius.circular(15),
+                    bottomLeft: Radius.circular(15))
             ),
             leading: Row(
               mainAxisAlignment: MainAxisAlignment.end,

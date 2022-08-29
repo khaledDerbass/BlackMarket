@@ -1,8 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'CustomProfileAppBar.dart';
 
-class resetPassword extends StatefulWidget {
+
+class resetPassword extends StatefulWidget
+{
   const resetPassword({Key? key}) : super(key: key);
 
   @override
@@ -10,6 +13,13 @@ class resetPassword extends StatefulWidget {
 }
 
 class _resetPasswordState extends State<resetPassword> {
+  final emailController=TextEditingController();
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -30,14 +40,18 @@ class _resetPasswordState extends State<resetPassword> {
               child: Column(
                 children: [
                   TextFormField(
+                    controller: emailController,
                     obscureText: true,
                     decoration: InputDecoration(
                       labelText:
                           isArabic(context) ? 'البريد الإلكتروني' : 'Email',
                       fillColor: Colors.transparent,
                       filled: true,
-                      // hintText: 'Password',
                     ),
+                    // autovalidateMode: AutovalidateMode.onUserInteraction,
+                    // validator: (email) => email != null && !EmailValidator.validate(email)
+                    // ?'Enter a valid Email'
+                    // :null,
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height * .10),
                   Row(
@@ -54,10 +68,12 @@ class _resetPasswordState extends State<resetPassword> {
                             primary: Colors.black,
                             shape: StadiumBorder(),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            resetPassword();
+                          },
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            //crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
                             children: [
                               Text(
                                   isArabic(context)
@@ -65,7 +81,7 @@ class _resetPasswordState extends State<resetPassword> {
                                       : "Reset now",
                                   style: TextStyle(fontFamily: 'SouqFont')),
                               Icon(
-                                Icons.refresh,
+                                Icons.email_outlined,
                                 color: Colors.white,
                               ),
                             ],
@@ -80,8 +96,20 @@ class _resetPasswordState extends State<resetPassword> {
       ),
     );
   }
-
+  Future resetPassword() async
+  {
+    await FirebaseAuth.instance.sendPasswordResetEmail(email: emailController.text.toLowerCase().trim());
+    Navigator.of(context, rootNavigator: true).pop('dialog');
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content:Text('Password Reset Email Sent'),
+        duration: Duration(seconds: 3),
+      ),
+    );
+  }
   bool isArabic(BuildContext context) {
     return context.locale.languageCode == 'ar';
   }
 }
+
+

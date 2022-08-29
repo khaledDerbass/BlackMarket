@@ -351,8 +351,8 @@ class _AddPostPageState extends State<AddPostPage> {
 
                         },
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      //    crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
                                 isArabic(context) ? 'إضافة الإعلان' : 'Submit',style: TextStyle(
@@ -375,7 +375,7 @@ class _AddPostPageState extends State<AddPostPage> {
           height: MediaQuery.of(context).size.height * 0.07,
           style: TabStyle.fixedCircle,
           color: CupertinoColors.white,
-          backgroundColor: Colors.deepPurple.withOpacity(0.85),
+          backgroundColor: Colors.deepPurpleAccent,
           items: [
             TabItem(
                 icon: Icons.home,

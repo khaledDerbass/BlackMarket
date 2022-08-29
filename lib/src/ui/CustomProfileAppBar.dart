@@ -14,19 +14,20 @@ class CustomProfileAppBar extends StatelessWidget {
       elevation: 0,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
-              bottomRight: Radius.circular(25),
-              bottomLeft: Radius.circular(25))),
+              bottomRight: Radius.circular(15),
+              bottomLeft: Radius.circular(15))),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children:[
           Padding(
             padding: EdgeInsets.only(
-              left: MediaQuery.of(context).size.height * .10,
+              left: MediaQuery.of(context).size.height * .08,
             ),),
-          Text("Souq Story",
-            style: TextStyle(fontSize: 18,fontFamily:'SouqFont' ),)
-        ],
-      ),
+
+    Image.asset('assets/images/logo2.png',height: MediaQuery.of(context).size.width * 0.15,width: MediaQuery.of(context).size.width * 0.30,),
+
+    ],
+    ),
 
     );
 

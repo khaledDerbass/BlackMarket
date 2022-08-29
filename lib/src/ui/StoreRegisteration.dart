@@ -6,6 +6,7 @@ import '../Services/StoreAuthService.dart';
 import '../blocs/CategoriesRepoitory.dart';
 import '../models/CategoryList.dart';
 import '../models/CategoryModel.dart';
+import 'CustomProfileAppBar.dart';
 
 
 class StoreRegisteration extends StatefulWidget {
@@ -28,22 +29,15 @@ class StoreRegisterationState extends State<StoreRegisteration> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.deepPurpleAccent,
-        automaticallyImplyLeading: false,
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                bottomRight: Radius.circular(25),
-                bottomLeft: Radius.circular(25))),
-        title: Center(
-          child: Text(
-              isArabic(context) ? 'التسجيل كمتجر' : "Registration as Store",style: TextStyle(
-              fontFamily:'SouqFont'
-          ),),
-        ),
-      ),
-      body: Stack(
+    return Material(
+        child: NestedScrollView(
+        headerSliverBuilder: (context, index) {
+      return [
+        CustomProfileAppBar(),
+      ];
+    },
+
+    body: Stack(
         children: [
           SingleChildScrollView(
             child: Container(
@@ -246,11 +240,12 @@ fontFamily: 'SouqFont'
                                 });
                           },
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             //crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(isArabic(context) ? 'التسجيل' : 'REGISTER',style: TextStyle(
-              fontFamily:'SouqFont')),
+                               fontFamily:'SouqFont')),
                               Icon(
                                 Icons.content_paste_rounded,
                                 color: Colors.white,
@@ -265,7 +260,7 @@ fontFamily: 'SouqFont'
           ),
         ],
       ),
-    );
+    ));
   }
   Widget _buildCategoriesList(BuildContext context, List<DocumentSnapshot>? snapshot) {
     var snapshots = snapshot?.first;
@@ -302,7 +297,7 @@ fontFamily: 'SouqFont'
         icon: const Icon(Icons.keyboard_arrow_down),
         value:  dropdownValueCity,
 
-        items:  const [
+        items:   [
       DropdownMenuItem(
       value: "Amman",
       child: Text("Amman"),

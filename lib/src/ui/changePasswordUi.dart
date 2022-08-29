@@ -110,7 +110,7 @@ class ChangePasswordUiState extends State<ChangePasswordUi> {
                                 },
                                 child: Row(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceEvenly,
                                   //crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Text(

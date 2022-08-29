@@ -50,8 +50,8 @@ class _HomeScreenState extends State<HomeScreen> {
   final box = GetStorage();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   var categoryList = [];
-  Color activeColor = CupertinoColors.activeOrange;
-  Color seenColor = CupertinoColors.darkBackgroundGray;
+  Color activeColor = Colors.deepPurpleAccent;
+  Color seenColor = Colors.grey;
   bool isLoading = false;
   @override
   void initState() {
@@ -310,7 +310,7 @@ class _HomeScreenState extends State<HomeScreen> {
           height: MediaQuery.of(context).size.height * 0.07,
           style: TabStyle.textIn,
           color: CupertinoColors.white,
-          backgroundColor: Colors.deepPurple.withOpacity(0.85),
+          backgroundColor: Colors.deepPurpleAccent,
           items: [
             TabItem(
                 icon: Icons.home,
@@ -344,7 +344,7 @@ class _HomeScreenState extends State<HomeScreen> {
           height: MediaQuery.of(context).size.height * 0.07,
           style: TabStyle.fixedCircle,
           color: CupertinoColors.white,
-          backgroundColor: Colors.deepPurple.withOpacity(0.85),
+          backgroundColor: Colors.deepPurpleAccent,
           items: [
             TabItem(
                 icon: Icons.home,
@@ -434,6 +434,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return context.locale.languageCode == 'ar';
   }
   Future<UserModel?> loadUser() async {
+
     late UserModel? user =null;
     await FirebaseFirestore.instance.collection('Categories').get().then((value) => value.docs.forEach((doc) async {
       categoryList = isArabic(context) ? CategoryList.categoryListFromJson(doc['CategoryListAr'] as Map<String, dynamic>)
@@ -455,6 +456,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return user;
   }
+  //StoryStart///////////////////////////////////////////////////////////////////
   Widget _buildListItem(BuildContext context, DocumentSnapshot snapshot, int length, int roleId, UserModel userModel) {
     final store = Store.fromSnapshot(snapshot);
     Color circleColor = activeColor;
@@ -487,7 +489,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   border: Border.all(
                     color: circleColor,
-                    width: 2.0,
+                    width: 3.5,
                     style: BorderStyle.solid,
                   ),
                 ),
@@ -573,8 +575,8 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     ) : Container();
   }
-
-
+//StoryEnd////////////////////////////////////////////////////////////////////////////////////
+//CategoryStart///////////////////////////////////////////////////////////////////////
   Widget _buildCategoryList(BuildContext context, List<DocumentSnapshot>? snapshot, [userData]) {
     List<Store> storesList = [];
     List<int> categories = [];
@@ -644,7 +646,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Container(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(15),
                     image: DecorationImage(
                       fit: BoxFit.cover,
                       image: Image.memory(
@@ -654,7 +656,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     border: Border.all(
                       color: circleColor,
-                      width: 2.0,
+                      width: 3.0,
                       style: BorderStyle.solid,
                     ),
                   ),
@@ -772,6 +774,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     MaterialPageRoute(
                                                         builder: (context) =>  profilepage(searchStore: UserStore(user,storesList.where((element) => element.storeId == cw.images[storyIndex].storeId).first,),currentUser: currentUser,)),
                                                   );
+                                                  //StoreProfile
                                                 }else{
                                                   LoginHelper.showErrorAlertDialog(context, "Error");
                                                 }
@@ -900,6 +903,8 @@ class _HomeScreenState extends State<HomeScreen> {
       children: List.of(widgetsList),
     );
   }
+  //CategoryEnd////////////////////////////////////////////////////////////////////////////////////
+
   int getLastSeenImageByStore(Store store) {
 
     var image = store.stories.where((element) => !element.seenBy.contains(AuthenticationService.getAuthInstance().currentUser!.uid));

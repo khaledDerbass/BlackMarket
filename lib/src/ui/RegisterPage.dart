@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:souq/src/ui/LoginPage.dart';
 import '../Services/AuthenticationService.dart';
+import 'CustomProfileAppBar.dart';
 import 'StoreRegisteration.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -20,20 +21,16 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.deepPurpleAccent,
-        automaticallyImplyLeading: false,
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                bottomRight: Radius.circular(25),
-                bottomLeft: Radius.circular(25))),
-        title:  Center(
-          child: Text( isArabic(context) ? 'التسجيل' : "Registration"),
-        ),
-      ),
+    return Material(
+        child: NestedScrollView(
+        headerSliverBuilder: (context, index) {
+      return [
+        CustomProfileAppBar(),
+      ];
+    },
 
-      body: Stack(
+
+    body: Stack(
         children: [
           SingleChildScrollView(
             child: Container(
@@ -134,7 +131,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             });
                           },
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             //crossAxisAlignment: CrossAxisAlignment.center,
                             children:  [
                              Text( isArabic(context) ? 'التسجيل' : 'REGISTER',style: TextStyle(
@@ -173,7 +170,7 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
         ],
       ),
-    );
+    ));
   }
   bool isArabic(BuildContext context) {
     return context.locale.languageCode == 'ar';
