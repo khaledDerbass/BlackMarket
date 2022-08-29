@@ -78,7 +78,7 @@ class _resetPasswordState extends State<resetPassword> {
                                   isArabic(context)
                                       ? 'إعادة تعيين'
                                       : "Reset now",
-                                  style: TextStyle(fontFamily: 'SouqFont')),
+                                  style: TextStyle(fontWeight:FontWeight.bold ,   fontFamily:'SouqFont',fontSize: 16)),
                               Icon(
                                 Icons.email_outlined,
                                 color: Colors.white,
