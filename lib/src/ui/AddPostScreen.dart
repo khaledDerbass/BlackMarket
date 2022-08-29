@@ -302,10 +302,10 @@ class _AddPostPageState extends State<AddPostPage> {
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           maximumSize: Size(
-                              MediaQuery.of(context).size.height * .22,
+                              MediaQuery.of(context).size.height * .30,
                               MediaQuery.of(context).size.height * .07),
                           minimumSize: Size(
-                              MediaQuery.of(context).size.height * .22,
+                              MediaQuery.of(context).size.height * .30,
                               MediaQuery.of(context).size.height * .07),
                           primary: Colors.black,
                           shape: StadiumBorder(),
@@ -356,7 +356,7 @@ class _AddPostPageState extends State<AddPostPage> {
                           children: [
                             Text(
                                 isArabic(context) ? 'إضافة الإعلان' : 'Submit',style: TextStyle(
-                          fontFamily:'SouqFont')),
+                                fontWeight:FontWeight.bold ,   fontFamily:'SouqFont',fontSize: 16)),
                             isLoading ? CircularProgressIndicator() :Icon(
                               Icons.done_outline,
                               color: Colors.white,
