@@ -464,8 +464,9 @@ class _HomeScreenState extends State<HomeScreen> {
     if(isSeen){
       circleColor = seenColor;
     }
-    int startIndex = getLastSeenImageByStore(store);
+    store.stories.sort((a, b) => a.createdAt.compareTo(b.createdAt));
 
+    int startIndex = getLastSeenImageByStore(store);
     List<String> seenImgIds = [];
     return userModel.followedStores.contains(store.storeId.trim()) ?  CupertinoPageScaffold(
       backgroundColor: CupertinoColors.white,
@@ -501,51 +502,130 @@ class _HomeScreenState extends State<HomeScreen> {
                       context: context,
                       builder: (context) {
                         return CupertinoPageScaffold(
-                          child: Story(
-                            fullscreen: false,
-                            topOffset:
-                            MediaQuery.of(context).size.height * 0.06,
-                            onFlashForward: Navigator.of(context).pop,
-                            onFlashBack: Navigator.of(context).pop,
-                            momentCount: store.stories.length,
-                            momentDurationGetter: (idx) => const Duration(seconds: 5),
-                            startAt: startIndex,
-                            momentBuilder: (context, index) {
-                              print("user story index " + index.toString());
-                              if(!seenImgIds.contains(store.stories[index].id)) {
-                                seenImgIds.add(store.stories[index].id);
-                              }
-                              return Scaffold(
-                                body: Stack(
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: CupertinoColors.darkBackgroundGray,
-                                        image: DecorationImage(
+                          child: SafeArea(
+                            child: GestureDetector(
+                              onVerticalDragUpdate: (details) {
+                                int sensitivity = 8;
+                                if (details.delta.dy > sensitivity) {
+                                  Navigator.pop(context);
+                                } else if(details.delta.dy < -sensitivity){
+                                  Navigator.pop(context);
+                                }
+                              },
+                              child: StoryPageView(
+                                initialStoryIndex: (_)=> startIndex,
+                                itemBuilder: (context, pageIndex, storyIndex) {
+                                  print("user story index " + storyIndex.toString());
+                                  if(!seenImgIds.contains(store.stories[storyIndex].id)) {
+                                    seenImgIds.add(store.stories[storyIndex].id);
+                                  }
+                                  return Stack(
+                                    children: [
+                                      Positioned.fill(
+                                        child: Container(color: Colors.black),
+                                      ),
+                                      Positioned.fill(
+                                        child: Image.memory(
+                                          base64Decode(store.stories[storyIndex].img),
                                           fit: BoxFit.contain,
-                                          image: Image.memory(base64Decode(
-                                              store.stories[index].img))
-                                              .image,
                                         ),
                                       ),
-                                    ),
-                                    Positioned(
-                                      top: 70,
-                                      left: 20,
-                                      child: Row(
-                                        children: [
-                                          ClipOval(
-                                            child: Image(image: Image.memory(base64Decode(store.stories.last.img)).image, height: 25,width: 25,),
+
+                                    ],
+                                  );
+                                },
+                                gestureItemBuilder: (context, pageIndex, storyIndex) {
+                                  return Row(
+                                    children: [
+                                      GestureDetector(
+                                        child: Align(
+                                          alignment: Alignment.topLeft,
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(top: 50, left: 15),
+                                            child: Row(
+                                              children: [
+                                                Container(
+                                                  height: 32,
+                                                  width: 32,
+                                                  decoration: BoxDecoration(
+                                                    image: DecorationImage(
+                                                      image: Image.memory(
+                                                        base64Decode(store.stories.last.img),
+                                                        fit: BoxFit.cover,
+                                                      ).image,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                  width: 8,
+                                                ),
+                                                Text(
+                                                  isArabic(context) ? store.nameAr : store.nameEn,
+                                                  style: TextStyle(
+                                                    fontSize: MediaQuery.of(context).size.width * 0.04,
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                    decoration: TextDecoration.none,
+                                                      fontFamily:'SouqFont',
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                          SizedBox(width: MediaQuery.of(context).size.width * 0.02,),
-                                          Text(isArabic(context) ? store.nameAr : store.nameEn,style: const TextStyle(color: Colors.white,fontSize: 17),),
-                                        ],
+                                        ),
+                                        onTap: () async{
+                                          if(AuthenticationService.isCurrentUserLoggedIn()){
+                                            late UserModel user;
+                                            late UserModel currentUser;
+                                            await FirebaseFirestore.instance.collection('Users').where(
+                                                'storeId', isEqualTo:store.storeId.replaceAll(" ", ""))
+                                                .get()
+                                                .then((value) =>
+                                                value.docs.forEach((doc) {
+                                                  user = UserModel.fromJson(value.docs.first.data());
+                                                }));
+
+                                            await FirebaseFirestore.instance.collection('Users').where(
+                                                'email', isEqualTo:AuthenticationService.getAuthInstance().currentUser!.email)
+                                                .get()
+                                                .then((value) =>
+                                                value.docs.forEach((doc) {
+                                                  currentUser = UserModel.fromJson(value.docs.first.data());
+                                                }));
+
+                                            if (user != null) {
+                                              Navigator.pushReplacement(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>  profilepage(searchStore: UserStore(user,store,),currentUser: currentUser,)),
+                                              );
+                                              //StoreProfile
+                                            }else{
+                                              LoginHelper.showErrorAlertDialog(context, "Error");
+                                            }
+                                          }else{
+                                            LoginHelper.showLoginAlertDialog(context);
+                                          }
+                                        },
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
+                                    ],
+                                  );
+                                },
+                                pageLength: store.stories.length,
+                                storyLength: (int pageIndex) {
+                                  return store.stories.length;
+                                },
+                                onPageLimitReached: () {
+
+                                  Navigator.pop(context);
+                                },
+                                onPageChanged: (_) async{
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ),
                           ),
                         );
                       },
