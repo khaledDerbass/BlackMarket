@@ -88,10 +88,10 @@ class _RegisterPageState extends State<RegisterPage> {
                       ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             maximumSize: Size(
-                                MediaQuery.of(context).size.height * .20,
+                                MediaQuery.of(context).size.height * .30,
                                 MediaQuery.of(context).size.height * .07),
                             minimumSize: Size(
-                                MediaQuery.of(context).size.height * .20,
+                                MediaQuery.of(context).size.height * .30,
                                 MediaQuery.of(context).size.height * .07),
                             primary: Colors.black,
                             shape: const StadiumBorder(),
@@ -134,10 +134,10 @@ class _RegisterPageState extends State<RegisterPage> {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             //crossAxisAlignment: CrossAxisAlignment.center,
                             children:  [
-                             Text( isArabic(context) ? 'التسجيل' : 'REGISTER',style: TextStyle(
-    fontFamily:'SouqFont')),
+                             Text( isArabic(context) ? 'التسجيل كمستخدم' : 'Register as User',style: TextStyle(
+                                 fontWeight:FontWeight.bold ,   fontFamily:'SouqFont',fontSize: 16)),
                               Icon(
-                                Icons.content_paste_rounded,
+                                Icons.how_to_reg,
                                 color: Colors.white,
                               ),
                             ],
@@ -159,7 +159,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         },
                         child:  Text(
                          isArabic(context) ? ' التسجيل كمتجر' : 'Register as Store',
-                          style: TextStyle(color: Colors.black,    fontFamily:'SouqFont'),
+                          style: TextStyle(color: Colors.black,fontWeight:FontWeight.bold ,   fontFamily:'SouqFont',fontSize: 16),
                         ),
                       )
                     ],

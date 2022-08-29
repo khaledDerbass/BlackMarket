@@ -122,7 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Image.asset('assets/images/logo2.png',height: MediaQuery.of(context).size.width * 0.15,width: MediaQuery.of(context).size.width * 0.15,),
+                                    Image.asset('assets/images/logo2.png',height: MediaQuery.of(context).size.width * 0.17,width: MediaQuery.of(context).size.width * 0.30,),
 
                                   ],
                                 ),

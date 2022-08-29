@@ -12,6 +12,7 @@ class CustomProfileAppBar extends StatelessWidget {
       pinned: true,
       centerTitle: false,
       elevation: 0,
+      expandedHeight: MediaQuery.of(context).size.height * 0.05,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
               bottomRight: Radius.circular(15),
@@ -24,7 +25,7 @@ class CustomProfileAppBar extends StatelessWidget {
               left: MediaQuery.of(context).size.height * .08,
             ),),
 
-    Image.asset('assets/images/logo2.png',height: MediaQuery.of(context).size.width * 0.15,width: MediaQuery.of(context).size.width * 0.30,),
+    Image.asset('assets/images/logo2.png',height: MediaQuery.of(context).size.width * 0.17,width: MediaQuery.of(context).size.width * 0.30,),
 
     ],
     ),

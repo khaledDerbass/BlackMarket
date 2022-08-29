@@ -8,7 +8,6 @@ import '../models/CategoryList.dart';
 import '../models/CategoryModel.dart';
 import 'CustomProfileAppBar.dart';
 
-
 class StoreRegisteration extends StatefulWidget {
   const StoreRegisteration({Key? key}) : super(key: key);
 
@@ -24,20 +23,22 @@ class StoreRegisterationState extends State<StoreRegisteration> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _categoryController = TextEditingController();
   CategoriesRepository repository = CategoriesRepository();
-  int dropdownvalue = 1;
-  String dropdownValueCity = 'Amman';
 
+  // define a list of options for the dropdown
+  final List<String> Cities = ["Amman", "Irbid", "Zarqa"];
+  // the selected value
+  String? _selectedCity;
+  int? dropdownvalue;
   @override
   Widget build(BuildContext context) {
     return Material(
         child: NestedScrollView(
-        headerSliverBuilder: (context, index) {
-      return [
-        CustomProfileAppBar(),
-      ];
-    },
-
-    body: Stack(
+      headerSliverBuilder: (context, index) {
+        return [
+          CustomProfileAppBar(),
+        ];
+      },
+      body: Stack(
         children: [
           SingleChildScrollView(
             child: Container(
@@ -87,7 +88,6 @@ class StoreRegisterationState extends State<StoreRegisteration> {
                       labelText: isArabic(context) ? 'رقم الهاتف' : 'Phone',
                     ),
                   ),
-
                   SizedBox(height: MediaQuery.of(context).size.height * .05),
                   TextField(
                     controller: _passwordController,
@@ -99,88 +99,80 @@ class StoreRegisterationState extends State<StoreRegisteration> {
                     ),
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height * .05),
-                  Align(
-                    alignment: isArabic(context)
-                        ? Alignment.centerRight
-                        : Alignment.centerLeft,
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                          top: MediaQuery.of(context).size.width * 0.02,
-                          left: MediaQuery.of(context).size.width * 0.02,
-                          right: MediaQuery.of(context).size.width * 0.02,
-                          bottom: MediaQuery.of(context).size.width * 0.04),
-                      child: isArabic(context)
-                          ? const Text(
-                        ": اختر المدينة",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-
-                        ),
-                      )
-                          : const Text(
-                        "Choose City :",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-fontFamily: 'SouqFont'
-                        ),
-                      ),
-                    ),),
                   LimitedBox(
                     maxHeight: MediaQuery.of(context).size.height * 0.25,
                     maxWidth: MediaQuery.of(context).size.width,
-                    child: StreamBuilder<QuerySnapshot>(
-                        builder: (context, snapshot) {
-
-                          if (!snapshot.hasData)
-                            return const LinearProgressIndicator();
-                          return _buildCitiesList(context, snapshot.data?.docs ?? []);
-                        }),
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height * .05),
-                  Align(
-                    alignment: isArabic(context)
-                        ? Alignment.centerRight
-                        : Alignment.centerLeft,
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                          top: MediaQuery.of(context).size.width * 0.02,
-                          left: MediaQuery.of(context).size.width * 0.02,
-                          right: MediaQuery.of(context).size.width * 0.02,
-                          bottom: MediaQuery.of(context).size.width * 0.04),
-                      child: isArabic(context)
-                          ? const Text(
-                        ": اختر الفئة",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-fontFamily: 'SouqFont'
-                        ),
-                      )
-                          : const Text(
-                        "Choose Category :",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                            fontFamily: 'SouqFont'
-
-                        ),
+                    child: DropdownButton<String>(
+                      value: _selectedCity,
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedCity = value;
+                        });
+                      },
+                      hint: Center(
+                          child: isArabic(context)
+                              ? const Text(
+                                  "  اختر المدينة",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                )
+                              : Text(
+                                  'Choose City  ',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'SouqFont'),
+                                )),
+                      // Hide the default underline
+                      underline: Container(),
+                      // set the color of the dropdown menu
+                      dropdownColor: Colors.white,
+                      icon: const Icon(
+                        Icons.keyboard_arrow_down,
+                        color: Colors.black,
                       ),
-                    ),),
+                      // isExpanded: true,
+
+                      // The list of options
+                      items: Cities.map((e) => DropdownMenuItem(
+                            value: e,
+                            child: Container(
+                              alignment: Alignment.center,
+                              child: Text(
+                                e,
+                                style: const TextStyle(fontSize: 16),
+                              ),
+                            ),
+                          )).toList(),
+
+                      // Customize the selected item
+                      selectedItemBuilder: (BuildContext context) =>
+                          Cities.map((e) => Center(
+                                child: Text(
+                                  e,
+                                  style: const TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              )).toList(),
+                    ),
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.height * .03),
                   LimitedBox(
-                    maxHeight: MediaQuery.of(context).size.height * 0.25,
+                    maxHeight: MediaQuery.of(context).size.height * .25,
                     maxWidth: MediaQuery.of(context).size.width,
                     child: StreamBuilder<QuerySnapshot>(
                         stream: repository.getCategoriesStream(),
                         builder: (context, snapshot) {
-
                           if (!snapshot.hasData)
                             return const LinearProgressIndicator();
-                          return _buildCategoriesList(context, snapshot.data?.docs ?? []);
+                          return _buildCategoriesList(
+                              context, snapshot.data?.docs ?? []);
                         }),
                   ),
-
                   SizedBox(height: MediaQuery.of(context).size.height * .03),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -188,27 +180,30 @@ fontFamily: 'SouqFont'
                       ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             maximumSize: Size(
-                                MediaQuery.of(context).size.height * .20,
+                                MediaQuery.of(context).size.height * .30,
                                 MediaQuery.of(context).size.height * .07),
                             minimumSize: Size(
-                                MediaQuery.of(context).size.height * .20,
+                                MediaQuery.of(context).size.height * .30,
                                 MediaQuery.of(context).size.height * .07),
                             primary: Colors.black,
                             shape: const StadiumBorder(),
                           ),
                           onPressed: () {
                             final snackBar1 = SnackBar(
-                              content: Text(isArabic(context)
+                                content: Text(
+                              isArabic(context)
                                   ? 'تم التسجيل بنجاح '
-                                  : 'Your account has been created successfully',style: TextStyle(
-                                  fontFamily:'SouqFont'),)
-                            );
+                                  : 'Your account has been created successfully',
+                              style: TextStyle(fontFamily: 'SouqFont'),
+                            ));
                             final snackBar2 = SnackBar(
-                              content: Text(isArabic(context)
-                                  ? 'حدث خطأ اثناء عملية التسجيل'
-                                  : 'Error during sign up',style: TextStyle(
-                                  fontFamily:'SouqFont'),
-                            ),);
+                              content: Text(
+                                isArabic(context)
+                                    ? 'حدث خطأ اثناء عملية التسجيل'
+                                    : 'Error during sign up',
+                                style: TextStyle(fontFamily: 'SouqFont'),
+                              ),
+                            );
 
                             // Find the ScaffoldMessenger in the widget tree
                             // and use it to show a SnackBar.
@@ -240,14 +235,13 @@ fontFamily: 'SouqFont'
                                 });
                           },
                           child: Row(
-
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             //crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text(isArabic(context) ? 'التسجيل' : 'REGISTER',style: TextStyle(
-                               fontFamily:'SouqFont')),
+                              Text(isArabic(context) ? 'التسجيل كمتجر' : 'Register as Store',
+                                  style: TextStyle(fontWeight:FontWeight.bold ,   fontFamily:'SouqFont',fontSize: 16)),
                               Icon(
-                                Icons.content_paste_rounded,
+                                Icons.warehouse_outlined,
                                 color: Colors.white,
                               ),
                             ],
@@ -262,68 +256,70 @@ fontFamily: 'SouqFont'
       ),
     ));
   }
-  Widget _buildCategoriesList(BuildContext context, List<DocumentSnapshot>? snapshot) {
-    var snapshots = snapshot?.first;
-    var list = isArabic(context) ? CategoryList.categoryListFromJson(snapshots!['CategoryListAr'] as Map<String, dynamic>)
-        : CategoryList.categoryListFromJson(snapshots!['CategoryList'] as Map<String, dynamic>);
-    print(list.first.name);
-    print("lwngth "   + list.length.toString());
-    List<CategoryModel> listOfCategories = [];
-    for(int i =0 ;i < list.length; i++){
-      listOfCategories.add(CategoryModel(list[i].name,list[i].value));
-    }
-    return DropdownButton(
-      // Down Arrow Icon
-        icon: const Icon(Icons.keyboard_arrow_down),
-        value:  dropdownvalue,
 
+  Widget _buildCategoriesList(
+      BuildContext context, List<DocumentSnapshot>? snapshot) {
+    var snapshots = snapshot?.first;
+    var list = isArabic(context)
+        ? CategoryList.categoryListFromJson(
+            snapshots!['CategoryListAr'] as Map<String, dynamic>)
+        : CategoryList.categoryListFromJson(
+            snapshots!['CategoryList'] as Map<String, dynamic>);
+    print(list.first.name);
+    print("lwngth " + list.length.toString());
+    List<CategoryModel> listOfCategories = [];
+    for (int i = 0; i < list.length; i++) {
+      listOfCategories.add(CategoryModel(list[i].name, list[i].value));
+    }
+
+    return DropdownButton(
+        hint: Center(
+            child: isArabic(context)
+                ? const Text(
+                    "  اختر الفئة",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  )
+                : Text(
+                    "Choose Category  ",
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'SouqFont'),
+                  )),
+        // Hide the default underline
+        underline: Container(),
+        // set the color of the dropdown menu
+        dropdownColor: Colors.white,
+
+        // Down Arrow Icon
+        icon: const Icon(Icons.keyboard_arrow_down),
+        value: dropdownvalue,
         items: listOfCategories.map((CategoryModel item) {
           return DropdownMenuItem(
             value: item.value,
             child: Text(item.type),
           );
         }).toList(),
-
         onChanged: (int? newValue) {
           setState(() {
             dropdownvalue = newValue!;
           });
-        });
+        },
+        selectedItemBuilder: (BuildContext context) =>
+            listOfCategories.map((CategoryModel item) => Center(
+              child: Text(
+            item.type,
+            style: const TextStyle(
+                fontSize: 16,
+                color: Colors.black,
+                fontWeight: FontWeight.bold),
+          ),
+        )).toList(),);
   }
-  Widget _buildCitiesList(BuildContext context, List<DocumentSnapshot>? snapshot) {
 
-    return DropdownButton(
-      // Down Arrow Icon
-        icon: const Icon(Icons.keyboard_arrow_down),
-        value:  dropdownValueCity,
-
-        items:   [
-      DropdownMenuItem(
-      value: "Amman",
-      child: Text("Amman"),
-    ),
-    DropdownMenuItem(
-    value: "Irbid",
-    child: Text("Irbid"),
-    ),
-    DropdownMenuItem(
-    value: "Zarqa",
-    child: Text("Zarqa"),
-    )
-    ],
-
-      onChanged: (value){
-        setState(() {
-          dropdownValueCity = value.toString();
-        });
-      },
-    //  isExpanded: true, //make true to take width of parent widget
-     underline: Container(), //empty line
-      style: TextStyle(fontSize: 18,color: Colors.black),
-     // dropdownColor: Colors.transparent,
-     // iconEnabledColor: Colors.white, //Icon color
-    );
-  }
   bool isArabic(BuildContext context) {
     return context.locale.languageCode == 'ar';
   }

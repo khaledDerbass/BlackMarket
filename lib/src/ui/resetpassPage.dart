@@ -41,7 +41,6 @@ class _resetPasswordState extends State<resetPassword> {
                 children: [
                   TextFormField(
                     controller: emailController,
-                    obscureText: true,
                     decoration: InputDecoration(
                       labelText:
                           isArabic(context) ? 'البريد الإلكتروني' : 'Email',
@@ -102,7 +101,7 @@ class _resetPasswordState extends State<resetPassword> {
     Navigator.of(context, rootNavigator: true).pop('dialog');
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content:Text('Password Reset Email Sent'),
+        content:Text('Reset Password Email Sent'),
         duration: Duration(seconds: 3),
       ),
     );

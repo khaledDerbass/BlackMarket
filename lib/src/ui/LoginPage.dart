@@ -137,7 +137,7 @@ class LoginScreenState extends State<LoginScreen> {
                                   isArabic(context)
                                       ? 'تسجيل الدخول'
                                       : 'Sign in',
-                                  style: TextStyle(fontFamily: 'SouqFont')),
+                                  style: TextStyle(fontWeight:FontWeight.bold ,   fontFamily:'SouqFont',fontSize: 16)),
                               Icon(
                                 Icons.lock,
                                 color: Colors.white,
@@ -161,7 +161,7 @@ class LoginScreenState extends State<LoginScreen> {
                         child: Text(
                           isArabic(context) ? 'التسجيل' : 'Register',
                           style: TextStyle(
-                              color: Colors.black, fontFamily: 'SouqFont'),
+                              color: Colors.black,fontWeight:FontWeight.bold ,   fontFamily:'SouqFont',fontSize: 16),
                         ),
                       ),
                       TextButton(
@@ -176,8 +176,7 @@ class LoginScreenState extends State<LoginScreen> {
                           isArabic(context)
                               ? 'نسيت كلمة المرور؟'
                               : 'Forgot password?',
-                          style: TextStyle(
-                              color: Colors.black, fontFamily: 'SouqFont'),
+                          style: TextStyle(color: Colors.black,fontWeight:FontWeight.bold ,   fontFamily:'SouqFont',fontSize: 16),
                         ),
                       ),
                     ],
