@@ -336,8 +336,8 @@ class _AddPostPageState extends State<AddPostPage> {
                             setState(() {
                             isLoading = false;
                             }),
-                              LoginHelper.showSuccessAlertDialog(context,
-                                  "Your Story has been shared successfully"),
+                              LoginHelper.showSuccessAlertDialog(context, isArabic(context) ? "تمت إضافة قصتك بنجاح ، يمكنك إضافة المزيد من القصص من خلال هذه الصفحة" :
+                                  "Your Story has been shared successfully, you can add more stories from this page."),
                             });
                           }on FirebaseException catch  (e) {
                             LoginHelper.showErrorAlertDialog(context, e.message.toString());
