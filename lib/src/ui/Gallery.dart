@@ -199,7 +199,7 @@ class _GalleryState extends State<Gallery> {
                           .image,
                     ),
               title: Text(
-                storeName,
+                widget.searchStore != null ? isArabic(context) ? widget.searchStore!.store.nameAr : widget.searchStore!.store.nameEn : storeName,
                 style:
                     TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
               ),
