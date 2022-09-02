@@ -25,7 +25,6 @@ class LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(FirebaseAuth.instance.currentUser?.email);
     return Material(
         child: NestedScrollView(
         headerSliverBuilder: (context, index) {
@@ -83,10 +82,10 @@ class LoginScreenState extends State<LoginScreen> {
                       ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             maximumSize: Size(
-                                MediaQuery.of(context).size.height * .19,
+                                MediaQuery.of(context).size.height * .22,
                                 MediaQuery.of(context).size.height * .07),
                             minimumSize: Size(
-                                MediaQuery.of(context).size.height * .19,
+                                MediaQuery.of(context).size.height * .22,
                                 MediaQuery.of(context).size.height * .07),
                             primary: Colors.black,
                             shape: StadiumBorder(),
@@ -139,7 +138,7 @@ class LoginScreenState extends State<LoginScreen> {
                                       : 'Sign in',
                                   style: TextStyle(fontWeight:FontWeight.bold ,   fontFamily:'SouqFont',fontSize: 16)),
                               Icon(
-                                Icons.lock,
+                                CupertinoIcons.padlock_solid,
                                 color: Colors.white,
                               ),
                             ],
