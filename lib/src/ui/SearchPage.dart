@@ -78,7 +78,15 @@ class _SearchPageState extends State<SearchPage>{
                        repository.collection.get().then((value) async => {
                        setState(()  {
                          stores.addAll(value.docs.map((e) => Store.fromSnapshot(e)));
-                         filteredStore.addAll(stores.where((element) => element.nameAr.toLowerCase().startsWith(x.toLowerCase()) || element.nameEn.toLowerCase().startsWith(x.toLowerCase())));
+                         for(Store s in stores){
+                           if(s.isApprovedByAdmin && (s.nameAr.toLowerCase().startsWith(x.toLowerCase()) || s.nameEn.toLowerCase().startsWith(x.toLowerCase()))){
+                             if(filteredStore.where((element) => element.storeId == s.storeId).toList().isEmpty){
+                                filteredStore.add(s);
+                             }
+                           }
+
+                         }
+                         //filteredStore.addAll(stores.where((element) =>  element.isApprovedByAdmin && (element.nameAr.toLowerCase().startsWith(x.toLowerCase()) || element.nameEn.toLowerCase().startsWith(x.toLowerCase()))));
                          filteredStore = filteredStore.toSet().toList();
                        }),
                        });

@@ -42,7 +42,7 @@ class StoryContent {
 
 StoryContent _StoryItemFromJson(Map<String, dynamic> json) {
   return StoryContent(
-      json['id'] as String,
+      json['id']  ?? "",
       json['img'] as String,
       json['Category'] as int,
       json['description'] ?? "",
