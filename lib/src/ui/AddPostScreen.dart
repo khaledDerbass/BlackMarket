@@ -13,18 +13,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:overlay_support/overlay_support.dart';
 import 'package:souq/Helpers/ImageHelper.dart';
 import '../../Helpers/LoginHelper.dart';
 import '../blocs/CategoriesRepoitory.dart';
 import '../blocs/StoryTimeRepo.dart';
 import '../models/CategoryList.dart';
 import '../models/CategoryModel.dart';
-import '../models/PushNotification.dart';
 import '../models/Store.dart';
 import '../models/StoryItem.dart';
-import '../models/StoryTimeList.dart';
-import '../models/StoryTimeModel.dart';
 import '../models/UserModel.dart';
 import '../models/UserStore.dart';
 import 'HomeScreen.dart';
@@ -46,21 +42,15 @@ class _AddPostPageState extends State<AddPostPage> {
   CategoriesRepository repository = CategoriesRepository();
   StoryTimeRepo repositoryStoryTimeRepo = StoryTimeRepo();
   final TextEditingController _descriptionController = TextEditingController();
-  int dropdownvalue = 1;
-  int dropdownDaysvalue = 1;
+  int? dropdownvalue;
+  //int dropdownDaysvalue = 1;
+  // define a list of options for the dropdown
+  final List<String> DaysList = ["1 Day", "2 Days", "3 Days","4 Days", "5 Days", "6 Days", "7 Days"];
+  // the selected value
+  String? _selectedDays;
   bool isLoading = false;
   @override
   void initState() {
-    // FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-    //   PushNotification notification = PushNotification(
-    //     title: message.notification?.title,
-    //     body: message.notification?.body,
-    //   );
-    //   setState(() {
-    //     _notificationInfo = notification;
-    //   });
-    // });
-    // checkForInitialMessage();
 
     super.initState();
   }
@@ -86,37 +76,10 @@ class _AddPostPageState extends State<AddPostPage> {
             SingleChildScrollView(
               child: Column(
                 children: [
-                  Align(
-                    alignment: isArabic(context)
-                        ? Alignment.centerRight
-                        : Alignment.centerLeft,
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                          top: MediaQuery.of(context).size.width * 0.05,
-                          left: MediaQuery.of(context).size.width * 0.02,
-                          right: MediaQuery.of(context).size.width * 0.02,
-                          bottom: MediaQuery.of(context).size.width * 0.05),
-                      child: isArabic(context)
-                          ? const Text(
-                              "اختر القسم",
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                  fontFamily:'SouqFont'
-                              ),
-                            )
-                          : const Text(
-                              "Choose Category",
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                  fontFamily:'SouqFont'
-                              ),
-                            ),
-                    ),
-                  ),
+
+                  SizedBox(height: MediaQuery.of(context).size.height * .05),
                   LimitedBox(
-                    maxHeight: MediaQuery.of(context).size.height * 0.25,
+                    maxHeight: MediaQuery.of(context).size.height * .05,
                     maxWidth: MediaQuery.of(context).size.width,
                     child: StreamBuilder<QuerySnapshot>(
                         stream: repository.getCategoriesStream(),
@@ -157,7 +120,7 @@ class _AddPostPageState extends State<AddPostPage> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Text('إضافة صور',style: TextStyle(
-                                    fontFamily:'SouqFont')),
+                                        fontWeight:FontWeight.bold ,   fontFamily:'SouqFont',fontSize: 16)),
                                     Icon(
                                       Icons.add_photo_alternate_outlined,
                                       color: Colors.white,
@@ -183,7 +146,7 @@ class _AddPostPageState extends State<AddPostPage> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: const [
                                     Text('Add Photos',style: TextStyle(
-                                        fontFamily:'SouqFont')),
+                                        fontWeight:FontWeight.bold ,   fontFamily:'SouqFont',fontSize: 16)),
                                     Icon(
                                       Icons.add_photo_alternate_outlined,
                                       color: Colors.white,
@@ -201,58 +164,81 @@ class _AddPostPageState extends State<AddPostPage> {
                           ),
                         ),
                       ):Container(
-                        height: MediaQuery.of(context).size.height * 0.1,
-                        width: MediaQuery.of(context).size.width * 0.25,
+                        height: MediaQuery.of(context).size.height * 0.05,
+                        width: MediaQuery.of(context).size.width * 0.15,
                         decoration: const BoxDecoration(
                           image: DecorationImage(
                             image: AssetImage('assets/images/placeholder.png'),
                             fit: BoxFit.fill,
                           ),
-                          shape: BoxShape.circle,
+                         // shape: BoxShape.circle,
                         ),
                       ),
                     ],
                   ),
-                  Align(
-                    alignment: isArabic(context)
-                        ? Alignment.centerRight
-                        : Alignment.centerLeft,
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                          top: MediaQuery.of(context).size.width * 0.05,
-                          left: MediaQuery.of(context).size.width * 0.02,
-                          right: MediaQuery.of(context).size.width * 0.02,
-                          bottom: MediaQuery.of(context).size.width * 0.05),
-                      child: isArabic(context)
-                          ? const Text(
-                        "عدد أيام القصة",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                            fontFamily:'SouqFont'
-                        ),
-                      )
-                          : const Text(
-                        "Day of story",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                            fontFamily:'SouqFont'
-                        ),
-                      ),
-                    ),
-                  ),
+                  SizedBox(height: MediaQuery.of(context).size.height * .05),
                   LimitedBox(
                     maxHeight: MediaQuery.of(context).size.height * 0.25,
                     maxWidth: MediaQuery.of(context).size.width,
-                    child: StreamBuilder<QuerySnapshot>(
-                        stream: repositoryStoryTimeRepo.getStoryTimeStream(),
-                        builder: (context, snapshot) {
-                          if (!snapshot.hasData)
-                            return const LinearProgressIndicator();
-                          return _buildDaysList(context, snapshot.data?.docs ?? []);
-                        }),
+                    child: DropdownButton<String>(
+                      value: _selectedDays,
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedDays = value;
+                        });
+                      },
+                      hint: Center(
+                          child: isArabic(context)
+                              ? const Text(
+                            "عدد أيام القصة",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          )
+                              : Text(
+                            "Day of story",
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'SouqFont'),
+                          )),
+                      // Hide the default underline
+                      underline: Container(),
+                      // set the color of the dropdown menu
+                      dropdownColor: Colors.white,
+                      icon: const Icon(
+                        Icons.keyboard_arrow_down,
+                        color: Colors.black,
+                      ),
+                      // isExpanded: true,
+
+                      // The list of options
+                      items: DaysList.map((e) => DropdownMenuItem(
+                        value: e,
+                        child: Container(
+                          alignment: Alignment.center,
+                          child: Text(
+                            e,
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                        ),
+                      )).toList(),
+
+                      // Customize the selected item
+                      selectedItemBuilder: (BuildContext context) =>
+                          DaysList.map((e) => Center(
+                            child: Text(
+                              e,
+                              style: const TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          )).toList(),
+                    ),
                   ),
+
                   Align(
                     alignment: isArabic(context)
                         ? Alignment.centerRight
@@ -321,7 +307,7 @@ class _AddPostPageState extends State<AddPostPage> {
                           XFile compressedImage = XFile(file.path);
                           Uint8List? bytes = await compressedImage.readAsBytes();
                           String img = base64Encode(bytes);
-                          StoryContent storyContent = StoryContent(ImageHelper.idGenerator(),img, dropdownvalue, _descriptionController.text, dropdownDaysvalue, DateTime.now().millisecondsSinceEpoch,[]);
+                          StoryContent storyContent = StoryContent(ImageHelper.idGenerator(),img, dropdownvalue!, _descriptionController.text, _selectedDays as int, DateTime.now().millisecondsSinceEpoch,[]);
                           List<dynamic> list = [];
                           list.add(storyContent.toJson());
                           print(storyContent.toJson());
@@ -488,54 +474,53 @@ class _AddPostPageState extends State<AddPostPage> {
       listOfCategories.add(CategoryModel(list[i].name,list[i].value));
     }
     return DropdownButton(
+      hint: Center(
+          child: isArabic(context)
+              ? const Text(
+            "  اختر الفئة",
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          )
+              : Text(
+            "Choose Category  ",
+            style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'SouqFont'),
+          )),
+      // Hide the default underline
+      underline: Container(),
+      // set the color of the dropdown menu
+      dropdownColor: Colors.white,
+
       // Down Arrow Icon
-        icon: const Icon(Icons.keyboard_arrow_down),
-        value:  dropdownvalue,
-
-        items: listOfCategories.map((CategoryModel item) {
-          return DropdownMenuItem(
-            value: item.value,
-            child: Text(item.type),
-          );
-        }).toList(),
-
-        onChanged: (int? newValue) {
-          setState(() {
-            dropdownvalue = newValue!;
-          });
+      icon: const Icon(Icons.keyboard_arrow_down),
+      value: dropdownvalue,
+      items: listOfCategories.map((CategoryModel item) {
+        return DropdownMenuItem(
+          value: item.value,
+          child: Text(item.type),
+        );
+      }).toList(),
+      onChanged: (int? newValue) {
+        setState(() {
+          dropdownvalue = newValue!;
         });
+      },
+      selectedItemBuilder: (BuildContext context) =>
+          listOfCategories.map((CategoryModel item) => Center(
+            child: Text(
+              item.type,
+              style: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold),
+            ),
+          )).toList(),);
   }
-  Widget _buildDaysList(BuildContext context, List<DocumentSnapshot>? snapshot) {
-    var snapshots = snapshot?.first;
 
-    print(snapshot?.first.data());
-    var list = snapshot!
-        .map((data) => StoryDurration.fromJson(snapshots!['StoryDurration']))
-        .toList();
-
-    List<StoryTimeModel> listOfDurrations = [];
-    for(int i =0 ;i < list.first.toJson().entries.length; i++){
-      if(list.first.toJson().entries.toList().elementAt(i).value != null)
-      listOfDurrations.add(StoryTimeModel(list.first.toJson().entries.toList().elementAt(i).key,list.first.toJson().entries.toList().elementAt(i).value));
-    }
-    return DropdownButton(
-      // Down Arrow Icon
-        icon: const Icon(Icons.keyboard_arrow_down),
-        value:  dropdownDaysvalue,
-
-        items: listOfDurrations.map((StoryTimeModel item) {
-          return DropdownMenuItem(
-            value: item.value,
-            child: Text(item.Day),
-          );
-        }).toList(),
-
-        onChanged: (int? newValue) {
-          setState(() {
-            dropdownDaysvalue = newValue!;
-          });
-        });
-  }
 
   void _openGallery(BuildContext context) async {
     final pickedFile = await ImagePicker().pickImage(
