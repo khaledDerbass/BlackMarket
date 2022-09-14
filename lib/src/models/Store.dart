@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:souq/src/models/StoryItem.dart';
-import 'package:stories_for_flutter/stories_for_flutter.dart';
 
 class Store {
-
   String nameAr;
   String nameEn;
   int category;

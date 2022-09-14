@@ -566,7 +566,7 @@ class _AddPostPageState extends State<AddPostPage> {
   }
 
   showCategoryAlertDialog(BuildContext context) {
-    Widget okButton = FlatButton(
+    Widget okButton = ElevatedButton(
       child: isArabic(context) ? const Text("إلغاء") : const Text("Dismiss"),
       onPressed: () {
         Navigator.of(context, rootNavigator: true).pop('dialog');

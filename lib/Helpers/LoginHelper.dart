@@ -9,7 +9,7 @@ import '../src/models/UserModel.dart';
 class LoginHelper{
 
  static showLoginAlertDialog(BuildContext context) {
-    Widget okButton = FlatButton(
+    Widget okButton = ElevatedButton(
       child: isArabic(context) ? const Text("تم") : const Text("Done"),
       onPressed: () {
         Navigator.of(context, rootNavigator: true).pop('dialog');
@@ -81,7 +81,7 @@ class LoginHelper{
  }
 
  static showSuccessAlertDialog(BuildContext context,String message) {
-   Widget okButton = FlatButton(
+   Widget okButton = ElevatedButton(
      child: isArabic(context) ? const Text("تم") : const Text("Done"),
      onPressed: () {
        Navigator.of(context, rootNavigator: true).pop('dialog');
@@ -131,7 +131,7 @@ class LoginHelper{
  }
 
  static showErrorAlertDialog(BuildContext context,String ErrorMessage) {
-   Widget okButton = FlatButton(
+   Widget okButton = ElevatedButton(
      child: isArabic(context) ? const Text("تم") : const Text("Done"),
      onPressed: () {
        Navigator.of(context, rootNavigator: true).pop('dialog');

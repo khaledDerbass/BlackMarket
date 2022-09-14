@@ -64,12 +64,12 @@ class SideDrawer extends StatelessWidget {
               onTap: () => {
                     showLanguageAlertDialog(context),
                   }),
-          ListTile(
-            leading: Icon(Icons.home_filled),
-            title: Text(isArabic(context) ? 'المدينة/البلد' :'Country/State',style: TextStyle(
-    fontFamily:'SouqFont'),),
-            onTap: () => {showCitiesAlertDialog(context)},
-          ),
+    //       ListTile(
+    //         leading: Icon(Icons.home_filled),
+    //         title: Text(isArabic(context) ? 'المدينة/البلد' :'Country/State',style: TextStyle(
+    // fontFamily:'SouqFont'),),
+    //         onTap: () => {showCitiesAlertDialog(context)},
+    //       ),
           isLoggedIN == true
               ? ListTile(
                   leading: Icon(Icons.logout),
@@ -95,7 +95,7 @@ class SideDrawer extends StatelessWidget {
   }
 
   showLanguageAlertDialog(BuildContext context) {
-    Widget okButton = FlatButton(
+    Widget okButton = ElevatedButton(
       child: isArabic(context) ? const Text("إلغاء",style: TextStyle(
           fontFamily:'SouqFont'),) : const Text("Dismiss",style: TextStyle(
           fontFamily:'SouqFont'),),
@@ -164,7 +164,7 @@ class SideDrawer extends StatelessWidget {
     );
   }
   showCitiesAlertDialog(BuildContext context) {
-    Widget okButton = FlatButton(
+    Widget okButton = ElevatedButton(
       child: isArabic(context) ? const Text("إلغاء",style: TextStyle(
           fontFamily:'SouqFont')) : const Text("Dismiss",style: TextStyle(
           fontFamily:'SouqFont'),),

@@ -12,6 +12,8 @@ class StoreAuthService{
     return FirebaseAuth.instance;
   }
   static int ROLEID = 2;
+
+
   static bool isCurrentUserLoggedIn() {
     final User? user = getAuthInstance().currentUser;
     if (user == null) {

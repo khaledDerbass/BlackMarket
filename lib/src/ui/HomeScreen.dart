@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:souq/Helpers/GEnums.dart';
 import 'package:souq/src/Services/AuthenticationService.dart';
 import 'package:souq/src/Services/StoreAuthService.dart';
 import 'package:souq/src/blocs/StoreRepository.dart';
@@ -18,7 +17,6 @@ import 'package:souq/src/models/CategoryWidget.dart';
 import 'package:souq/src/models/Store.dart';
 import 'package:souq/src/models/StoryItem.dart';
 import 'package:souq/src/ui/SearchPage.dart';
-import 'package:flutter_stories/flutter_stories.dart';
 import '../../Helpers/LoginHelper.dart';
 import '../models/CategoryList.dart';
 import '../models/ImageStoreModel.dart';
@@ -126,9 +124,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
                                   ],
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.only(right: MediaQuery.of(context).size.width * 0.03),
-                                  child: Row(
+                                  Padding(
+                                    padding: EdgeInsets.only(right: MediaQuery.of(context).size.width * 0.03),
+                                    child: Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
                                       IconButton(onPressed: (){
@@ -151,7 +149,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 stream: repository.getStores(),
                                 builder: (context, snapshot) {
                                   if (!snapshot.hasData)
-                                    return const LinearProgressIndicator();
+                                    return Container();
                                   return _buildList(context, snapshot.data?.docs ?? [],roleId,data);
                                 }),
                           ),
@@ -190,7 +188,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     return SizedBox(
                                         height: MediaQuery.of(context).size.height * 0.01,
                                         width: MediaQuery.of(context).size.width * 0.01,
-                                        child: const CircularProgressIndicator());
+                                        child:  Container());
                                   }
                                   return _buildCategoryList(
                                       context, snapshot.data?.docs ?? [],data);
@@ -282,7 +280,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     return SizedBox(
                                         height: MediaQuery.of(context).size.height * 0.01,
                                         width: MediaQuery.of(context).size.width * 0.01,
-                                        child: const CircularProgressIndicator());
+                                        child: Container());
                                   }
                                   return _buildCategoryList(
                                       context, snapshot.data?.docs ?? []);
@@ -294,8 +292,8 @@ class _HomeScreenState extends State<HomeScreen> {
               }
 
               // Displaying LoadingSpinner to indicate waiting state
-              return const Center(
-                child: CircularProgressIndicator(),
+              return  Center(
+                child: Container(),
               );
             },
 
@@ -610,6 +608,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                           }
                                         },
                                       ),
+                                      // Align(
+                                      //   alignment: Alignment.bottomLeft,
+                                      //   child: Padding(
+                                      //     padding:  EdgeInsets.only(bottom:MediaQuery.of(context).size.height * 0.2,left:MediaQuery.of(context).size.height * 0.001,),
+                                      //
+                                      //     child:Text('Description',style: TextStyle( color:Colors.deepPurpleAccent),),
+                                      //   ),
+                                      // ),
                                     ],
                                   );
                                 },
@@ -824,6 +830,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         fontWeight: FontWeight.bold,
                                                       ),
                                                     ),
+
                                                   ],
                                                 ),
                                               ),
@@ -862,6 +869,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 LoginHelper.showLoginAlertDialog(context);
                                               }
                                             },
+
                                           ),
                                           Align(
                                             alignment: Alignment.topRight,
@@ -926,13 +934,25 @@ class _HomeScreenState extends State<HomeScreen> {
                                                             Text(isArabic(context) ? 'متابعة' :'Follow' , style: TextStyle(
                                                         fontFamily:'SouqFont')),
                                                           ],
-                                                        )
+                                                        ),
+
                                                     ),
                                                   ) : Container(),
+
+
                                                 ],
                                               ),
                                             ),
                                           ),
+                                    //       Align(
+                                    //           alignment: Alignment.bottomLeft,
+                                    //            child: Padding(
+                                    //              padding:  EdgeInsets.only(bottom:MediaQuery.of(context).size.height * 0.2,left:MediaQuery.of(context).size.height * 0.001,),
+                                    //
+                                    //         child:Text('Description',style: TextStyle( color:Colors.deepPurpleAccent, fontFamily:'SouqFont',  fontSize: 16,)),),
+                                    // ),
+
+
                                         ],
                                       );
                                     }, valueListenable: cw.images[storyIndex].isFollowButtonVisible,

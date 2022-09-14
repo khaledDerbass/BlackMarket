@@ -56,7 +56,8 @@ class profilepageState extends State<profilepage> {
     print(roleId);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: widget.searchStore != null ?Scaffold(
+      home: widget.searchStore != null ?
+      Scaffold(
         body: DefaultTabController(
           length: 1,
           child: NestedScrollView(
