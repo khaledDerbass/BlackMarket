@@ -82,10 +82,10 @@ class LoginScreenState extends State<LoginScreen> {
                       ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             maximumSize: Size(
-                                MediaQuery.of(context).size.height * .22,
+                                MediaQuery.of(context).size.height * .25,
                                 MediaQuery.of(context).size.height * .07),
                             minimumSize: Size(
-                                MediaQuery.of(context).size.height * .22,
+                                MediaQuery.of(context).size.height * .25,
                                 MediaQuery.of(context).size.height * .07),
                             primary: Colors.black,
                             shape: StadiumBorder(),

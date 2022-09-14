@@ -6,7 +6,6 @@ import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -288,10 +287,10 @@ class _AddPostPageState extends State<AddPostPage> {
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           maximumSize: Size(
-                              MediaQuery.of(context).size.height * .30,
+                              MediaQuery.of(context).size.height * .25,
                               MediaQuery.of(context).size.height * .07),
                           minimumSize: Size(
-                              MediaQuery.of(context).size.height * .30,
+                              MediaQuery.of(context).size.height * .25,
                               MediaQuery.of(context).size.height * .07),
                           primary: Colors.black,
                           shape: StadiumBorder(),

@@ -218,7 +218,7 @@ class _GalleryState extends State<Gallery> {
             mainAxisSize: MainAxisSize.min,
             children: [
               _createPhotoTitle(),
-              Image.memory(base64Decode(url), fit: BoxFit.fitWidth),
+              Image.memory(base64Decode(url), fit: BoxFit.cover),
               _createActionBar(url),
             ],
           ),
