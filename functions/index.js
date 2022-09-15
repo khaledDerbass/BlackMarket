@@ -8,10 +8,10 @@ const database = admin.firestore();
 exports.RemoveEndedStories = functions.pubsub.schedule('1 2 * * *').onRun((context) => {
     database.collection("Store")
                             .onSnapshot((snapshot) => {
-                              const data = snapshot.docs.map((doc) => ({
+                              /*const data = snapshot.docs.map((doc) => ({
                                 id: doc.id,
                                 ...doc.data(),
-                              }));
+                              }));*/
 
                               snapshot.forEach(doc => {
                                 console.log(doc.id, '=>', doc.data());
