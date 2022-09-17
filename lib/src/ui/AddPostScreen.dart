@@ -310,7 +310,7 @@ class _AddPostPageState extends State<AddPostPage> {
                           XFile compressedImage = XFile(file.path);
                           Uint8List? bytes = await compressedImage.readAsBytes();
                           String img = base64Encode(bytes);
-                          StoryContent storyContent = StoryContent(ImageHelper.idGenerator(),img, dropdownvalue!, _descriptionController.text, _selectedDays as int, DateTime.now().millisecondsSinceEpoch,[]);
+                          StoryContent storyContent = StoryContent(ImageHelper.idGenerator(),img, dropdownvalue!, _descriptionController.text, int.parse(_selectedDays!), DateTime.now().millisecondsSinceEpoch,[]);
                           List<dynamic> list = [];
                           list.add(storyContent.toJson());
                           print(storyContent.toJson());
