@@ -6,7 +6,7 @@ const FieldValue = require('firebase-admin').firestore.FieldValue;
 
 //firebase functions:log -n 1000
 
-exports.RemoveEndedStories = functions.pubsub.schedule('0 0 * * *').onRun((context) => {
+exports.RemoveEndedStories = functions.pubsub.schedule('0 * * * *').onRun((context) => {
     database.collection("Store")
                             .onSnapshot((snapshot) => {
 
