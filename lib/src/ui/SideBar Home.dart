@@ -95,11 +95,12 @@ class SideDrawer extends StatelessWidget {
   }
 
   showLanguageAlertDialog(BuildContext context) {
-    Widget okButton = ElevatedButton(
-      child: isArabic(context) ? const Text("إلغاء",style: TextStyle(
-          fontFamily:'SouqFont'),) : const Text("Dismiss",style: TextStyle(
-          fontFamily:'SouqFont'),),
-      onPressed: () {
+    Widget okButton = GestureDetector(
+      child: Container(
+        padding: EdgeInsets.all(10),
+        child: isArabic(context) ? const Text("تم") : const Text("Done"),
+      ),
+      onTap: (){
         Navigator.of(context, rootNavigator: true).pop('dialog');
       },
     );
@@ -164,11 +165,12 @@ class SideDrawer extends StatelessWidget {
     );
   }
   showCitiesAlertDialog(BuildContext context) {
-    Widget okButton = ElevatedButton(
-      child: isArabic(context) ? const Text("إلغاء",style: TextStyle(
-          fontFamily:'SouqFont')) : const Text("Dismiss",style: TextStyle(
-          fontFamily:'SouqFont'),),
-      onPressed: () {
+    Widget okButton = GestureDetector(
+      child: Container(
+        padding: EdgeInsets.all(10),
+        child: isArabic(context) ? const Text("تم") : const Text("Done"),
+      ),
+      onTap: (){
         Navigator.of(context, rootNavigator: true).pop('dialog');
       },
     );

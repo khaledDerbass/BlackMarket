@@ -295,7 +295,7 @@ class _AddPostPageState extends State<AddPostPage> {
                           primary: Colors.black,
                           shape: StadiumBorder(),
                         ),
-                        onPressed: () async{
+                        onPressed: _selectedDays == null || dropdownvalue == null || imageFile == null ? null: () async{
                           setState(() {
                             isLoading = true;
                           });
@@ -306,7 +306,9 @@ class _AddPostPageState extends State<AddPostPage> {
                           XFile compressedImage = XFile(file.path);
                           Uint8List? bytes = await compressedImage.readAsBytes();
                           String img = base64Encode(bytes);
-                          StoryContent storyContent = StoryContent(ImageHelper.idGenerator(),img, dropdownvalue!, _descriptionController.text, _selectedDays as int, DateTime.now().millisecondsSinceEpoch,[]);
+                          var selectedDurration = _selectedDays?.substring(0,1);
+                          print(selectedDurration);
+                          StoryContent storyContent = StoryContent(ImageHelper.idGenerator(),img, dropdownvalue!, _descriptionController.text, int.parse(selectedDurration!) , DateTime.now().millisecondsSinceEpoch,[]);
                           List<dynamic> list = [];
                           list.add(storyContent.toJson());
                           print(storyContent.toJson());
@@ -565,9 +567,12 @@ class _AddPostPageState extends State<AddPostPage> {
   }
 
   showCategoryAlertDialog(BuildContext context) {
-    Widget okButton = ElevatedButton(
-      child: isArabic(context) ? const Text("إلغاء") : const Text("Dismiss"),
-      onPressed: () {
+    Widget okButton = GestureDetector(
+      child: Container(
+        padding: EdgeInsets.all(10),
+        child: isArabic(context) ? const Text("تم") : const Text("Done"),
+      ),
+      onTap: (){
         Navigator.of(context, rootNavigator: true).pop('dialog');
       },
     );

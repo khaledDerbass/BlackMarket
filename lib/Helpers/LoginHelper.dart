@@ -9,9 +9,12 @@ import '../src/models/UserModel.dart';
 class LoginHelper{
 
  static showLoginAlertDialog(BuildContext context) {
-    Widget okButton = ElevatedButton(
-      child: isArabic(context) ? const Text("تم") : const Text("Done"),
-      onPressed: () {
+    Widget okButton = GestureDetector(
+      child: Container(
+        padding: EdgeInsets.all(10),
+        child: isArabic(context) ? const Text("تم") : const Text("Done"),
+      ),
+      onTap: (){
         Navigator.of(context, rootNavigator: true).pop('dialog');
       },
     );
@@ -81,9 +84,13 @@ class LoginHelper{
  }
 
  static showSuccessAlertDialog(BuildContext context,String message) {
-   Widget okButton = ElevatedButton(
-     child: isArabic(context) ? const Text("تم") : const Text("Done"),
-     onPressed: () {
+
+   Widget okButton = GestureDetector(
+     child: Container(
+       padding: EdgeInsets.all(10),
+       child: isArabic(context) ? const Text("تم") : const Text("Done"),
+     ),
+     onTap: (){
        Navigator.of(context, rootNavigator: true).pop('dialog');
      },
    );
@@ -131,9 +138,12 @@ class LoginHelper{
  }
 
  static showErrorAlertDialog(BuildContext context,String ErrorMessage) {
-   Widget okButton = ElevatedButton(
-     child: isArabic(context) ? const Text("تم") : const Text("Done"),
-     onPressed: () {
+   Widget okButton = GestureDetector(
+     child: Container(
+       padding: EdgeInsets.all(10),
+       child: isArabic(context) ? const Text("تم") : const Text("Done"),
+     ),
+     onTap: (){
        Navigator.of(context, rootNavigator: true).pop('dialog');
      },
    );
