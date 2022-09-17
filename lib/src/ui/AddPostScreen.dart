@@ -44,7 +44,8 @@ class _AddPostPageState extends State<AddPostPage> {
   int? dropdownvalue;
   //int dropdownDaysvalue = 1;
   // define a list of options for the dropdown
-  final List<String> DaysList = ["1 Day", "2 Days", "3 Days","4 Days", "5 Days", "6 Days", "7 Days"];
+  final List<String> DaysList = ["1", "2", "3","4", "5", "6", "7"];
+
   // the selected value
   String? _selectedDays;
   bool isLoading = false;
@@ -217,10 +218,13 @@ class _AddPostPageState extends State<AddPostPage> {
                         value: e,
                         child: Container(
                           alignment: Alignment.center,
-                          child: Text(
-                            e,
+                          child: isArabic(context) ? Text(
+                            e + " " +"يوم",
                             style: const TextStyle(fontSize: 16),
-                          ),
+                          ) : Text(
+                            e +" "+ "Day(s)",
+                            style: const TextStyle(fontSize: 16),
+                          ) ,
                         ),
                       )).toList(),
 
@@ -306,9 +310,7 @@ class _AddPostPageState extends State<AddPostPage> {
                           XFile compressedImage = XFile(file.path);
                           Uint8List? bytes = await compressedImage.readAsBytes();
                           String img = base64Encode(bytes);
-                          var selectedDurration = _selectedDays?.substring(0,1);
-                          print(selectedDurration);
-                          StoryContent storyContent = StoryContent(ImageHelper.idGenerator(),img, dropdownvalue!, _descriptionController.text, int.parse(selectedDurration!) , DateTime.now().millisecondsSinceEpoch,[]);
+                          StoryContent storyContent = StoryContent(ImageHelper.idGenerator(),img, dropdownvalue!, _descriptionController.text, _selectedDays as int, DateTime.now().millisecondsSinceEpoch,[]);
                           List<dynamic> list = [];
                           list.add(storyContent.toJson());
                           print(storyContent.toJson());
