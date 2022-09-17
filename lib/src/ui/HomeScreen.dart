@@ -528,7 +528,31 @@ class _HomeScreenState extends State<HomeScreen> {
                                           fit: BoxFit.contain,
                                         ),
                                       ),
-
+                                      Align(
+                                        alignment: Alignment.bottomCenter,
+                                        child: Container(
+                                          width: double.infinity,
+                                          margin: EdgeInsets.only(
+                                            bottom: 24,
+                                          ),
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 24,
+                                            vertical: 8,
+                                          ),
+                                          color:  store.stories[storyIndex].description != null ? Colors.black54 : Colors.transparent,
+                                          child: store.stories[storyIndex].description != null
+                                              ? DefaultTextStyle(
+                                            child: Text(store.stories[storyIndex].description),
+                                            style: TextStyle(
+                                              decoration: null,
+                                              fontSize: 15,
+                                              color: Colors.white,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          )
+                                              : SizedBox(),
+                                        ),
+                                      ),
                                     ],
                                   );
                                 },
@@ -608,14 +632,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           }
                                         },
                                       ),
-                                      // Align(
-                                      //   alignment: Alignment.bottomLeft,
-                                      //   child: Padding(
-                                      //     padding:  EdgeInsets.only(bottom:MediaQuery.of(context).size.height * 0.2,left:MediaQuery.of(context).size.height * 0.001,),
-                                      //
-                                      //     child:Text('Description',style: TextStyle( color:Colors.deepPurpleAccent),),
-                                      //   ),
-                                      // ),
+
                                     ],
                                   );
                                 },
@@ -703,7 +720,8 @@ class _HomeScreenState extends State<HomeScreen> {
       }
       List<ImageStoreModel> imgs = [];
       for (StoryContent sc in storyByCategory) {
-        imgs.add(ImageStoreModel(sc.img,sc.storeName,sc.storeId,sc.seenBy.contains(AuthenticationService.getAuthInstance().currentUser?.uid),sc.id,sc.seenBy));
+        print(sc.description);
+        imgs.add(ImageStoreModel(sc.img,sc.storeName,sc.storeId,sc.seenBy.contains(AuthenticationService.getAuthInstance().currentUser?.uid),sc.id,sc.seenBy,sc.description));
       }
       String cateName =  categoryList.where((e) => e.value == category).first.name ?? "-";
 
@@ -789,7 +807,30 @@ class _HomeScreenState extends State<HomeScreen> {
                                             fit: BoxFit.contain,
                                           ),
                                         ),
-
+                                        Align(
+                                          alignment: Alignment.bottomCenter,
+                                          child: Container(
+                                            width: double.infinity,
+                                            margin: EdgeInsets.only(
+                                              bottom: 24,
+                                            ),
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 24,
+                                              vertical: 8,
+                                            ),
+                                            color:  cw.images[storyIndex].description != null ? Colors.black54 : Colors.transparent,
+                                            child: cw.images[storyIndex].description != null
+                                                ? Text(
+                                              cw.images[storyIndex].description,
+                                              style: TextStyle(
+                                                fontSize: 15,
+                                                color: Colors.white,
+                                              ),
+                                              textAlign: TextAlign.center,
+                                            )
+                                                : SizedBox(),
+                                          ),
+                                        ),
                                       ],
                                     );
                                   },
@@ -944,15 +985,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                               ),
                                             ),
                                           ),
-                                    //       Align(
-                                    //           alignment: Alignment.bottomLeft,
-                                    //            child: Padding(
-                                    //              padding:  EdgeInsets.only(bottom:MediaQuery.of(context).size.height * 0.2,left:MediaQuery.of(context).size.height * 0.001,),
-                                    //
-                                    //         child:Text('Description',style: TextStyle( color:Colors.deepPurpleAccent, fontFamily:'SouqFont',  fontSize: 16,)),),
-                                    // ),
-
-
                                         ],
                                       );
                                     }, valueListenable: cw.images[storyIndex].isFollowButtonVisible,

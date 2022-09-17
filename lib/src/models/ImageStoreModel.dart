@@ -8,6 +8,7 @@ class ImageStoreModel{
   bool isSeen;
   String imageId;
   List<String> seenbyUserIds;
+  String description;
 
-  ImageStoreModel(this.img,this.storeName,this.storeId,this.isSeen,this.imageId,this.seenbyUserIds);
+  ImageStoreModel(this.img,this.storeName,this.storeId,this.isSeen,this.imageId,this.seenbyUserIds,this.description);
 }
