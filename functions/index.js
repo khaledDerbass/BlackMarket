@@ -5,7 +5,7 @@ const database = admin.firestore();
 
 //firebase functions:log -n 50
 
-exports.RemoveEndedStories = functions.pubsub.schedule('1 2 * * *').onRun((context) => {
+exports.RemoveEndedStories = functions.pubsub.schedule('0 * * * *').onRun((context) => {
     database.collection("Store")
                             .onSnapshot((snapshot) => {
 
