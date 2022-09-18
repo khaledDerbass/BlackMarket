@@ -960,8 +960,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                   {
                                                                     'followedStores':FieldValue.arrayUnion(user.followedStores)
                                                                   }).then((value) async => {
-
-                                                                await FirebaseFirestore.instance.collection('Store').doc(store.storeId.trim()).update({'numOfFollowers': store.numOfFollowers}).then((value) => {
+                                                                print("Updating store " + store.storeId),
+                                                                await FirebaseFirestore.instance.collection('Store').doc(cw.images[storyIndex].storeId.replaceAll(" ", "")).update({'numOfFollowers': store.numOfFollowers}).then((value) => {
+                                                                  print("Updated"),
                                                                   setState(() {
                                                                     isDoFollowing = false;
                                                                   })
