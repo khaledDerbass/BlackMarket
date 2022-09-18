@@ -221,6 +221,7 @@ class _GalleryState extends State<Gallery> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 _createPhotoTitle(),
                 LimitedBox(
@@ -232,7 +233,7 @@ class _GalleryState extends State<Gallery> {
                         color: Colors.white,
                       ),
                       imageProvider: Image.memory(base64Decode(url),
-                        fit: BoxFit.cover , width: double.infinity,).image,
+                        fit: BoxFit.fitWidth , width: double.infinity,).image,
                     ),
                   )
                 ),
