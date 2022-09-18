@@ -692,6 +692,7 @@ class _HomeScreenState extends State<HomeScreen> {
     snapshot?.reversed
         .map((data) => {
       currentStore = Store.fromSnapshot(data),
+      currentStore.storeId = data.id,
       storesList.add(currentStore),
       if (!categories.contains(Store.fromSnapshot(data).category))
         {categories.add(Store.fromSnapshot(data).category)},
@@ -710,6 +711,7 @@ class _HomeScreenState extends State<HomeScreen> {
           for(StoryContent sc in store.stories){
             sc.storeName = isArabic(context) ? store.nameAr : store.nameEn;
             sc.storeId = store.storeId;
+            print("Store ID for sc : " + store.storeId + " "+ store.nameAr);
           }
           storyByCategory.addAll(store.stories.where((e) => e.category == category).toList());
 
@@ -721,6 +723,7 @@ class _HomeScreenState extends State<HomeScreen> {
       List<ImageStoreModel> imgs = [];
       for (StoryContent sc in storyByCategory) {
         print(sc.description);
+        print("Store ID for sc : " + sc.storeId);
         imgs.add(ImageStoreModel(sc.img,sc.storeName,sc.storeId,sc.seenBy.contains(AuthenticationService.getAuthInstance().currentUser?.uid),sc.id,sc.seenBy,sc.description));
       }
       String cateName =  categoryList.where((e) => e.value == category).first.name ?? "-";
@@ -786,6 +789,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: StoryPageView(
                                   initialStoryIndex: (_)=> startIndex,
                                   itemBuilder: (context, pageIndex, storyIndex) {
+                                    print("Store ID for image : " + cw.images[storyIndex].storeId);
                                     SeenImageModel img = SeenImageModel(storyIndex,cw,cw.images[storyIndex].storeId,cw.images[storyIndex].imageId);
                                     try{
                                       var list = seenImagesIndexList.where((a) => a.imageId == cw.images[storyIndex].imageId);
@@ -877,14 +881,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                               ),
                                             ),
                                             onTap: () async{
+                                              print("Search for user : " + cw.images[storyIndex].storeId);
                                               if(AuthenticationService.isCurrentUserLoggedIn()){
                                                 late UserModel user;
                                                 late UserModel currentUser;
                                                 await FirebaseFirestore.instance.collection('Users').where(
-                                                    'storeId', isEqualTo:cw.images[storyIndex].storeId.replaceAll(" ", ""))
+                                                    'storeId', isEqualTo:cw.images[storyIndex].storeId.replaceAll(" ", "").trim())
                                                     .get()
                                                     .then((value) =>
                                                     value.docs.forEach((doc) {
+                                                      print(doc.id);
                                                       user = UserModel.fromJson(value.docs.first.data());
                                                     }));
 
@@ -1007,7 +1013,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         },
                       ).whenComplete(() => {
-                        if(AuthenticationService.isCurrentUserLoggedIn() && seenImagesIndexList.isNotEmpty)
+                        if(AuthenticationService.isCurrentUserLoggedIn() && seenImagesIndexList.isNotEmpty && ModalRoute.of(context)!.isCurrent)
                           markStoriesAsSeen(seenImagesIndexList),
                           print(seenImagesIndexList),
                       });

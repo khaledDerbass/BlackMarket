@@ -55,15 +55,7 @@ class profilepageState extends State<profilepage> {
       debugShowCheckedModeBanner: false,
       home: widget.searchStore != null
           ? Scaffold(
-              appBar: AppBar(
-                leading: IconButton(
-                  icon: Icon(Icons.arrow_back, color: Colors.black),
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const HomeScreen()),
-                  ),
-                ),
-              ),
+
               body: DefaultTabController(
                 length: 1,
                 child: NestedScrollView(

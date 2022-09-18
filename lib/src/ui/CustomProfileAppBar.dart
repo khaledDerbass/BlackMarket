@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:souq/src/ui/HeaderWidget.dart';
 
+import 'HomeScreen.dart';
+
 class CustomProfileAppBar extends StatelessWidget {
   const CustomProfileAppBar({Key? key}) : super(key: key);
 
@@ -20,6 +22,14 @@ class CustomProfileAppBar extends StatelessWidget {
       title: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children:[
+          IconButton(onPressed:(){
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                  const HomeScreen()),
+            );
+          }, icon: Icon(Icons.arrow_back)),
           Padding(
             padding: EdgeInsets.only(
               left: MediaQuery.of(context).size.height * .08,
