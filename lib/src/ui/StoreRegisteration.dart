@@ -99,7 +99,7 @@ class StoreRegisterationState extends State<StoreRegisteration> {
                     ),
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height * .05),
-                  LimitedBox(
+                  /*LimitedBox(
                     maxHeight: MediaQuery.of(context).size.height * 0.25,
                     maxWidth: MediaQuery.of(context).size.width,
                     child: DropdownButton<String>(
@@ -159,7 +159,7 @@ class StoreRegisterationState extends State<StoreRegisteration> {
                                 ),
                               )).toList(),
                     ),
-                  ),
+                  ),*/
                   SizedBox(height: MediaQuery.of(context).size.height * .03),
                   LimitedBox(
                     maxHeight: MediaQuery.of(context).size.height * .25,

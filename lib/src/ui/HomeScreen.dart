@@ -101,100 +101,102 @@ class _HomeScreenState extends State<HomeScreen> {
                   var data = snapshot.data as UserModel;
                   print(data.email);
                   return SafeArea(
-                      child: Column(
-                        children: [
-                          Container(
-                            height: MediaQuery.of(context).size.height * 0.12,
-                            child:  Stack(
-                              children: [
-                                HeaderWidget(MediaQuery.of(context).size.height * 0.12, false, Icons.account_circle_rounded),
-                                Positioned(
-                                  left: 13,
-                                  child: IconButton(
-                                    onPressed: (){
-                                      _scaffoldKey.currentState?.openDrawer();
-                                    },
-                                    icon: Icon(Icons.menu_outlined,color: Colors.white,size: MediaQuery.of(context).size.height * 0.032,),
+                      child: LimitedBox(
+                        child: Column(
+                          children: [
+                            Container(
+                              height: MediaQuery.of(context).size.height * 0.12,
+                              child:  Stack(
+                                children: [
+                                  HeaderWidget(MediaQuery.of(context).size.height * 0.12, false, Icons.account_circle_rounded),
+                                  Positioned(
+                                    left: 13,
+                                    child: IconButton(
+                                      onPressed: (){
+                                        _scaffoldKey.currentState?.openDrawer();
+                                      },
+                                      icon: Icon(Icons.menu_outlined,color: Colors.white,size: MediaQuery.of(context).size.height * 0.032,),
+                                    ),
                                   ),
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Image.asset('assets/images/logo2.png',height: MediaQuery.of(context).size.width * 0.17,width: MediaQuery.of(context).size.width * 0.30,),
-
-                                  ],
-                                ),
-                                  Padding(
-                                    padding: EdgeInsets.only(right: MediaQuery.of(context).size.width * 0.03),
-                                    child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      IconButton(onPressed: (){
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(builder: (context) => const SearchPage()),
-                                        );
-                                      }, icon: Icon(Icons.search_rounded,color: Colors.white,size: MediaQuery.of(context).size.height * 0.032,))
+                                      Image.asset('assets/images/logo2.png',height: MediaQuery.of(context).size.width * 0.17,width: MediaQuery.of(context).size.width * 0.30,),
 
                                     ],
                                   ),
-                                ),
-                              ],
+                                    Padding(
+                                      padding: EdgeInsets.only(right: MediaQuery.of(context).size.width * 0.03),
+                                      child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        IconButton(onPressed: (){
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(builder: (context) => const SearchPage()),
+                                          );
+                                        }, icon: Icon(Icons.search_rounded,color: Colors.white,size: MediaQuery.of(context).size.height * 0.032,))
+
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          LimitedBox(
-                            maxHeight: MediaQuery.of(context).size.height * 0.25,
-                            maxWidth: MediaQuery.of(context).size.width,
-                            child: StreamBuilder<QuerySnapshot>(
-                                stream: repository.getStores(),
-                                builder: (context, snapshot) {
-                                  if (!snapshot.hasData)
-                                    return Container();
-                                  return _buildList(context, snapshot.data?.docs ?? [],roleId,data);
-                                }),
-                          ),
-                          Align(
-                              alignment: isArabic(context)
-                                  ? Alignment.centerRight
-                                  : Alignment.centerLeft,
-                              child: Padding(
-                                padding: EdgeInsets.only(
-                                    bottom: MediaQuery.of(context).size.width * 0.02,
-                                    left: MediaQuery.of(context).size.width * 0.02,
-                                    right: MediaQuery.of(context).size.width * 0.02),
-                                child: isArabic(context)
-                                    ? const Text(
-                                  "التصنيفات",
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                      fontFamily:'SouqFont'
+                            LimitedBox(
+                              maxHeight: MediaQuery.of(context).size.height * 0.25,
+                              maxWidth: MediaQuery.of(context).size.width,
+                              child: StreamBuilder<QuerySnapshot>(
+                                  stream: repository.getStores(),
+                                  builder: (context, snapshot) {
+                                    if (!snapshot.hasData)
+                                      return Container();
+                                    return _buildList(context, snapshot.data?.docs ?? [],roleId,data);
+                                  }),
+                            ),
+                            Align(
+                                alignment: isArabic(context)
+                                    ? Alignment.centerRight
+                                    : Alignment.centerLeft,
+                                child: Padding(
+                                  padding: EdgeInsets.only(
+                                      bottom: MediaQuery.of(context).size.width * 0.02,
+                                      left: MediaQuery.of(context).size.width * 0.02,
+                                      right: MediaQuery.of(context).size.width * 0.02),
+                                  child: isArabic(context)
+                                      ? const Text(
+                                    "التصنيفات",
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                        fontFamily:'SouqFont'
+                                    ),
+                                  )
+                                      : const Text(
+                                    "Categories",
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                        fontFamily:'SouqFont'
+                                    ),
                                   ),
-                                )
-                                    : const Text(
-                                  "Categories",
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                      fontFamily:'SouqFont'
-                                  ),
-                                ),
-                              )),
-                          Expanded(
-                            child: StreamBuilder<QuerySnapshot>(
-                                stream: repository.getStores(),
-                                builder: (context, snapshot) {
-                                  if (!snapshot.hasData) {
-                                    return SizedBox(
-                                        height: MediaQuery.of(context).size.height * 0.01,
-                                        width: MediaQuery.of(context).size.width * 0.01,
-                                        child:  Container());
-                                  }
-                                  return _buildCategoryList(
-                                      context, snapshot.data?.docs ?? [],data);
-                                }),
-                          ),
-                        ],
+                                )),
+                            Expanded(
+                              child: StreamBuilder<QuerySnapshot>(
+                                  stream: repository.getStores(),
+                                  builder: (context, snapshot) {
+                                    if (!snapshot.hasData) {
+                                      return SizedBox(
+                                          height: MediaQuery.of(context).size.height * 0.01,
+                                          width: MediaQuery.of(context).size.width * 0.01,
+                                          child:  Container());
+                                    }
+                                    return _buildCategoryList(
+                                        context, snapshot.data?.docs ?? [],data);
+                                  }),
+                            ),
+                          ],
+                        ),
                       ));
                 }else if(snapshot.data == null && FirebaseAuth.instance.currentUser == null){
                   return SafeArea(

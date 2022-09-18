@@ -1,6 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:souq/Helpers/LoginHelper.dart';
+import 'package:souq/src/ui/LoginPage.dart';
 import 'CustomProfileAppBar.dart';
 
 
@@ -97,14 +99,18 @@ class _resetPasswordState extends State<resetPassword> {
   }
   Future resetPassword() async
   {
-    await FirebaseAuth.instance.sendPasswordResetEmail(email: emailController.text.toLowerCase().trim());
-    Navigator.of(context, rootNavigator: true).pop('dialog');
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content:Text('Reset Password Email Sent'),
-        duration: Duration(seconds: 3),
+    await FirebaseAuth.instance.sendPasswordResetEmail(email: emailController.text.toLowerCase().replaceAll(" ", "").trim()).then((value) => {
+       LoginHelper.showSuccessAlertDialog(context, 'Reset Password Email Sent'),
+    }).whenComplete(() => {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+            const LoginScreen()),
       ),
-    );
+    });
+
+
   }
   bool isArabic(BuildContext context) {
     return context.locale.languageCode == 'ar';
