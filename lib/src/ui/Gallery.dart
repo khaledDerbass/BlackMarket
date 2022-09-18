@@ -8,6 +8,7 @@ import 'package:souq/src/models/StoryItem.dart';
 import '../models/Store.dart';
 import '../models/UserModel.dart';
 import '../models/UserStore.dart';
+import 'package:photo_view/photo_view.dart';
 
 class Gallery extends StatefulWidget {
   final UserStore? searchStore;
@@ -209,18 +210,35 @@ class _GalleryState extends State<Gallery> {
       );
 
   Widget _createPopupContent(String url) => Container(
+
         padding: EdgeInsets.symmetric(
             horizontal: MediaQuery.of(context).size.height * .01),
         child: ClipRRect(
           borderRadius:
               BorderRadius.circular(MediaQuery.of(context).size.height * .01),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _createPhotoTitle(),
-              Image.memory(base64Decode(url), fit: BoxFit.cover),
-              _createActionBar(url),
-            ],
+          child: Container(
+            color: Colors.white,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _createPhotoTitle(),
+                LimitedBox(
+                  maxHeight: MediaQuery.of(context).size.height * 0.45,
+                  child: Container(
+                    child: PhotoView(
+                      tightMode: true,
+                      backgroundDecoration: BoxDecoration(
+                        color: Colors.white,
+                      ),
+                      imageProvider: Image.memory(base64Decode(url),
+                        fit: BoxFit.cover , width: double.infinity,).image,
+                    ),
+                  )
+                ),
+                _createActionBar(url),
+              ],
+            ),
           ),
         ),
       );

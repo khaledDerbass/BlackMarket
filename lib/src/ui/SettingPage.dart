@@ -19,7 +19,7 @@ class SettingPageState extends State<SettingPage> {
       child: NestedScrollView(
         headerSliverBuilder: (context,index) {
           return [
-            CustomProfileAppBar(),
+            CustomProfileAppBar(false),
           ];
         },
         body: Stack(

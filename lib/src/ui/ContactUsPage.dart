@@ -17,7 +17,7 @@ class ContactUsState extends State<ContactUs> {
         child: NestedScrollView(
             headerSliverBuilder: (context, index) {
             return [
-              CustomProfileAppBar(),
+              CustomProfileAppBar(false),
             ];
           },
 

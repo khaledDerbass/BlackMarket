@@ -35,7 +35,7 @@ class StoreRegisterationState extends State<StoreRegisteration> {
         child: NestedScrollView(
       headerSliverBuilder: (context, index) {
         return [
-          CustomProfileAppBar(),
+          CustomProfileAppBar(false),
         ];
       },
       body: Stack(

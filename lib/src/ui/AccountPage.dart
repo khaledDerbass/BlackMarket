@@ -31,7 +31,7 @@ class AccountPageState extends State<AccountPage> {
       child: NestedScrollView(
           headerSliverBuilder: (context, index) {
             return [
-              CustomProfileAppBar(),
+              CustomProfileAppBar(false),
             ];
           },
           body: FutureBuilder(

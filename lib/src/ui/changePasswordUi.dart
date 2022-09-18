@@ -25,7 +25,7 @@ class ChangePasswordUiState extends State<ChangePasswordUi> {
       child: NestedScrollView(
           headerSliverBuilder: (context, index) {
             return [
-              CustomProfileAppBar(),
+              CustomProfileAppBar(false),
             ];
           },
           body: Stack(

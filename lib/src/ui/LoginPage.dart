@@ -29,7 +29,7 @@ class LoginScreenState extends State<LoginScreen> {
         child: NestedScrollView(
         headerSliverBuilder: (context, index) {
       return [
-        CustomProfileAppBar(),
+        CustomProfileAppBar(false),
       ];
     },
 

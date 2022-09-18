@@ -26,7 +26,7 @@ class _resetPasswordState extends State<resetPassword> {
       child: NestedScrollView(
         headerSliverBuilder: (context, index) {
           return [
-            CustomProfileAppBar(),
+            CustomProfileAppBar(false),
           ];
         },
         body: Stack(

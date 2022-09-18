@@ -25,7 +25,7 @@ class _RegisterPageState extends State<RegisterPage> {
         child: NestedScrollView(
         headerSliverBuilder: (context, index) {
       return [
-        CustomProfileAppBar(),
+        CustomProfileAppBar(false),
       ];
     },
 

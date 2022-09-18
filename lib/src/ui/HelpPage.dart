@@ -18,7 +18,7 @@ class HelpPageState extends State<HelpPage> {
       child: NestedScrollView(
         headerSliverBuilder: (context,index) {
           return [
-            CustomProfileAppBar(),
+            CustomProfileAppBar(false),
           ];
         },
         body: Stack(

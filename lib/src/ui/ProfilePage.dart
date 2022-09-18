@@ -61,7 +61,7 @@ class profilepageState extends State<profilepage> {
                 child: NestedScrollView(
                   headerSliverBuilder: (context, index) {
                     return [
-                      CustomProfileAppBar(),
+                      CustomProfileAppBar(true),
                       profileHeader(
                           searchStore: widget.searchStore,
                           currentUser: widget.currentUser),
@@ -420,7 +420,7 @@ class profilepageState extends State<profilepage> {
                 child: NestedScrollView(
                   headerSliverBuilder: (context, index) {
                     return [
-                      CustomProfileAppBar(),
+                      CustomProfileAppBar(false),
                       profileHeader(),
                     ];
                   },
