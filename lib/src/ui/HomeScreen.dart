@@ -1015,7 +1015,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         },
                       ).whenComplete(() => {
-                        if(AuthenticationService.isCurrentUserLoggedIn() && seenImagesIndexList.isNotEmpty && ModalRoute.of(context)!.isCurrent)
+                        if(AuthenticationService.isCurrentUserLoggedIn() && seenImagesIndexList.isNotEmpty)
                           markStoriesAsSeen(seenImagesIndexList),
                           print(seenImagesIndexList),
                       });
