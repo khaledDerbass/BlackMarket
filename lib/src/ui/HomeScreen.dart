@@ -325,7 +325,7 @@ class _HomeScreenState extends State<HomeScreen> {
               {
                 if (AuthenticationService.isCurrentUserLoggedIn())
                   {
-                    Navigator.pushReplacement(
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => const profilepage()),
@@ -377,7 +377,7 @@ class _HomeScreenState extends State<HomeScreen> {
               {
                 if (AuthenticationService.isCurrentUserLoggedIn())
                   {
-                    Navigator.pushReplacement(
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => const profilepage()),
@@ -618,7 +618,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 }));
 
                                             if (user != null) {
-                                              Navigator.pushReplacement(
+                                              Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>  profilepage(searchStore: UserStore(user,store,),currentUser: currentUser,)),
@@ -903,7 +903,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     }));
 
                                                 if (user != null) {
-                                                  Navigator.pushReplacement(
+                                                  Navigator.push(
                                                     context,
                                                     MaterialPageRoute(
                                                         builder: (context) =>  profilepage(searchStore: UserStore(user,storesList.where((element) => element.storeId == cw.images[storyIndex].storeId).first,),currentUser: currentUser,)),

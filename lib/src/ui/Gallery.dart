@@ -229,7 +229,7 @@ class _GalleryState extends State<Gallery> {
                   child: Container(
                     child: PhotoView(
                       tightMode: true,
-                      backgroundDecoration: BoxDecoration(
+                      backgroundDecoration: const BoxDecoration(
                         color: Colors.white,
                       ),
                       imageProvider: Image.memory(base64Decode(url),
