@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:souq/src/models/StoryItem.dart';
+import '../models/ImgWithDescriptionModel.dart';
 import '../models/Store.dart';
 import '../models/UserModel.dart';
 import '../models/UserStore.dart';
@@ -27,7 +28,7 @@ class _GalleryState extends State<Gallery> {
   late UserStore userStore;
   String storeName = "Souq Story";
   final UserStore? searchStore;
-  List<String> imageUrls = [];
+  List<ImgWithDescriptionModel> imageUrls = [];
   _GalleryState(this.searchStore);
 
   @override
@@ -36,7 +37,7 @@ class _GalleryState extends State<Gallery> {
     super.initState();
     if (searchStore != null) {
       for (int i = 0; i < widget.searchStore!.store.stories.length; i++) {
-        imageUrls.add(widget.searchStore!.store.stories[i].img);
+        imageUrls.add(ImgWithDescriptionModel(widget.searchStore!.store.stories[i].img,widget.searchStore!.store.stories[i].description));
       }
     }
   }
@@ -143,17 +144,17 @@ class _GalleryState extends State<Gallery> {
     );
   }
 
-  Widget _createGridTileWidget(String url) => Builder(
+  Widget _createGridTileWidget(ImgWithDescriptionModel url) => Builder(
         builder: (context) => GestureDetector(
           onTap: () {
             _popupDialog = _createPopupDialog(url);
             Overlay.of(context)!.insert(_popupDialog);
           },
-          child: Image.memory(base64Decode(url), fit: BoxFit.cover),
+          child: Image.memory(base64Decode(url.img), fit: BoxFit.cover),
         ),
       );
 
-  OverlayEntry _createPopupDialog(String url) {
+  OverlayEntry _createPopupDialog(ImgWithDescriptionModel url) {
     return OverlayEntry(
       builder: (context) => AnimatedDialog(
         child: _createPopupContent(url),
@@ -161,10 +162,10 @@ class _GalleryState extends State<Gallery> {
     );
   }
 
-  OverlayEntry _createDeleteDialog(String url) {
+  OverlayEntry _createDeleteDialog(ImgWithDescriptionModel url) {
     return OverlayEntry(
       builder: (context) => AnimatedDialog(
-        child: _createDeleteBox(url),
+        child: _createDeleteBox(url.img),
       ),
     );
   }
@@ -209,7 +210,7 @@ class _GalleryState extends State<Gallery> {
         ),
       );
 
-  Widget _createPopupContent(String url) => Container(
+  Widget _createPopupContent(ImgWithDescriptionModel url) => Container(
 
         padding: EdgeInsets.symmetric(
             horizontal: MediaQuery.of(context).size.height * .01),
@@ -232,7 +233,7 @@ class _GalleryState extends State<Gallery> {
                       backgroundDecoration: const BoxDecoration(
                         color: Colors.white,
                       ),
-                      imageProvider: Image.memory(base64Decode(url),
+                      imageProvider: Image.memory(base64Decode(url.img),
                         fit: BoxFit.fitWidth , width: double.infinity,).image,
                     ),
                   )
@@ -243,7 +244,7 @@ class _GalleryState extends State<Gallery> {
           ),
         ),
       );
-  Widget _createActionBar(String url) => Container(
+  Widget _createActionBar(ImgWithDescriptionModel url) => Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(
           vertical: MediaQuery.of(context).size.height * .015),
@@ -255,17 +256,32 @@ class _GalleryState extends State<Gallery> {
                 _deleteDialog = _createDeleteDialog(url);
                 Overlay.of(context)!.insert(_deleteDialog);
               },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              child: Column(
+
                 children: [
-                  Text(
-                    isArabic(context) ? "حذف المنشور" : "Remove Post",
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Text(url.description),
+                      )
+                    ],
                   ),
-                  Icon(
-                    Icons.delete_forever,
-                    size: MediaQuery.of(context).size.height * 0.04,
-                  )
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+
+                      Text(
+                        isArabic(context) ? "حذف المنشور" : "Remove Post",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Icon(
+                        Icons.delete_forever,
+                        size: MediaQuery.of(context).size.height * 0.04,
+                      )
+                    ],
+                  ),
                 ],
               ),
             )
@@ -295,6 +311,7 @@ class _GalleryState extends State<Gallery> {
                       height: MediaQuery.of(context).size.height / 4,
                       child: ListView(
                         children: <Widget>[
+
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -396,7 +413,7 @@ class _GalleryState extends State<Gallery> {
     imageUrls.clear();
     store.stories.sort((a, b) => a.createdAt.compareTo(b.createdAt));
     for (int i = 0; i < store.stories.length; i++) {
-      imageUrls.add(store.stories[i].img);
+      imageUrls.add(ImgWithDescriptionModel(store.stories[i].img, store.stories[i].description));
     }
     print(imageUrls.length);
     return store;
