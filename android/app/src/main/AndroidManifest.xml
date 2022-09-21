@@ -1,9 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.souq.app.souq">
    <application
-        android:label="souq"
+        android:label="Souq Story"
         android:name="${applicationName}"
-        android:icon="@drawable/ssplashscreen">
+     android:icon="@drawable/souqappicon">
+
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
