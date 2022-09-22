@@ -18,6 +18,8 @@ class StoreRegisteration extends StatefulWidget {
 class StoreRegisterationState extends State<StoreRegisteration> {
   final TextEditingController _nameArController = TextEditingController();
   final TextEditingController _nameEnController = TextEditingController();
+  final TextEditingController _storeDesc = TextEditingController();
+  final TextEditingController _storeLoc = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -99,6 +101,24 @@ class StoreRegisterationState extends State<StoreRegisteration> {
                     ),
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height * .05),
+                  TextField(
+                    controller: _storeDesc,
+                    decoration: InputDecoration(
+                      fillColor: Colors.transparent,
+                      filled: true,
+                      labelText: isArabic(context) ? 'وصف المتجر' : 'Store Description',
+                    ),
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.height * .05),
+                  TextField(
+                    controller: _storeLoc,
+                    decoration: InputDecoration(
+                      fillColor: Colors.transparent,
+                      filled: true,
+                      labelText: isArabic(context) ? 'موقع المتجر' : 'Store Location',
+                    ),
+                  ),
+
                   /*LimitedBox(
                     maxHeight: MediaQuery.of(context).size.height * 0.25,
                     maxWidth: MediaQuery.of(context).size.width,
@@ -215,6 +235,8 @@ class StoreRegisterationState extends State<StoreRegisteration> {
                               _nameArController.text,
                               _nameEnController.text,
                               _categoryController.text,
+                                _storeDesc.text,
+                              _storeLoc.text,
                             ).then((value) => {
                                   if (value)
                                     {

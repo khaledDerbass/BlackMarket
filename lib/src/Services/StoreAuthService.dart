@@ -21,7 +21,7 @@ class StoreAuthService{
     }
     return true;
   }
-  static Future<bool> register(String email , String password,String phone,String NameAr,String NameEn,String Category) async {
+  static Future<bool> register(String email , String password,String phone,String NameAr,String NameEn,String Category, String descStore,String locStore) async {
     try{
       final User? user = (await
       getAuthInstance().createUserWithEmailAndPassword(
@@ -29,7 +29,7 @@ class StoreAuthService{
         password: password,
       )
       ).user;
-      Store store = Store(NameAr,NameEn,int.tryParse(Category)?.toInt() ?? 1,false,[],0);
+      Store store = Store(NameAr,NameEn,int.tryParse(Category)?.toInt() ?? 1,false,[],0,descStore,locStore);
       DocumentReference storeId = await FirebaseFirestore.instance.collection('Store').add(store.toJson());
       UserModel userModel = UserModel(email,email,phone,password,"",[],ROLEID,storeId.id);
       await FirebaseFirestore.instance.collection('Users').add(userModel.toJson()).then((value) => print(value));

@@ -33,6 +33,9 @@ class profileHeaderState extends State<profileHeader>{
   final box = GetStorage();
   late UserStore userStore;
   String storeName = "Souq Story";
+  String storeDesc = "";
+  String storeLoc = "";
+
   UserStore? searchStore;
   profileHeaderState(this.searchStore,currentUser);
   bool isFollowing = false;
@@ -143,131 +146,184 @@ class profileHeaderState extends State<profileHeader>{
                 ),
               ],
             ),
-            Row(
+            Column(
               children: [
-                SizedBox(
-                  height:
-                  MediaQuery.of(context).size.height * .0,
-                ),
-                LimitedBox(
-                  maxWidth: MediaQuery.of(context).size.width * 0.3,
-                  child: Padding(
-                    padding:  EdgeInsets.all(MediaQuery.of(context).size.height *
-                        0.02 ,),
-                    child: Text(
-                      isArabic(context) ? widget.searchStore?.store.nameAr ?? "" : widget.searchStore?.store.nameEn ?? "",
-                      style:  TextStyle(
-                        fontWeight: FontWeight.w900,
-                        decoration: TextDecoration.none,
-                        fontSize: MediaQuery.of(context).size.width * 0.035,
-                        letterSpacing: .5,fontFamily: 'SouqFont'
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    LimitedBox(
+                      maxWidth: MediaQuery.of(context).size.width * 0.3,
+                      child: Padding(
+                        padding:  EdgeInsets.all(MediaQuery.of(context).size.height *
+                            0.02 ,),
+                        child: Text(
+                          isArabic(context) ? widget.searchStore?.store.nameAr ?? "" : widget.searchStore?.store.nameEn ?? "",
+                          style:  TextStyle(
+                            fontWeight: FontWeight.w900,
+                            decoration: TextDecoration.none,
+                            fontSize: MediaQuery.of(context).size.width * 0.035,
+                            letterSpacing: .5,fontFamily: 'SouqFont'
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),
-                Padding(
-                  padding:  EdgeInsets.only(left: MediaQuery.of(context).size.height *
-                      .1 ),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      maximumSize: Size(
-                          MediaQuery.of(context).size.height *
-                              .20,
-                          MediaQuery.of(context).size.height *
-                              .04),
-                      minimumSize: Size(
-                          MediaQuery.of(context).size.height *
-                              .20,
-                          MediaQuery.of(context).size.height *
-                              .04),
-                      primary: Colors.black,
-                    ),
-                    onPressed: () async {
-                      if(AuthenticationService.isCurrentUserLoggedIn() == false){
-                        LoginHelper.showLoginAlertDialog(context);
-                      }else{
-                        if(isFollowing){
-                          print("Unfollow");
-                          UserModel user = widget.currentUser!;
-                          Store store = widget.searchStore!.store;
-                          setState(() {
-                            isFollowing = false;
-                            user.followedStores.remove(store.storeId);
-                            store.numOfFollowers -=1;
-                            if(store.numOfFollowers <0){
-                              store.numOfFollowers = 0;
+                    Padding(
+                      padding:  EdgeInsets.only(right:MediaQuery.of(context).size.height *
+                          .039 ),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          maximumSize: Size(
+                              MediaQuery.of(context).size.height *
+                                  .20,
+                              MediaQuery.of(context).size.height *
+                                  .04),
+                          minimumSize: Size(
+                              MediaQuery.of(context).size.height *
+                                  .20,
+                              MediaQuery.of(context).size.height *
+                                  .04),
+                          primary: Colors.black,
+                        ),
+                        onPressed: () async {
+                          if(AuthenticationService.isCurrentUserLoggedIn() == false){
+                            LoginHelper.showLoginAlertDialog(context);
+                          }else{
+                            if(isFollowing){
+                              print("Unfollow");
+                              UserModel user = widget.currentUser!;
+                              Store store = widget.searchStore!.store;
+                              setState(() {
+                                isFollowing = false;
+                                user.followedStores.remove(store.storeId);
+                                store.numOfFollowers -=1;
+                                if(store.numOfFollowers <0){
+                                  store.numOfFollowers = 0;
+                                }
+                              });
+                              await FirebaseFirestore.instance.collection('Users').where('email' , isEqualTo: FirebaseAuth.instance.currentUser!.email).get().then((value) async => {
+                                print("1"),
+                                await FirebaseFirestore.instance.collection('Users').doc(value.docs.first.id).update(
+                                    {
+                                      'followedStores':FieldValue.arrayRemove([store.storeId])
+                                    }).then((value) async => {
+                                  print("2"),
+                                  await FirebaseFirestore.instance.collection('Store').doc(widget.searchStore?.store.storeId.trim()).update({'numOfFollowers': store.numOfFollowers})
+                                }),
+                              });
                             }
-                          });
-                          await FirebaseFirestore.instance.collection('Users').where('email' , isEqualTo: FirebaseAuth.instance.currentUser!.email).get().then((value) async => {
-                            print("1"),
-                            await FirebaseFirestore.instance.collection('Users').doc(value.docs.first.id).update(
-                                {
-                                  'followedStores':FieldValue.arrayRemove([store.storeId])
-                                }).then((value) async => {
-                              print("2"),
-                              await FirebaseFirestore.instance.collection('Store').doc(widget.searchStore?.store.storeId.trim()).update({'numOfFollowers': store.numOfFollowers})
-                            }),
-                          });
-                        }
-                        else{
-                          print("follow");
-                          UserModel user = widget.currentUser!;
-                          Store store = widget.searchStore!.store;
-                          setState(() {
-                            isFollowing = true;
-                            user.followedStores.add(store.storeId.replaceAll(" ", ""));
-                            store.numOfFollowers +=1;
-                          });
-                          await FirebaseFirestore.instance.collection('Users').where('email' , isEqualTo: FirebaseAuth.instance.currentUser!.email).get().then((value) async => {
-                            await FirebaseFirestore.instance.collection('Users').doc(value.docs.first.id).update(
-                                {
-                                  'followedStores':FieldValue.arrayUnion(user.followedStores)
-                                }).then((value) async => {
+                            else{
+                              print("follow");
+                              UserModel user = widget.currentUser!;
+                              Store store = widget.searchStore!.store;
+                              setState(() {
+                                isFollowing = true;
+                                user.followedStores.add(store.storeId.replaceAll(" ", ""));
+                                store.numOfFollowers +=1;
+                              });
+                              await FirebaseFirestore.instance.collection('Users').where('email' , isEqualTo: FirebaseAuth.instance.currentUser!.email).get().then((value) async => {
+                                await FirebaseFirestore.instance.collection('Users').doc(value.docs.first.id).update(
+                                    {
+                                      'followedStores':FieldValue.arrayUnion(user.followedStores)
+                                    }).then((value) async => {
 
-                              await FirebaseFirestore.instance.collection('Store').doc(widget.searchStore?.store.storeId.trim()).update({'numOfFollowers': store.numOfFollowers})
+                                  await FirebaseFirestore.instance.collection('Store').doc(widget.searchStore?.store.storeId.trim()).update({'numOfFollowers': store.numOfFollowers})
 
-                            }),
-                          });
+                                }),
+                              });
 
 
-                        }
+                            }
 
-                      }
-                    },
+                          }
+                        },
 
-                    child: !isFollowing?
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      crossAxisAlignment:
-                      CrossAxisAlignment.center,
-                      children:  [
+                        child: !isFollowing?
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          crossAxisAlignment:
+                          CrossAxisAlignment.center,
+                          children:  [
 
-                        Text(isArabic(context) ? 'متابعة':'Follow',style: TextStyle(
-                            fontFamily:'SouqFont'
-                        ),),
-                        const Icon(
-                          Icons.add,
-                          color: Colors.white,
+                            Text(isArabic(context) ? 'متابعة':'Follow',style: TextStyle(
+                                fontFamily:'SouqFont'
+                            ),),
+                            const Icon(
+                              Icons.add,
+                              color: Colors.white,
+                            ),
+                          ],
+                        ) :
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          crossAxisAlignment:
+                          CrossAxisAlignment.center,
+                          children:  [
+
+                            Text(isArabic(context) ? 'إلغاء المتابعة':'Unfollow',style: TextStyle(
+                                fontFamily:'SouqFont'
+                            ),),
+                            const Icon(
+                              Icons.remove_circle_outline,
+                              color: Colors.white,
+                            ),
+                          ],
                         ),
-                      ],
-                    ) :
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      crossAxisAlignment:
-                      CrossAxisAlignment.center,
-                      children:  [
-
-                        Text(isArabic(context) ? 'إلغاء المتابعة':'Unfollow',style: TextStyle(
-                            fontFamily:'SouqFont'
-                        ),),
-                        const Icon(
-                          Icons.remove_circle_outline,
-                          color: Colors.white,
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
+                  ],
                 ),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    LimitedBox(
+                      maxWidth: MediaQuery.of(context).size.width * 0.8,
+                      child: Padding(
+                        padding:   EdgeInsets.only(left: MediaQuery.of(context).size.height *
+                            0.02 ,
+                          right: MediaQuery.of(context).size.height *
+                              0.02 ,
+                          top: MediaQuery.of(context).size.height *
+                              0.02 ,),
+                        child: Text(
+                          widget.searchStore!.store.descStore,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w900,
+                            decoration: TextDecoration.none,
+                            fontSize: MediaQuery.of(context).size.width * 0.035,
+                            letterSpacing: .5,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    LimitedBox(
+                      maxWidth: MediaQuery.of(context).size.width * 0.8,
+                      child: Padding(
+                        padding:   EdgeInsets.only(left: MediaQuery.of(context).size.height *
+                            0.02 ,
+                          right: MediaQuery.of(context).size.height *
+                              0.02 ,
+                          top: MediaQuery.of(context).size.height *
+                              0.02 ,),
+                        child: Text(
+                          widget.searchStore!.store.locStore,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w900,
+                            decoration: TextDecoration.none,
+                            fontSize: MediaQuery.of(context).size.width * 0.035,
+                            letterSpacing: .5,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
                 SizedBox(
                   height:
                   MediaQuery.of(context).size.height * .005,
@@ -432,27 +488,83 @@ class profileHeaderState extends State<profileHeader>{
                         ),
                       ],
                     ),
-                    Row(
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        SizedBox(
-                          height:
-                          MediaQuery.of(context).size.height * .0,
-                        ),
-                        LimitedBox(
-                          maxWidth: MediaQuery.of(context).size.width * 0.3,
-                          child: Padding(
-                            padding:  EdgeInsets.all(MediaQuery.of(context).size.height *
-                                0.02 ,),
-                            child: Text(
-                              storeName,
-                              style: TextStyle(
-                                fontWeight: FontWeight.w900,
-                                decoration: TextDecoration.none,
-                                fontSize: MediaQuery.of(context).size.width * 0.035,
-                                letterSpacing: .5,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            LimitedBox(
+                              maxWidth: MediaQuery.of(context).size.width * 0.3,
+                              child: Padding(
+                                padding:  EdgeInsets.only(left: MediaQuery.of(context).size.height *
+                                    0.02 ,
+                                right: MediaQuery.of(context).size.height *
+                                    0.02 ,
+                                top: MediaQuery.of(context).size.height *
+                                    0.02 ,),
+                                child: Text(
+                                  storeName,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w900,
+                                    decoration: TextDecoration.none,
+                                    fontSize: MediaQuery.of(context).size.width * 0.035,
+                                    letterSpacing: .5,
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            LimitedBox(
+                              maxWidth: MediaQuery.of(context).size.width * 0.8,
+                              child: Padding(
+                                padding:   EdgeInsets.only(left: MediaQuery.of(context).size.height *
+                                    0.02 ,
+                                  right: MediaQuery.of(context).size.height *
+                                      0.02 ,
+                                  top: MediaQuery.of(context).size.height *
+                                      0.02 ,),
+                                child: Text(
+                                  storeDesc,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w900,
+                                    decoration: TextDecoration.none,
+                                    fontSize: MediaQuery.of(context).size.width * 0.035,
+                                    letterSpacing: .5,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            LimitedBox(
+                              maxWidth: MediaQuery.of(context).size.width * 0.8,
+                              child: Padding(
+                                padding:   EdgeInsets.only(left: MediaQuery.of(context).size.height *
+                                    0.02 ,
+                                  right: MediaQuery.of(context).size.height *
+                                      0.02 ,
+                                  top: MediaQuery.of(context).size.height *
+                                      0.02 ,),
+                                child: Text(
+                                  storeLoc,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w900,
+                                    decoration: TextDecoration.none,
+                                    fontSize: MediaQuery.of(context).size.width * 0.035,
+                                    letterSpacing: .5,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                         userStore.userModel.storeId != userStore.store.storeId ? Padding(
                           padding:  EdgeInsets.only(left: MediaQuery.of(context).size.height *
@@ -735,6 +847,8 @@ class profileHeaderState extends State<profileHeader>{
     userStore = UserStore(user, store);
     storeName =
     isArabic(context) ? userStore.store.nameAr : userStore.store.nameEn;
+     storeDesc = userStore.store.descStore;
+     storeLoc = userStore.store.locStore;
     return store;
   }
 
