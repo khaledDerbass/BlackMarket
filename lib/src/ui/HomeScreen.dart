@@ -745,293 +745,293 @@ class _HomeScreenState extends State<HomeScreen> {
 
       widgetsList.add(CupertinoPageScaffold(
         backgroundColor: CupertinoColors.white,
-        child: Padding(
-          padding: EdgeInsets.only(
-              left: MediaQuery.of(context).size.width * 0.004,
-              right: MediaQuery.of(context).size.width * 0.004),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: Image.memory(
-                        base64Decode(cw.thumbnailImage),
-                      ).image,
+        child: Align(
+          alignment: Alignment.center,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: Image.memory(
+                      base64Decode(cw.thumbnailImage),
+                    ).image,
 
-                    ),
-                    border: Border.all(
-                      color: circleColor,
-                      width: 3.0,
-                      style: BorderStyle.solid,
-                    ),
                   ),
-                  width: MediaQuery.of(context).size.height * 0.12,
-                  height: MediaQuery.of(context).size.height * 0.12,
-                  child: GestureDetector(
-                    onTap: () async{
-                      List<SeenImageModel> seenImagesIndexList = [];
-                      await showCupertinoDialog(
-                        context: context,
-                        builder: (context) {
-                          return SafeArea(
-                            child: Scaffold(
-                              body: GestureDetector(
-                                onVerticalDragUpdate: (details) {
-                                  int sensitivity = 8;
-                                  if (details.delta.dy > sensitivity) {
-                                    Navigator.pop(context);
-                                  } else if(details.delta.dy < -sensitivity){
-                                    Navigator.pop(context);
-                                  }
-                                },
-                                child: StoryPageView(
-                                  initialStoryIndex: (_)=> startIndex,
-                                  itemBuilder: (context, pageIndex, storyIndex) {
-                                    print("Store ID for image : " + cw.images[storyIndex].storeId);
-                                    SeenImageModel img = SeenImageModel(storyIndex,cw,cw.images[storyIndex].storeId,cw.images[storyIndex].imageId);
-                                    try{
-                                      var list = seenImagesIndexList.where((a) => a.imageId == cw.images[storyIndex].imageId);
-                                      if(list.isEmpty && !cw.images[storyIndex].seenbyUserIds.contains(AuthenticationService.getAuthInstance().currentUser!.uid)) {
-                                        seenImagesIndexList.add(img);
-                                      }
-                                    }catch (e) {
-                                      print(e.toString());
+                  border: Border.all(
+                    color: circleColor,
+                    width: 3.0,
+                    style: BorderStyle.solid,
+                  ),
+                ),
+                width: MediaQuery.of(context).size.height * 0.12,
+                height: MediaQuery.of(context).size.height * 0.12,
+                child: GestureDetector(
+                  onTap: () async{
+                    List<SeenImageModel> seenImagesIndexList = [];
+                    await showCupertinoDialog(
+                      context: context,
+                      builder: (context) {
+                        return SafeArea(
+                          child: Scaffold(
+                            body: GestureDetector(
+                              onVerticalDragUpdate: (details) {
+                                int sensitivity = 8;
+                                if (details.delta.dy > sensitivity) {
+                                  Navigator.pop(context);
+                                } else if(details.delta.dy < -sensitivity){
+                                  Navigator.pop(context);
+                                }
+                              },
+                              child: StoryPageView(
+                                initialStoryIndex: (_)=> startIndex,
+                                itemBuilder: (context, pageIndex, storyIndex) {
+                                  print("Store ID for image : " + cw.images[storyIndex].storeId);
+                                  SeenImageModel img = SeenImageModel(storyIndex,cw,cw.images[storyIndex].storeId,cw.images[storyIndex].imageId);
+                                  try{
+                                    var list = seenImagesIndexList.where((a) => a.imageId == cw.images[storyIndex].imageId);
+                                    if(list.isEmpty && !cw.images[storyIndex].seenbyUserIds.contains(AuthenticationService.getAuthInstance().currentUser!.uid)) {
+                                      seenImagesIndexList.add(img);
                                     }
+                                  }catch (e) {
+                                    print(e.toString());
+                                  }
 
-                                    return Stack(
+                                  return Stack(
+                                    children: [
+                                      Positioned.fill(
+                                        child: Container(color: Colors.black),
+                                      ),
+                                      Positioned.fill(
+                                        child: Image.memory(
+                                          base64Decode(cw.images[storyIndex].img),
+                                          fit: BoxFit.contain,
+                                        ),
+                                      ),
+                                      Align(
+                                        alignment: Alignment.bottomCenter,
+                                        child: Container(
+                                          width: double.infinity,
+                                          margin: EdgeInsets.only(
+                                            bottom: 24,
+                                          ),
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 24,
+                                            vertical: 8,
+                                          ),
+                                          color:  cw.images[storyIndex].description != null ? Colors.black54 : Colors.transparent,
+                                          child: cw.images[storyIndex].description != null
+                                              ? Text(
+                                            cw.images[storyIndex].description,
+                                            style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.white,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          )
+                                              : SizedBox(),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                                gestureItemBuilder: (context, pageIndex, storyIndex) {
+                                  return ValueListenableBuilder(builder: (BuildContext context, value, Widget? child)
+                                  {
+                                    return Row(
                                       children: [
-                                        Positioned.fill(
-                                          child: Container(color: Colors.black),
-                                        ),
-                                        Positioned.fill(
-                                          child: Image.memory(
-                                            base64Decode(cw.images[storyIndex].img),
-                                            fit: BoxFit.contain,
-                                          ),
-                                        ),
-                                        Align(
-                                          alignment: Alignment.bottomCenter,
-                                          child: Container(
-                                            width: double.infinity,
-                                            margin: EdgeInsets.only(
-                                              bottom: 24,
-                                            ),
-                                            padding: EdgeInsets.symmetric(
-                                              horizontal: 24,
-                                              vertical: 8,
-                                            ),
-                                            color:  cw.images[storyIndex].description != null ? Colors.black54 : Colors.transparent,
-                                            child: cw.images[storyIndex].description != null
-                                                ? Text(
-                                              cw.images[storyIndex].description,
-                                              style: TextStyle(
-                                                fontSize: 15,
-                                                color: Colors.white,
-                                              ),
-                                              textAlign: TextAlign.center,
-                                            )
-                                                : SizedBox(),
-                                          ),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                  gestureItemBuilder: (context, pageIndex, storyIndex) {
-                                    return ValueListenableBuilder(builder: (BuildContext context, value, Widget? child)
-                                    {
-                                      return Row(
-                                        children: [
-                                          GestureDetector(
-                                            child: Align(
-                                              alignment: Alignment.topLeft,
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(top: 44, left: 8),
-                                                child: Row(
-                                                  children: [
-                                                    Container(
-                                                      height: 32,
-                                                      width: 32,
-                                                      decoration: BoxDecoration(
-                                                        image: DecorationImage(
-                                                          image: Image.memory(
-                                                            base64Decode(cw.thumbnailImage),
-                                                            fit: BoxFit.cover,
-                                                          ).image,
-                                                          fit: BoxFit.cover,
-                                                        ),
-                                                        shape: BoxShape.circle,
-                                                      ),
-                                                    ),
-                                                    const SizedBox(
-                                                      width: 8,
-                                                    ),
-                                                    Text(
-                                                      cw.images[storyIndex].storeName,
-                                                      style: TextStyle(
-                                                        fontSize: 17,
-                                                        color: Colors.white,
-                                                        fontWeight: FontWeight.bold,
-                                                      ),
-                                                    ),
-
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                            onTap: () async{
-                                              print("Search for user : " + cw.images[storyIndex].storeId);
-                                              if(AuthenticationService.isCurrentUserLoggedIn()){
-                                                late UserModel user;
-                                                late UserModel currentUser;
-                                                await FirebaseFirestore.instance.collection('Users').where(
-                                                    'storeId', isEqualTo:cw.images[storyIndex].storeId.replaceAll(" ", "").trim())
-                                                    .get()
-                                                    .then((value) =>
-                                                    value.docs.forEach((doc) {
-                                                      print(doc.id);
-                                                      user = UserModel.fromJson(value.docs.first.data());
-                                                    }));
-
-                                                await FirebaseFirestore.instance.collection('Users').where(
-                                                    'email', isEqualTo:AuthenticationService.getAuthInstance().currentUser!.email)
-                                                    .get()
-                                                    .then((value) =>
-                                                    value.docs.forEach((doc) {
-                                                      currentUser = UserModel.fromJson(value.docs.first.data());
-                                                    }));
-
-                                                if (user != null) {
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>  profilepage(searchStore: UserStore(user,storesList.where((element) => element.storeId == cw.images[storyIndex].storeId).first,),currentUser: currentUser,)),
-                                                  );
-                                                  //StoreProfile
-                                                }else{
-                                                  LoginHelper.showErrorAlertDialog(context, "Error");
-                                                }
-                                              }else{
-                                                LoginHelper.showLoginAlertDialog(context);
-                                              }
-                                            },
-
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topRight,
+                                        GestureDetector(
+                                          child: Align(
+                                            alignment: Alignment.topLeft,
                                             child: Padding(
-                                              padding: const EdgeInsets.only(top: 35,left: 10,right: 10),
+                                              padding: const EdgeInsets.only(top: 44, left: 8),
                                               child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.end,
                                                 children: [
-                                                  userData != null && userData.storeId != cw.images[storyIndex].storeId && !userData.followedStores.contains(cw.images[storyIndex].storeId)? Visibility(
-                                                    visible: cw.images[storyIndex].isFollowButtonVisible.value && !userData.followedStores.contains(cw.images[storyIndex].storeId),
-                                                    child: ElevatedButton(
-                                                        style: ElevatedButton.styleFrom(
-                                                          maximumSize: Size(
-                                                              MediaQuery.of(context).size.height *
-                                                                  .1,
-                                                              MediaQuery.of(context).size.height *
-                                                                  .04),
-                                                          minimumSize: Size(
-                                                              MediaQuery.of(context).size.height *
-                                                                  .1,
-                                                              MediaQuery.of(context).size.height *
-                                                                  .04),
-                                                          primary: Colors.pinkAccent.withOpacity(0.3),
-                                                        ),
-                                                        onPressed: () async{
-                                                          if(AuthenticationService.isCurrentUserLoggedIn() == false){
-                                                            LoginHelper.showLoginAlertDialog(context);
-                                                          }else{
-                                                            UserModel user = userData;
-                                                            WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
-                                                              isDoFollowing = true;
-                                                              cw.images[storyIndex].isFollowButtonVisible.value = false;
-                                                              user.followedStores.add(cw.images[storyIndex].storeId.replaceAll(" ", ""));
-                                                            },));
-                                                            Store store = Store.fromSnapshot(await FirebaseFirestore.instance.collection('Store').doc(cw.images[storyIndex].storeId.replaceAll(" ", "")).get());
-                                                            store.numOfFollowers +=1;
-                                                            await FirebaseFirestore.instance.collection('Users').where('email' , isEqualTo: FirebaseAuth.instance.currentUser!.email).get().then((value) async => {
-                                                              await FirebaseFirestore.instance.collection('Users').doc(value.docs.first.id).update(
-                                                                  {
-                                                                    'followedStores':FieldValue.arrayUnion(user.followedStores)
-                                                                  }).then((value) async => {
-                                                                print("Updating store " + store.storeId),
-                                                                await FirebaseFirestore.instance.collection('Store').doc(cw.images[storyIndex].storeId.replaceAll(" ", "")).update({'numOfFollowers': store.numOfFollowers}).then((value) => {
-                                                                  print("Updated"),
-                                                                  setState(() {
-                                                                    isDoFollowing = false;
-                                                                  })
-                                                                })
-
-                                                              }),
-                                                            });
-
-
-                                                          }
-
-
-                                                        },
-                                                        child: Row(
-                                                          mainAxisAlignment: MainAxisAlignment.center,
-                                                          crossAxisAlignment:
-                                                          CrossAxisAlignment.center,
-                                                          children:  [
-                                                            Text(isArabic(context) ? 'متابعة' :'Follow' , style: TextStyle(
-                                                        fontFamily:'SouqFont')),
-                                                          ],
-                                                        ),
-
+                                                  Container(
+                                                    height: 32,
+                                                    width: 32,
+                                                    decoration: BoxDecoration(
+                                                      image: DecorationImage(
+                                                        image: Image.memory(
+                                                          base64Decode(cw.thumbnailImage),
+                                                          fit: BoxFit.cover,
+                                                        ).image,
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                      shape: BoxShape.circle,
                                                     ),
-                                                  ) : Container(),
-
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 8,
+                                                  ),
+                                                  Text(
+                                                    cw.images[storyIndex].storeName,
+                                                    style: TextStyle(
+                                                      fontSize: 17,
+                                                      color: Colors.white,
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
+                                                  ),
 
                                                 ],
                                               ),
                                             ),
                                           ),
-                                        ],
-                                      );
-                                    }, valueListenable: cw.images[storyIndex].isFollowButtonVisible,
-                                    );
-                                  },
-                                  pageLength: cw.images.length,
-                                  storyLength: (int pageIndex) {
-                                    return cw.images.length;
-                                  },
-                                  onPageLimitReached: () {
+                                          onTap: () async{
+                                            print("Search for user : " + cw.images[storyIndex].storeId);
+                                            if(AuthenticationService.isCurrentUserLoggedIn()){
+                                              late UserModel user;
+                                              late UserModel currentUser;
+                                              await FirebaseFirestore.instance.collection('Users').where(
+                                                  'storeId', isEqualTo:cw.images[storyIndex].storeId.replaceAll(" ", "").trim())
+                                                  .get()
+                                                  .then((value) =>
+                                                  value.docs.forEach((doc) {
+                                                    print(doc.id);
+                                                    user = UserModel.fromJson(value.docs.first.data());
+                                                  }));
 
-                                    Navigator.pop(context);
-                                  },
-                                  onPageChanged: (_) async{
-                                    Navigator.pop(context);
-                                  },
-                                ),
+                                              await FirebaseFirestore.instance.collection('Users').where(
+                                                  'email', isEqualTo:AuthenticationService.getAuthInstance().currentUser!.email)
+                                                  .get()
+                                                  .then((value) =>
+                                                  value.docs.forEach((doc) {
+                                                    currentUser = UserModel.fromJson(value.docs.first.data());
+                                                  }));
+
+                                              if (user != null) {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>  profilepage(searchStore: UserStore(user,storesList.where((element) => element.storeId == cw.images[storyIndex].storeId).first,),currentUser: currentUser,)),
+                                                );
+                                                //StoreProfile
+                                              }else{
+                                                LoginHelper.showErrorAlertDialog(context, "Error");
+                                              }
+                                            }else{
+                                              LoginHelper.showLoginAlertDialog(context);
+                                            }
+                                          },
+
+                                        ),
+                                        Align(
+                                          alignment: Alignment.topRight,
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(top: 35,left: 10,right: 10),
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.end,
+                                              children: [
+                                                userData != null && userData.storeId != cw.images[storyIndex].storeId && !userData.followedStores.contains(cw.images[storyIndex].storeId)? Visibility(
+                                                  visible: cw.images[storyIndex].isFollowButtonVisible.value && !userData.followedStores.contains(cw.images[storyIndex].storeId),
+                                                  child: ElevatedButton(
+                                                      style: ElevatedButton.styleFrom(
+                                                        maximumSize: Size(
+                                                            MediaQuery.of(context).size.height *
+                                                                .1,
+                                                            MediaQuery.of(context).size.height *
+                                                                .04),
+                                                        minimumSize: Size(
+                                                            MediaQuery.of(context).size.height *
+                                                                .1,
+                                                            MediaQuery.of(context).size.height *
+                                                                .04),
+                                                        primary: Colors.pinkAccent.withOpacity(0.3),
+                                                      ),
+                                                      onPressed: () async{
+                                                        if(AuthenticationService.isCurrentUserLoggedIn() == false){
+                                                          LoginHelper.showLoginAlertDialog(context);
+                                                        }else{
+                                                          UserModel user = userData;
+                                                          WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
+                                                            isDoFollowing = true;
+                                                            cw.images[storyIndex].isFollowButtonVisible.value = false;
+                                                            user.followedStores.add(cw.images[storyIndex].storeId.replaceAll(" ", ""));
+                                                          },));
+                                                          Store store = Store.fromSnapshot(await FirebaseFirestore.instance.collection('Store').doc(cw.images[storyIndex].storeId.replaceAll(" ", "")).get());
+                                                          store.numOfFollowers +=1;
+                                                          await FirebaseFirestore.instance.collection('Users').where('email' , isEqualTo: FirebaseAuth.instance.currentUser!.email).get().then((value) async => {
+                                                            await FirebaseFirestore.instance.collection('Users').doc(value.docs.first.id).update(
+                                                                {
+                                                                  'followedStores':FieldValue.arrayUnion(user.followedStores)
+                                                                }).then((value) async => {
+                                                              print("Updating store " + store.storeId),
+                                                              await FirebaseFirestore.instance.collection('Store').doc(cw.images[storyIndex].storeId.replaceAll(" ", "")).update({'numOfFollowers': store.numOfFollowers}).then((value) => {
+                                                                print("Updated"),
+                                                                setState(() {
+                                                                  isDoFollowing = false;
+                                                                })
+                                                              })
+
+                                                            }),
+                                                          });
+
+
+                                                        }
+
+
+                                                      },
+                                                      child: Row(
+                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                        crossAxisAlignment:
+                                                        CrossAxisAlignment.center,
+                                                        children:  [
+                                                          Text(isArabic(context) ? 'متابعة' :'Follow' , style: TextStyle(
+                                                      fontFamily:'SouqFont')),
+                                                        ],
+                                                      ),
+
+                                                  ),
+                                                ) : Container(),
+
+
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  }, valueListenable: cw.images[storyIndex].isFollowButtonVisible,
+                                  );
+                                },
+                                pageLength: cw.images.length,
+                                storyLength: (int pageIndex) {
+                                  return cw.images.length;
+                                },
+                                onPageLimitReached: () {
+
+                                  Navigator.pop(context);
+                                },
+                                onPageChanged: (_) async{
+                                  Navigator.pop(context);
+                                },
                               ),
                             ),
-                          );
-                        },
-                      ).whenComplete(() => {
-                        if(AuthenticationService.isCurrentUserLoggedIn() && seenImagesIndexList.isNotEmpty)
-                          markStoriesAsSeen(seenImagesIndexList),
-                          print(seenImagesIndexList),
-                      });
-                    },
-                  ),
+                          ),
+                        );
+                      },
+                    ).whenComplete(() => {
+                      if(AuthenticationService.isCurrentUserLoggedIn() && seenImagesIndexList.isNotEmpty)
+                        markStoriesAsSeen(seenImagesIndexList),
+                        print(seenImagesIndexList),
+                    });
+                  },
                 ),
-                Container(
-                  padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * 0.005),
-                  child: Text(cw.categoryName,style: TextStyle(
+              ),
+              Expanded(
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.24,
+                  child: Text(cw.categoryName,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
                       fontFamily:'SouqFont')),
-
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ));
