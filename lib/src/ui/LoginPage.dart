@@ -112,25 +112,13 @@ class LoginScreenState extends State<LoginScreen> {
                               maskType: EasyLoadingMaskType.black,
                               dismissOnTap: false
                             );
-                            print('EasyLoading show');
-                            final snackBar1 = SnackBar(
-                              content: Text(isArabic(context)
-                                  ? 'تم تسجيل الدخول'
-                                  : 'Signed in successfully'),
-                            );
-                            final snackBar2 = SnackBar(
-                              content: Text(isArabic(context)
-                                  ? 'خطأ في إسم المستخدم او كلمة السر'
-                                  : 'Wrong Email or Password'),
-                            );
+
                             AuthenticationService.signInWithEmailAndPassword(
                               _emailController.text.toLowerCase().trim(),
                               _passwordController.text,
                             ).then((value) async => {
                                   if (value)
                                     {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(snackBar1),
                                       await LoginHelper.getUserWithEmail(
                                               _emailController.text
                                                   .toLowerCase()
@@ -146,8 +134,9 @@ class LoginScreenState extends State<LoginScreen> {
                                     }
                                   else
                                     {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(snackBar2),
+                                     LoginHelper.showErrorAlertDialog(context, isArabic(context)
+                                         ? 'خطأ في إسم المستخدم او كلمة السر'
+                                         : 'Wrong Email or Password')
                                     },
                                 _timer?.cancel(),
                                 await EasyLoading.dismiss(),

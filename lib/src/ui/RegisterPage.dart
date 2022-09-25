@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:souq/src/ui/LoginPage.dart';
+import '../../Helpers/LoginHelper.dart';
 import '../Services/AuthenticationService.dart';
 import 'CustomProfileAppBar.dart';
 import 'StoreRegisteration.dart';
@@ -118,19 +119,10 @@ class _RegisterPageState extends State<RegisterPage> {
                               maskType: EasyLoadingMaskType.black,
                                 dismissOnTap: false
                             );
-                            final snackBar1 = SnackBar(
-                              content: Text( isArabic(context) ? 'تم التسجيل بنجاح ' : 'Your account has been created successfully',style: TextStyle(
-                                  fontFamily:'SouqFont')),
-                            );
-                            final snackBar2 = SnackBar(
-                              content: Text( isArabic(context) ? 'حدث خطأ اثناء عملية التسجيل' : 'Error during sign up',style: TextStyle(
-                                  fontFamily:'SouqFont')),
 
-                            );
 
                             // Find the ScaffoldMessenger in the widget tree
                             // and use it to show a SnackBar.
-
                             AuthenticationService.register(
                                 _emailController.text.toLowerCase().trim(),
                                 _passwordController.text,
@@ -139,15 +131,15 @@ class _RegisterPageState extends State<RegisterPage> {
                                 .then((value) async => {
                               if (value)
                                 {
-                                ScaffoldMessenger.of(context).showSnackBar(snackBar1),
-                                  Navigator.push(
+                                LoginHelper.showSuccessAlertDialog(context, isArabic(context) ? 'تم التسجيل بنجاح ' : 'Your account has been created successfully'),
+                                Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
                                         const LoginScreen()),
                                   )
                                 }else{
-                                ScaffoldMessenger.of(context).showSnackBar(snackBar2),
+                                LoginHelper.showErrorAlertDialog(context, isArabic(context) ? 'حدث خطأ اثناء عملية التسجيل' : 'Error during sign up'),
                               },
                               _timer?.cancel(),
                               await EasyLoading.dismiss(),
