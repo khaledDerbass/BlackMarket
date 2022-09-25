@@ -226,7 +226,7 @@ class _GalleryState extends State<Gallery> {
               children: [
                 _createPhotoTitle(),
                 LimitedBox(
-                  maxHeight: MediaQuery.of(context).size.height * 0.45,
+                  maxHeight: MediaQuery.of(context).size.height * 0.5,
                   child: Container(
                     child: PhotoView(
                       tightMode: true,

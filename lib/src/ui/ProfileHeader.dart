@@ -167,7 +167,7 @@ class profileHeaderState extends State<profileHeader>{
                         ),
                       ),
                     ),
-                    Padding(
+                    widget.searchStore?.userModel.email != AuthenticationService.getAuthInstance().currentUser?.email ? Padding(
                       padding:  EdgeInsets.only(right:MediaQuery.of(context).size.height *
                           .039 ),
                       child: ElevatedButton(
@@ -269,7 +269,7 @@ class profileHeaderState extends State<profileHeader>{
                           ],
                         ),
                       ),
-                    ),
+                    ) : Container(),
                   ],
                 ),
 
@@ -394,6 +394,7 @@ class profileHeaderState extends State<profileHeader>{
                                         Uint8List? bytes;
                                         String img;
                                         File? file;
+
                                         XFile compressedImage;
                                         _showChoiceDialog(context).then((value) async => {
                                         file = await compressFile(File(imageFile!.path)),
@@ -409,17 +410,22 @@ class profileHeaderState extends State<profileHeader>{
                                                 'profilePicture':img
                                               }).then((value) => {
                                                 LoginHelper.showSuccessAlertDialog(context, isArabic(context) ? "تم تغيير الصورة الشخصية بنجاح" : "Your profile photo has been changed successfully."),
+                                            setState(() {
+
+                                            })
                                             }),
                                         }),
 
                                         });
 
                                       }, // button pressed
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          Icon(Icons.add, color: Colors.white,), // icon
-                                        ],
+                                      child: FittedBox(
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            Icon(Icons.add, color: Colors.white,), // icon
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
