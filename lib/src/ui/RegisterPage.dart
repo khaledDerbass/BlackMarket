@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:souq/src/ui/LoginPage.dart';
 import '../Services/AuthenticationService.dart';
 import 'CustomProfileAppBar.dart';
@@ -18,7 +21,19 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  Timer? _timer;
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    EasyLoading.addStatusCallback((status) {
+      print('EasyLoading Status $status');
+      if (status == EasyLoadingStatus.dismiss) {
+        _timer?.cancel();
+      }
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -96,7 +111,13 @@ class _RegisterPageState extends State<RegisterPage> {
                             primary: Colors.black,
                             shape: const StadiumBorder(),
                           ),
-                          onPressed: () {
+                          onPressed: () async{
+                            _timer?.cancel();
+                            await EasyLoading.show(
+                              status: 'loading...',
+                              maskType: EasyLoadingMaskType.black,
+                                dismissOnTap: false
+                            );
                             final snackBar1 = SnackBar(
                               content: Text( isArabic(context) ? 'تم التسجيل بنجاح ' : 'Your account has been created successfully',style: TextStyle(
                                   fontFamily:'SouqFont')),
@@ -115,7 +136,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 _passwordController.text,
                                 _phoneController.text,
                                 _usernameController.text)
-                                .then((value) => {
+                                .then((value) async => {
                               if (value)
                                 {
                                 ScaffoldMessenger.of(context).showSnackBar(snackBar1),
@@ -127,7 +148,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                   )
                                 }else{
                                 ScaffoldMessenger.of(context).showSnackBar(snackBar2),
-                              }
+                              },
+                              _timer?.cancel(),
+                              await EasyLoading.dismiss(),
                             });
                           },
                           child: Row(

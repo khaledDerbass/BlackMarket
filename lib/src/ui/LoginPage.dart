@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:souq/src/models/UserModel.dart';
@@ -22,7 +25,19 @@ class LoginScreen extends StatefulWidget {
 class LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  Timer? _timer;
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    EasyLoading.addStatusCallback((status) {
+      print('EasyLoading Status $status');
+      if (status == EasyLoadingStatus.dismiss) {
+        _timer?.cancel();
+      }
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -91,6 +106,13 @@ class LoginScreenState extends State<LoginScreen> {
                             shape: StadiumBorder(),
                           ),
                           onPressed: () async {
+                            _timer?.cancel();
+                            await EasyLoading.show(
+                              status: 'loading...',
+                              maskType: EasyLoadingMaskType.black,
+                              dismissOnTap: false
+                            );
+                            print('EasyLoading show');
                             final snackBar1 = SnackBar(
                               content: Text(isArabic(context)
                                   ? 'تم تسجيل الدخول'
@@ -126,7 +148,9 @@ class LoginScreenState extends State<LoginScreen> {
                                     {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(snackBar2),
-                                    }
+                                    },
+                                _timer?.cancel(),
+                                await EasyLoading.dismiss(),
                                 });
                           },
                           child: Row(
