@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
@@ -6,6 +7,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
@@ -35,7 +37,7 @@ class profileHeaderState extends State<profileHeader>{
   String storeName = "Souq Story";
   String storeDesc = "";
   String storeLoc = "";
-
+  Timer? _timer;
   UserStore? searchStore;
   profileHeaderState(this.searchStore,currentUser);
   bool isFollowing = false;
@@ -45,7 +47,12 @@ class profileHeaderState extends State<profileHeader>{
   void initState() {
     // TODO: implement initState
     super.initState();
-
+    EasyLoading.addStatusCallback((status) {
+      print('EasyLoading Status $status');
+      if (status == EasyLoadingStatus.dismiss) {
+        _timer?.cancel();
+      }
+    });
   }
   @override
   Widget build(BuildContext context) {
@@ -389,7 +396,8 @@ class profileHeaderState extends State<profileHeader>{
                                     color: Colors.black, // button color
                                     child: InkWell(
                                       splashColor: Colors.green, // splash color
-                                      onTap: () {
+                                      onTap: () async{
+
                                         print(AuthenticationService.getAuthInstance().currentUser?.uid);
                                         Uint8List? bytes;
                                         String img;
@@ -397,6 +405,12 @@ class profileHeaderState extends State<profileHeader>{
 
                                         XFile compressedImage;
                                         _showChoiceDialog(context).then((value) async => {
+                                        _timer?.cancel(),
+                                            await EasyLoading.show(
+                                            status: 'loading...',
+                                            maskType: EasyLoadingMaskType.black,
+                                            dismissOnTap: false
+                                        ),
                                         file = await compressFile(File(imageFile!.path)),
                                           print("Size before : ${File(imageFile!.path).lengthSync()}"),
                                           print("Size After : ${File(file!.path).lengthSync()}"),
@@ -408,7 +422,9 @@ class profileHeaderState extends State<profileHeader>{
                                             await FirebaseFirestore.instance.collection('Users').doc(value.docs.first.id).update(
                                               {
                                                 'profilePicture':img
-                                              }).then((value) => {
+                                              }).then((value) async => {
+                                              _timer?.cancel(),
+                                              await EasyLoading.dismiss(),
                                                 LoginHelper.showSuccessAlertDialog(context, isArabic(context) ? "تم تغيير الصورة الشخصية بنجاح" : "Your profile photo has been changed successfully."),
                                             setState(() {
 
