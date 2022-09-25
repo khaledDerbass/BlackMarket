@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
@@ -9,6 +10,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
@@ -49,10 +51,17 @@ class _AddPostPageState extends State<AddPostPage> {
   // the selected value
   String? _selectedDays;
   bool isLoading = false;
+  Timer? _timer;
   @override
   void initState() {
 
     super.initState();
+    EasyLoading.addStatusCallback((status) {
+      print('EasyLoading Status $status');
+      if (status == EasyLoadingStatus.dismiss) {
+        _timer?.cancel();
+      }
+    });
   }
 
   Widget build(BuildContext context) {
@@ -300,6 +309,13 @@ class _AddPostPageState extends State<AddPostPage> {
                           shape: StadiumBorder(),
                         ),
                         onPressed: _selectedDays == null || dropdownvalue == null || imageFile == null ? null: () async{
+                          _timer?.cancel();
+                          await EasyLoading.show(
+                              status: 'loading...',
+                              maskType: EasyLoadingMaskType.black,
+                              dismissOnTap: false
+                          );
+                          print('EasyLoading show');
                           setState(() {
                             isLoading = true;
                           });
@@ -320,11 +336,13 @@ class _AddPostPageState extends State<AddPostPage> {
                                 .doc(userStore.userModel.storeId)
                                 .update(
                                 {'Stories': FieldValue.arrayUnion(list)}).then((
-                                value) =>
+                                value) async =>
                             {
                             setState(() {
                             isLoading = false;
                             }),
+                              _timer?.cancel(),
+                              await EasyLoading.dismiss(),
                               LoginHelper.showSuccessAlertDialog(context, isArabic(context) ? "تمت إضافة قصتك بنجاح ، يمكنك إضافة المزيد من القصص من خلال هذه الصفحة" :
                                   "Your Story has been shared successfully, you can add more stories from this page."),
                             });
