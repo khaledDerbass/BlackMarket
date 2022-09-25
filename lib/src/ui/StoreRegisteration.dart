@@ -119,67 +119,6 @@ class StoreRegisterationState extends State<StoreRegisteration> {
                     ),
                   ),
 
-                  /*LimitedBox(
-                    maxHeight: MediaQuery.of(context).size.height * 0.25,
-                    maxWidth: MediaQuery.of(context).size.width,
-                    child: DropdownButton<String>(
-                      value: _selectedCity,
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedCity = value;
-                        });
-                      },
-                      hint: Center(
-                          child: isArabic(context)
-                              ? const Text(
-                                  "  اختر المدينة",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                )
-                              : Text(
-                                  'Choose City  ',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: 'SouqFont'),
-                                )),
-                      // Hide the default underline
-                      underline: Container(),
-                      // set the color of the dropdown menu
-                      dropdownColor: Colors.white,
-                      icon: const Icon(
-                        Icons.keyboard_arrow_down,
-                        color: Colors.black,
-                      ),
-                      // isExpanded: true,
-
-                      // The list of options
-                      items: Cities.map((e) => DropdownMenuItem(
-                            value: e,
-                            child: Container(
-                              alignment: Alignment.center,
-                              child: Text(
-                                e,
-                                style: const TextStyle(fontSize: 16),
-                              ),
-                            ),
-                          )).toList(),
-
-                      // Customize the selected item
-                      selectedItemBuilder: (BuildContext context) =>
-                          Cities.map((e) => Center(
-                                child: Text(
-                                  e,
-                                  style: const TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              )).toList(),
-                    ),
-                  ),*/
                   SizedBox(height: MediaQuery.of(context).size.height * .03),
                   LimitedBox(
                     maxHeight: MediaQuery.of(context).size.height * .25,

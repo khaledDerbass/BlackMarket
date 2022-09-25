@@ -52,5 +52,4 @@ Map<String, dynamic> _storeToJson(Store instance) =>
       'descStore': instance.descStore,
       'locStore': instance.locStore,
       'storeId' : instance.storeId
-
     };
