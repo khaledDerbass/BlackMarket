@@ -15,9 +15,11 @@ class AccountPage extends StatefulWidget
 }
 
 class AccountPageState extends State<AccountPage> {
-  final TextEditingController _usernameController = TextEditingController();
+   TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
+   TextEditingController _DescriprionController = TextEditingController();
+   TextEditingController _LocationController = TextEditingController();
   final GlobalKey<FormState> _form = GlobalKey<FormState>();
 
   @override
@@ -67,22 +69,7 @@ class AccountPageState extends State<AccountPage> {
                             key: _form,
                             child: Column(
                               children: [
-                                TextField(
-                                  onChanged: (value) {},
-                                  controller: _usernameController,
-                                  readOnly: true,
-                                  decoration: InputDecoration(
-                                    fillColor: Colors.transparent,
-                                    labelText: isArabic(context)
-                                        ? 'اسم المستخدم'
-                                        : 'Username',
-                                    filled: true,
-                                  ),
-                                ),
-                                SizedBox(
-                                    height:
-                                    MediaQuery.of(context).size.height * .03),
-                                TextField(
+                              TextField(
                                   readOnly: true,
                                   onChanged: (value) {},
                                   controller: _emailController,
@@ -107,7 +94,47 @@ class AccountPageState extends State<AccountPage> {
                                     filled: true,
                                     enabled: false,
                                     labelText:
-                                    isArabic(context) ? 'رقم الهاتف' : 'Phone',
+                                    isArabic(context) ? 'رقم الهاتف' : 'Phone Number',
+                                  ),
+                                ),
+                                SizedBox(
+                                    height:
+                                    MediaQuery.of(context).size.height * .05),
+                                TextField(
+                                  onChanged: (value) {},
+                                  controller: _usernameController,
+                                  decoration: InputDecoration(
+                                    fillColor: Colors.transparent,
+                                    labelText: isArabic(context)
+                                        ? 'اسم المستخدم'
+                                        : 'Username',
+                                    filled: true,
+                                  ),
+                                ),
+                                SizedBox(
+                                    height:
+                                    MediaQuery.of(context).size.height * .05),
+
+                               TextField(
+                                  onChanged: (value) {},
+                                  controller: _DescriprionController,
+                                  decoration: InputDecoration(
+                                    fillColor: Colors.transparent,
+                                    filled: true,
+                                    labelText:
+                                    isArabic(context) ? 'وصف المتجر' : 'Store Description',
+                                  ),
+                                ),     SizedBox(
+                                    height:
+                                    MediaQuery.of(context).size.height * .05),
+                                TextField(
+                                  onChanged: (value) {},
+                                  controller: _LocationController,
+                                  decoration: InputDecoration(
+                                    fillColor: Colors.transparent,
+                                    filled: true,
+                                    labelText:
+                                    isArabic(context) ? 'موقع المتجر' : 'Store Location',
                                   ),
                                 ),
                                 SizedBox(

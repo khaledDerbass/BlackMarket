@@ -106,7 +106,7 @@ class StoreRegisterationState extends State<StoreRegisteration> {
                     decoration: InputDecoration(
                       fillColor: Colors.transparent,
                       filled: true,
-                      labelText: isArabic(context) ? 'وصف المتجر' : 'Store Description',
+                      labelText: isArabic(context) ? ' وصف المتجر (اختياري)' : 'Store Description (Optional)',
                     ),
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height * .05),
@@ -115,7 +115,7 @@ class StoreRegisterationState extends State<StoreRegisteration> {
                     decoration: InputDecoration(
                       fillColor: Colors.transparent,
                       filled: true,
-                      labelText: isArabic(context) ? 'موقع المتجر' : 'Store Location',
+                      labelText: isArabic(context) ? ' موقع المتجر (اختياري)' : 'Store Location (Optional)',
                     ),
                   ),
 

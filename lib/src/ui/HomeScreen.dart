@@ -244,7 +244,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           Padding(
                             padding:  EdgeInsets.all(MediaQuery.of(context).size.height * 0.06),
-                            child: Text(isArabic(context) ? "يرجى تسجيل الدخول لتتمكن من متابعة المتاجر"  : "Please Sign up/in in order to follow stores",style: TextStyle(
+                            child: Text(isArabic(context) ? "يرجى تسجيل الدخول لتتمكن من متابعة المتاجر المفضلة"  : "Please Sign up/in in order to follow your favorite stores",style: TextStyle(
               fontFamily:'SouqFont')),
                           ),
                           Align(
