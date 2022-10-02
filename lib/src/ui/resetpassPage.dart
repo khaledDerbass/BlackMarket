@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:souq/Helpers/LoginHelper.dart';
 import 'package:souq/src/ui/LoginPage.dart';
 import 'CustomProfileAppBar.dart';
@@ -16,11 +19,22 @@ class resetPassword extends StatefulWidget
 
 class _resetPasswordState extends State<resetPassword> {
   final emailController=TextEditingController();
-
+  Timer? _timer;
   @override
   void dispose() {
     emailController.dispose();
     super.dispose();
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    EasyLoading.addStatusCallback((status) {
+      print('EasyLoading Status $status');
+      if (status == EasyLoadingStatus.dismiss) {
+        _timer?.cancel();
+      }
+    });
   }
   @override
   Widget build(BuildContext context) {
@@ -69,7 +83,8 @@ class _resetPasswordState extends State<resetPassword> {
                             primary: Colors.black,
                             shape: StadiumBorder(),
                           ),
-                          onPressed: () {
+                          onPressed: () async {
+
                             resetPassword();
                           },
                           child: Row(
@@ -99,15 +114,23 @@ class _resetPasswordState extends State<resetPassword> {
   }
   Future resetPassword() async
   {
+    _timer?.cancel();
+    await EasyLoading.show(
+        status: 'loading...',
+        maskType: EasyLoadingMaskType.black,
+        dismissOnTap: false
+    );
     await FirebaseAuth.instance.sendPasswordResetEmail(email: emailController.text.toLowerCase().replaceAll(" ", "").trim()).then((value) => {
        LoginHelper.showSuccessAlertDialog(context, 'Reset Password Email Sent'),
-    }).whenComplete(() => {
+    }).whenComplete(() async=> {
       Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) =>
             const LoginScreen()),
       ),
+      _timer?.cancel(),
+      await EasyLoading.dismiss(),
     });
 
 

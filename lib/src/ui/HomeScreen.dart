@@ -192,8 +192,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           child:  Container());
                                     }
                                     return _buildCategoryList(
-                                        context, snapshot.data?.docs ?? [],data);
-                                  }),
+                                        context, snapshot.data?.docs ?? [],data);}),
                             ),
                           ],
                         ),
@@ -768,7 +767,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 width: MediaQuery.of(context).size.height * 0.12,
-                height: MediaQuery.of(context).size.height * 0.12,
+                height: MediaQuery.of(context).size.height * 0.11,
                 child: GestureDetector(
                   onTap: () async{
                     List<SeenImageModel> seenImagesIndexList = [];

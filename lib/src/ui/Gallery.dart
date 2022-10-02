@@ -49,101 +49,107 @@ class _GalleryState extends State<Gallery> {
     return Scaffold(
       body: widget.searchStore != null
           ? GridView.count(
-              crossAxisCount: 3,
-              childAspectRatio: .5,
-              padding:
-                  EdgeInsets.all(MediaQuery.of(context).size.height * .002),
-              children: imageUrls
-                  .map(_createGridTileWidget)
-                  .toList()
-                  .reversed
-                  .toList(),
-            )
+        crossAxisCount: 3,
+        childAspectRatio: .5,
+        padding:
+        EdgeInsets.all(MediaQuery.of(context).size.height * .002),
+        children: imageUrls
+            .map(_createGridTileWidget)
+            .toList()
+            .reversed
+            .toList(),
+      )
           : roleId == 1
-              ? FutureBuilder(
-                  builder: (ctx, snapshot) {
-                    // Checking if future is resolved or not
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      // If we got an error
-                      if (snapshot.hasError) {
-                        return Center(
-                          child: Text(
-                            '${snapshot.error} occurred',
-                            style: TextStyle(fontSize: 18),
-                          ),
-                        );
-
-                        // if we got our data
-                      } else if (snapshot.hasData) {
-                        // Extracting data from snapshot object
-                        var data = snapshot.data as UserModel;
-                        return GridView.count(
-                          crossAxisCount: 3,
-                          childAspectRatio: .5,
-                          padding: EdgeInsets.all(
-                              MediaQuery.of(context).size.height * .002),
-                          children:
-                              imageUrls.map(_createGridTileWidget).toList(),
-                        );
-                      }
-                    }
-
-                    // Displaying LoadingSpinner to indicate waiting state
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  },
-
-                  // Future that needs to be resolved
-                  // inorder to display something on the Canvas
-                  future: roleId == 1 ? loadUser() : loadStore(context),
-                )
-              : FutureBuilder(
-                  builder: (ctx, snapshot) {
-                    // Checking if future is resolved or not
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      // If we got an error
-                      if (snapshot.hasError) {
-                        return Center(
-                          child: Text(
-                            '${snapshot.error} occurred',
-                            style: TextStyle(fontSize: 18),
-                          ),
-                        );
-
-                        // if we got our data
-                      } else if (snapshot.hasData) {
-                        // Extracting data from snapshot object
-                        var data = snapshot.data as Store;
-                        return GridView.count(
-                          crossAxisCount: 3,
-                          childAspectRatio: .5,
-                          padding: EdgeInsets.all(
-                              MediaQuery.of(context).size.height * .002),
-                          children: data.stories.length > 0
-                              ? imageUrls
-                                  .map(_createGridTileWidget)
-                                  .toList()
-                                  .reversed
-                                  .toList()
-                              : [Container()],
-                        );
-                      }
-                    }
-
-                    // Displaying LoadingSpinner to indicate waiting state
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  },
-
-                  // Future that needs to be resolved
-                  // inorder to display something on the Canvas
-                  future: roleId == 1 ? loadUser() : loadStore(context),
+          ? FutureBuilder(
+        builder: (ctx, snapshot) {
+          // Checking if future is resolved or not
+          if (snapshot.connectionState == ConnectionState.done) {
+            // If we got an error
+            if (snapshot.hasError) {
+              return Center(
+                child: Text(
+                  '${snapshot.error} occurred',
+                  style: TextStyle(fontSize: 18),
                 ),
+              );
+
+              // if we got our data
+            } else if (snapshot.hasData) {
+              // Extracting data from snapshot object
+              var data = snapshot.data as UserModel;
+              return GridView.count(
+                crossAxisCount: 3,
+                childAspectRatio: .5,
+                padding: EdgeInsets.all(
+                    MediaQuery.of(context).size.height * .002),
+                children:
+                imageUrls.map(_createGridTileWidget).toList(),
+              );
+            }
+          }
+
+          // Displaying LoadingSpinner to indicate waiting state
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+
+        // Future that needs to be resolved
+        // inorder to display something on the Canvas
+        future: roleId == 1 ? loadUser() : loadStore(context),
+      )
+          : FutureBuilder(
+        builder: (ctx, snapshot) {
+          // Checking if future is resolved or not
+          if (snapshot.connectionState == ConnectionState.done) {
+            // If we got an error
+            if (snapshot.hasError) {
+              return Center(
+                child: Text(
+                  '${snapshot.error} occurred',
+                  style: TextStyle(fontSize: 18),
+                ),
+              );
+
+              // if we got our data
+            } else if (snapshot.hasData) {
+              // Extracting data from snapshot object
+              var data = snapshot.data as Store;
+              return GridView.count(
+                crossAxisCount: 3,
+                childAspectRatio: .5,
+                padding: EdgeInsets.all(
+                    MediaQuery.of(context).size.height * .002),
+                children: data.stories.length > 0
+                    ? imageUrls
+                    .map(_createGridTileWidget)
+                    .toList()
+                    .reversed
+                    .toList()
+                    : [Container()],
+              );
+            }
+          }
+
+          // Displaying LoadingSpinner to indicate waiting state
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+
+        // Future that needs to be resolved
+        // inorder to display something on the Canvas
+        future: roleId == 1 ? loadUser() : loadStore(context),
+      )
     );
   }
-
+  Future<bool> _onWillPop() {
+    if(_popupDialog != null){
+      _popupDialog.remove();
+      return Future.value(false);
+    }
+    return Future.value(true);
+  }
   Widget _createGridTileWidget(ImgWithDescriptionModel url) => Builder(
         builder: (context) => GestureDetector(
           onTap: () {
@@ -226,7 +232,7 @@ class _GalleryState extends State<Gallery> {
               children: [
                 _createPhotoTitle(),
                 LimitedBox(
-                  maxHeight: MediaQuery.of(context).size.height * 0.45,
+                  maxHeight: MediaQuery.of(context).size.height * 0.5,
                   child: Container(
                     child: PhotoView(
                       tightMode: true,

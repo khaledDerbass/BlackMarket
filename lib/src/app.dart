@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:souq/src/ui/HomeScreen.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 
 class App extends StatelessWidget {
@@ -21,6 +22,7 @@ class App extends StatelessWidget {
       home: const Scaffold(
         body: HomeScreen(),
       ),
+      builder: EasyLoading.init(),
     );
   }
 }

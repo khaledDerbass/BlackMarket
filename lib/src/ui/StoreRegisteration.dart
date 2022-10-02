@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:souq/src/ui/LoginPage.dart';
 import '../Services/StoreAuthService.dart';
 import '../blocs/CategoriesRepoitory.dart';
@@ -31,6 +34,19 @@ class StoreRegisterationState extends State<StoreRegisteration> {
   // the selected value
   String? _selectedCity;
   int? dropdownvalue;
+  Timer? _timer;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    EasyLoading.addStatusCallback((status) {
+      print('EasyLoading Status $status');
+      if (status == EasyLoadingStatus.dismiss) {
+        _timer?.cancel();
+      }
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -119,67 +135,6 @@ class StoreRegisterationState extends State<StoreRegisteration> {
                     ),
                   ),
 
-                  /*LimitedBox(
-                    maxHeight: MediaQuery.of(context).size.height * 0.25,
-                    maxWidth: MediaQuery.of(context).size.width,
-                    child: DropdownButton<String>(
-                      value: _selectedCity,
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedCity = value;
-                        });
-                      },
-                      hint: Center(
-                          child: isArabic(context)
-                              ? const Text(
-                                  "  اختر المدينة",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                )
-                              : Text(
-                                  'Choose City  ',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: 'SouqFont'),
-                                )),
-                      // Hide the default underline
-                      underline: Container(),
-                      // set the color of the dropdown menu
-                      dropdownColor: Colors.white,
-                      icon: const Icon(
-                        Icons.keyboard_arrow_down,
-                        color: Colors.black,
-                      ),
-                      // isExpanded: true,
-
-                      // The list of options
-                      items: Cities.map((e) => DropdownMenuItem(
-                            value: e,
-                            child: Container(
-                              alignment: Alignment.center,
-                              child: Text(
-                                e,
-                                style: const TextStyle(fontSize: 16),
-                              ),
-                            ),
-                          )).toList(),
-
-                      // Customize the selected item
-                      selectedItemBuilder: (BuildContext context) =>
-                          Cities.map((e) => Center(
-                                child: Text(
-                                  e,
-                                  style: const TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              )).toList(),
-                    ),
-                  ),*/
                   SizedBox(height: MediaQuery.of(context).size.height * .03),
                   LimitedBox(
                     maxHeight: MediaQuery.of(context).size.height * .25,
@@ -208,7 +163,13 @@ class StoreRegisterationState extends State<StoreRegisteration> {
                             primary: Colors.black,
                             shape: const StadiumBorder(),
                           ),
-                          onPressed: () {
+                          onPressed: () async {
+                            _timer?.cancel();
+                            await EasyLoading.show(
+                              status: 'loading...',
+                              maskType: EasyLoadingMaskType.black,
+                                dismissOnTap: false
+                            );
                             final snackBar1 = SnackBar(
                                 content: Text(
                               isArabic(context)
@@ -237,7 +198,7 @@ class StoreRegisterationState extends State<StoreRegisteration> {
                               _categoryController.text,
                                 _storeDesc.text,
                               _storeLoc.text,
-                            ).then((value) => {
+                            ).then((value) async => {
                                   if (value)
                                     {
                                       ScaffoldMessenger.of(context)
@@ -254,6 +215,9 @@ class StoreRegisterationState extends State<StoreRegisteration> {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(snackBar2),
                                     }
+                              ,
+                              _timer?.cancel(),
+                              await EasyLoading.dismiss(),
                                 });
                           },
                           child: Row(
