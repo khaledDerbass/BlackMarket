@@ -729,7 +729,7 @@ class _HomeScreenState extends State<HomeScreen> {
       }
       String cateName =  categoryList.where((e) => e.value == category).first.name ?? "-";
 
-      CategoryWidget categoryWidget = CategoryWidget(storyByCategory.first.img,cateName, imgs);
+      CategoryWidget categoryWidget = CategoryWidget(getCategoryThumbnail(category),cateName, imgs);
       categoryWidgets.add(categoryWidget);
       storyByCategory.clear();
     }
@@ -755,9 +755,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   borderRadius: BorderRadius.circular(15),
                   image: DecorationImage(
                     fit: BoxFit.cover,
-                    image: Image.memory(
-                      base64Decode(cw.thumbnailImage),
-                    ).image,
+                    image: cw.thumbnailImage,
 
                   ),
                   border: Border.all(
@@ -854,10 +852,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     width: 32,
                                                     decoration: BoxDecoration(
                                                       image: DecorationImage(
-                                                        image: Image.memory(
-                                                          base64Decode(cw.thumbnailImage),
-                                                          fit: BoxFit.cover,
-                                                        ).image,
+                                                        image: cw.thumbnailImage,
                                                         fit: BoxFit.cover,
                                                       ),
                                                       shape: BoxShape.circle,
@@ -1197,4 +1192,8 @@ checkForInitialMessage() async {
     );
 
   }
+}
+
+getCategoryThumbnail(int id){
+  return AssetImage('assets/Categories/'+ id.toString()+ '.jpg');
 }

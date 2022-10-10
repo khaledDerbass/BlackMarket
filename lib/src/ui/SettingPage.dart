@@ -59,7 +59,7 @@ class SettingPageState extends State<SettingPage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => const AccountPage()),
+                                    builder: (context) =>  AccountPage()),
                               ),}
                         ),
                         const Divider(),

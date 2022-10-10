@@ -2,7 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import '../models/Store.dart';
 import '../models/UserModel.dart';
+import '../models/UserStore.dart';
 import 'CustomProfileAppBar.dart';
 import 'changePasswordUi.dart';
 
@@ -20,8 +22,8 @@ class AccountPageState extends State<AccountPage> {
   final TextEditingController _phoneController = TextEditingController();
    TextEditingController _DescriprionController = TextEditingController();
    TextEditingController _LocationController = TextEditingController();
-  final GlobalKey<FormState> _form = GlobalKey<FormState>();
-
+   GlobalKey<FormState> _form = GlobalKey<FormState>();
+   late UserStore? userStore;
   @override
   void initState()  {
     // TODO: implement initState
@@ -29,8 +31,11 @@ class AccountPageState extends State<AccountPage> {
   }
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: NestedScrollView(
+
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+
+      body: NestedScrollView(
           headerSliverBuilder: (context, index) {
             return [
               CustomProfileAppBar(false),
@@ -57,131 +62,125 @@ class AccountPageState extends State<AccountPage> {
                   _usernameController.text = data.name;
                   _emailController.text = data.email;
                   _phoneController.text = data.phoneNumber;
-                  return Stack(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.only(
-                          top: MediaQuery.of(context).size.height * .08,
-                          left: MediaQuery.of(context).size.height * .05,
-                          right: MediaQuery.of(context).size.height * .05,
-                        ),
-                        child:  Form(
-                            key: _form,
-                            child: Column(
-                              children: [
-                              TextField(
-                                  readOnly: true,
-                                  onChanged: (value) {},
-                                  controller: _emailController,
-                                  decoration: InputDecoration(
-                                    fillColor: Colors.transparent,
-                                    filled: true,
-                                    enabled: false,
-                                    labelText: isArabic(context)
-                                        ? 'البريد الإلكتروني'
-                                        : 'Email',
-                                  ),
-                                ),
-                                SizedBox(
-                                    height:
-                                    MediaQuery.of(context).size.height * .03),
-                                TextField(
-                                  readOnly: true,
-                                  onChanged: (value) {},
-                                  controller: _phoneController,
-                                  decoration: InputDecoration(
-                                    fillColor: Colors.transparent,
-                                    filled: true,
-                                    enabled: false,
-                                    labelText:
-                                    isArabic(context) ? 'رقم الهاتف' : 'Phone Number',
-                                  ),
-                                ),
-                                SizedBox(
-                                    height:
-                                    MediaQuery.of(context).size.height * .05),
-                                TextField(
-                                  onChanged: (value) {},
-                                  controller: _usernameController,
-                                  decoration: InputDecoration(
-                                    fillColor: Colors.transparent,
-                                    labelText: isArabic(context)
-                                        ? 'اسم المستخدم'
-                                        : 'Username',
-                                    filled: true,
-                                  ),
-                                ),
-                                SizedBox(
-                                    height:
-                                    MediaQuery.of(context).size.height * .05),
+                  if(userStore != null){
+                    _DescriprionController.text = userStore!.store.descStore;
+                    _LocationController.text = userStore!.store.locStore;
+                  }
+                  return Container(
+                    padding: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * .08,
+                      left: MediaQuery.of(context).size.height * .05,
+                      right: MediaQuery.of(context).size.height * .05,
+                    ),
+                    child:  Form(
+                        key: _form,
+                        child: Column(
+                          children: [
+                            TextFormField (
+                              readOnly: true,
+                              controller: _emailController,
+                              decoration: InputDecoration(
+                                fillColor: Colors.transparent,
+                                filled: true,
+                                enabled: false,
+                                labelText: isArabic(context)
+                                    ? 'البريد الإلكتروني'
+                                    : 'Email',
+                              ),
+                            ),
+                            SizedBox(
+                                height:
+                                MediaQuery.of(context).size.height * .03),
+                            TextFormField (
+                              readOnly: true,
+                              controller: _phoneController,
+                              decoration: InputDecoration(
+                                fillColor: Colors.transparent,
+                                filled: true,
+                                enabled: false,
+                                labelText:
+                                isArabic(context) ? 'رقم الهاتف' : 'Phone Number',
+                              ),
+                            ),
+                            SizedBox(
+                                height:
+                                MediaQuery.of(context).size.height * .05),
+                            TextFormField (
+                              controller: _usernameController,
+                              decoration: InputDecoration(
+                                fillColor: Colors.transparent,
+                                labelText: isArabic(context)
+                                    ? 'اسم المستخدم'
+                                    : 'Username',
+                                filled: true,
+                              ),
+                            ),
+                            SizedBox(
+                                height:
+                                MediaQuery.of(context).size.height * .05),
 
-                               TextField(
-                                  onChanged: (value) {},
-                                  controller: _DescriprionController,
-                                  decoration: InputDecoration(
-                                    fillColor: Colors.transparent,
-                                    filled: true,
-                                    labelText:
-                                    isArabic(context) ? 'وصف المتجر' : 'Store Description',
-                                  ),
-                                ),     SizedBox(
-                                    height:
-                                    MediaQuery.of(context).size.height * .05),
-                                TextField(
-                                  onChanged: (value) {},
-                                  controller: _LocationController,
-                                  decoration: InputDecoration(
-                                    fillColor: Colors.transparent,
-                                    filled: true,
-                                    labelText:
-                                    isArabic(context) ? 'موقع المتجر' : 'Store Location',
-                                  ),
-                                ),
-                                SizedBox(
-                                    height:
-                                    MediaQuery.of(context).size.height * .10),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          maximumSize: Size(
-                                              MediaQuery.of(context).size.height *
-                                                  .22,
-                                              MediaQuery.of(context).size.height *
-                                                  .08),
-                                          minimumSize: Size(
-                                              MediaQuery.of(context).size.height *
-                                                  .22,
-                                              MediaQuery.of(context).size.height *
-                                                  .08),
-                                          primary: Colors.black,
-                                          shape: StadiumBorder(),
-                                        ),
-                                        onPressed: () async {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(builder: (context) => const ChangePasswordUi()),
-                                          );
-                                        },
-                                        child: Row(
-                                          children: [
-                                            Text(isArabic(context)
-                                                ? 'تغيير كلمة السر'
-                                                : "Change Password",style: TextStyle(
+                           userStore != null ?TextFormField (
+                              controller: _DescriprionController,
+                              decoration: InputDecoration(
+                                fillColor: Colors.transparent,
+                                labelText:
+                                isArabic(context) ? 'وصف المتجر' : 'Store Description',
+                              ),
+                            ) : Container(),
+                            userStore != null ?SizedBox(
+                                height:
+                                MediaQuery.of(context).size.height * .05): Container(),
+                            userStore != null ? TextFormField (
+                              controller: _LocationController,
+                              decoration: InputDecoration(
+                                fillColor: Colors.transparent,
+                                labelText:
+                                isArabic(context) ? 'موقع المتجر' : 'Store Location',
+                              ),
+                            ): Container(),
+                            SizedBox(
+                                height:
+                                MediaQuery.of(context).size.height * .10),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      maximumSize: Size(
+                                          MediaQuery.of(context).size.height *
+                                              .22,
+                                          MediaQuery.of(context).size.height *
+                                              .08),
+                                      minimumSize: Size(
+                                          MediaQuery.of(context).size.height *
+                                              .22,
+                                          MediaQuery.of(context).size.height *
+                                              .08),
+                                      primary: Colors.black,
+                                      shape: StadiumBorder(),
+                                    ),
+                                    onPressed: () async {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => const ChangePasswordUi()),
+                                      );
+                                    },
+                                    child: Row(
+                                      children: [
+                                        Text(isArabic(context)
+                                            ? 'تغيير كلمة السر'
+                                            : "Change Password",style: TextStyle(
               fontFamily:'SouqFont')),
-                                            Icon(
-                                              Icons.refresh,
-                                              color: Colors.white,
-                                            ),
-                                          ],
-                                        )),
-                                  ],
-                                ),
+                                        Icon(
+                                          Icons.refresh,
+                                          color: Colors.white,
+                                        ),
+                                      ],
+                                    )),
                               ],
-                            )),
-                      ),
-                    ],
+                            ),
+                          ],
+                        )),
                   );
                 }
               }
@@ -205,6 +204,9 @@ class AccountPageState extends State<AccountPage> {
 
   Future<UserModel> loadUser() async {
     late UserModel user;
+    DocumentSnapshot snap;
+    late Store store;
+
     await FirebaseFirestore.instance
         .collection('Users')
         .where('email', isEqualTo: FirebaseAuth.instance.currentUser?.email)
@@ -212,7 +214,23 @@ class AccountPageState extends State<AccountPage> {
         .then((value) => value.docs.forEach((doc) {
               user = UserModel.fromJson(value.docs.first.data());
               print(user.name);
-            }));
+            })).then((value) async => {
+  if(user.storeId != ''){
+    await FirebaseFirestore.instance
+        .collection('Store')
+        .doc(user.storeId)
+        .get()
+        .then((value) => {
+      snap = value,
+      store = Store.fromSnapshot(snap),
+      print(store.nameAr),
+    }),
+
+    userStore = UserStore(user, store),
+  }else{
+    userStore = null,
+  }
+    });
 
     return user;
   }

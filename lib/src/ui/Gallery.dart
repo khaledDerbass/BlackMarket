@@ -216,40 +216,43 @@ class _GalleryState extends State<Gallery> {
         ),
       );
 
-  Widget _createPopupContent(ImgWithDescriptionModel url) => Container(
+  Widget _createPopupContent(ImgWithDescriptionModel url) => WillPopScope(
+    onWillPop: _onWillPop,
+    child: Container(
 
-        padding: EdgeInsets.symmetric(
-            horizontal: MediaQuery.of(context).size.height * .01),
-        child: ClipRRect(
-          borderRadius:
-              BorderRadius.circular(MediaQuery.of(context).size.height * .01),
-          child: Container(
-            color: Colors.white,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _createPhotoTitle(),
-                LimitedBox(
-                  maxHeight: MediaQuery.of(context).size.height * 0.5,
-                  child: Container(
-                    child: PhotoView(
-                      tightMode: true,
-                      backgroundDecoration: const BoxDecoration(
-                        color: Colors.white,
+          padding: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.height * .01),
+          child: ClipRRect(
+            borderRadius:
+                BorderRadius.circular(MediaQuery.of(context).size.height * .01),
+            child: Container(
+              color: Colors.white,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _createPhotoTitle(),
+                  LimitedBox(
+                    maxHeight: MediaQuery.of(context).size.height * 0.5,
+                    child: Container(
+                      child: PhotoView(
+                        tightMode: true,
+                        backgroundDecoration: const BoxDecoration(
+                          color: Colors.white,
+                        ),
+                        imageProvider: Image.memory(base64Decode(url.img),
+                          fit: BoxFit.fitWidth , width: double.infinity,).image,
                       ),
-                      imageProvider: Image.memory(base64Decode(url.img),
-                        fit: BoxFit.fitWidth , width: double.infinity,).image,
-                    ),
-                  )
-                ),
-                _createActionBar(url),
-              ],
+                    )
+                  ),
+                  _createActionBar(url),
+                ],
+              ),
             ),
           ),
         ),
-      );
+  );
   Widget _createActionBar(ImgWithDescriptionModel url) => Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(
@@ -268,9 +271,11 @@ class _GalleryState extends State<Gallery> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Text(url.description),
+                      Flexible(
+                        child: Padding(
+                          padding: const EdgeInsets.all(15),
+                          child: Text(url.description),
+                        ),
                       )
                     ],
                   ),
@@ -291,7 +296,19 @@ class _GalleryState extends State<Gallery> {
                 ],
               ),
             )
-          : Container());
+          : Container(
+        child:  Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Flexible(
+              child: Padding(
+                padding: const EdgeInsets.all(15),
+                child: Text(url.description),
+              ),
+            )
+          ],
+        ),
+      ));
 
   Widget _createDeleteBox(String url) => Container(
         padding: EdgeInsets.symmetric(

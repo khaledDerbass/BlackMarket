@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:souq/Helpers/LoginHelper.dart';
@@ -37,9 +35,7 @@ class _SearchPageState extends State<SearchPage>{
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
+    return  Scaffold(
           resizeToAvoidBottomInset: false,
           appBar: AppBar(
             toolbarHeight: MediaQuery.of(context).size.height * 0.1,
@@ -141,7 +137,7 @@ class _SearchPageState extends State<SearchPage>{
                           }));
 
                       if (user != null) {
-                        Navigator.pushReplacement(
+                        Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) =>  profilepage(searchStore: UserStore(user,filteredStore[index],),currentUser: currentUser,)),
@@ -161,7 +157,6 @@ class _SearchPageState extends State<SearchPage>{
             },
             ),
           ),
-      ),
     );
 
   }
