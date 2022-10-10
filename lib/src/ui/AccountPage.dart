@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:souq/src/ui/UpdateAccountInfo.dart';
 import '../models/Store.dart';
 import '../models/UserModel.dart';
 import '../models/UserStore.dart';
@@ -106,6 +107,8 @@ class AccountPageState extends State<AccountPage> {
                                 height:
                                 MediaQuery.of(context).size.height * .05),
                             TextFormField (
+                              readOnly: true,
+                              enabled: false,
                               controller: _usernameController,
                               decoration: InputDecoration(
                                 fillColor: Colors.transparent,
@@ -120,8 +123,12 @@ class AccountPageState extends State<AccountPage> {
                                 MediaQuery.of(context).size.height * .05),
 
                            userStore != null ?TextFormField (
+                             readOnly: true,
+                             enabled: false,
+
                               controller: _DescriprionController,
                               decoration: InputDecoration(
+                                filled: true,
                                 fillColor: Colors.transparent,
                                 labelText:
                                 isArabic(context) ? 'وصف المتجر' : 'Store Description',
@@ -131,8 +138,11 @@ class AccountPageState extends State<AccountPage> {
                                 height:
                                 MediaQuery.of(context).size.height * .05): Container(),
                             userStore != null ? TextFormField (
+                              readOnly: true,
+                              enabled: false,
                               controller: _LocationController,
                               decoration: InputDecoration(
+                                filled: true,
                                 fillColor: Colors.transparent,
                                 labelText:
                                 isArabic(context) ? 'موقع المتجر' : 'Store Location',
@@ -141,43 +151,83 @@ class AccountPageState extends State<AccountPage> {
                             SizedBox(
                                 height:
                                 MediaQuery.of(context).size.height * .10),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      maximumSize: Size(
-                                          MediaQuery.of(context).size.height *
-                                              .22,
-                                          MediaQuery.of(context).size.height *
-                                              .08),
-                                      minimumSize: Size(
-                                          MediaQuery.of(context).size.height *
-                                              .22,
-                                          MediaQuery.of(context).size.height *
-                                              .08),
-                                      primary: Colors.black,
-                                      shape: StadiumBorder(),
-                                    ),
-                                    onPressed: () async {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(builder: (context) => const ChangePasswordUi()),
-                                      );
-                                    },
-                                    child: Row(
-                                      children: [
-                                        Text(isArabic(context)
-                                            ? 'تغيير كلمة السر'
-                                            : "Change Password",style: TextStyle(
+                            FittedBox(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        maximumSize: Size(
+                                            MediaQuery.of(context).size.height *
+                                                .21,
+                                            MediaQuery.of(context).size.height *
+                                                .08),
+                                        minimumSize: Size(
+                                            MediaQuery.of(context).size.height *
+                                                .21,
+                                            MediaQuery.of(context).size.height *
+                                                .08),
+                                        primary: Colors.black,
+                                        shape: StadiumBorder(),
+                                      ),
+                                      onPressed: () async {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context) => const ChangePasswordUi()),
+                                        );
+                                      },
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Text(isArabic(context)
+                                              ? 'تغيير كلمة السر'
+                                              : "Change Password",style: TextStyle(
               fontFamily:'SouqFont')),
-                                        Icon(
-                                          Icons.refresh,
-                                          color: Colors.white,
-                                        ),
-                                      ],
-                                    )),
-                              ],
+                                          Icon(
+                                            Icons.refresh,
+                                            color: Colors.white,
+                                          ),
+                                        ],
+                                      )),
+                                  SizedBox(
+                                      width:
+                                      MediaQuery.of(context).size.height * .01),
+                                  ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        maximumSize: Size(
+                                            MediaQuery.of(context).size.height *
+                                                .2,
+                                            MediaQuery.of(context).size.height *
+                                                .08),
+                                        minimumSize: Size(
+                                            MediaQuery.of(context).size.height *
+                                                .2,
+                                            MediaQuery.of(context).size.height *
+                                                .08),
+                                        primary: Colors.black,
+                                        shape: StadiumBorder(),
+                                      ),
+                                      onPressed: () async {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context) => const UpdateAccountPage()),
+                                        );
+                                      },
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Text(isArabic(context)
+                                              ? 'تعديل'
+                                              : "Edit",style: TextStyle(
+                                              fontFamily:'SouqFont')),
+                                          Icon(
+                                            Icons.edit,
+                                            color: Colors.white,
+                                          ),
+                                        ],
+                                      )),
+                                ],
+                              ),
                             ),
                           ],
                         )),
