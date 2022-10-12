@@ -9,7 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:overlay_support/overlay_support.dart';
+import 'dart:ui' as ui;
 import 'package:souq/src/Services/AuthenticationService.dart';
 import 'package:souq/src/Services/StoreAuthService.dart';
 import 'package:souq/src/blocs/StoreRepository.dart';
@@ -19,6 +19,7 @@ import 'package:souq/src/models/StoryItem.dart';
 import 'package:souq/src/ui/SearchPage.dart';
 import '../../Helpers/LoginHelper.dart';
 import '../models/CategoryList.dart';
+import '../models/CategoryModel.dart';
 import '../models/ImageStoreModel.dart';
 import '../models/PushNotification.dart';
 import '../models/SeenImageModel.dart';
@@ -47,25 +48,13 @@ class _HomeScreenState extends State<HomeScreen> {
   late int roleId = 0;
   final box = GetStorage();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  var categoryList = [];
+  List<CategoryList> categoryList = [];
   Color activeColor = Colors.deepPurpleAccent;
   Color seenColor = Colors.grey;
   bool isLoading = false;
   @override
   void initState() {
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      PushNotification notification = PushNotification(
-        title: message.notification?.title,
-        body: message.notification?.body,
-      );
-      setState(() {
-        _notificationInfo = notification;
-      });
-    });
-    checkForInitialMessage();
-
     super.initState();
-
   }
 
   String dropdownValue = 'Amman';
@@ -99,7 +88,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 } else if (snapshot.hasData) {
                   // Extracting data from snapshot object
                   var data = snapshot.data as UserModel;
-                  print(data.email);
                   return SafeArea(
                       child: LimitedBox(
                         child: Column(
@@ -396,7 +384,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildList(BuildContext context, List<DocumentSnapshot>? snapshot, int roleId, UserModel userModel) {
-    print(context.locale.languageCode);
     String? loggedInStore = "";
     bool isSignedIn = false;
     if(roleId == 1){
@@ -514,7 +501,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               child: StoryPageView(
                                 initialStoryIndex: (_)=> startIndex,
                                 itemBuilder: (context, pageIndex, storyIndex) {
-                                  print("user story index " + storyIndex.toString());
                                   if(!seenImgIds.contains(store.stories[storyIndex].id)) {
                                     seenImgIds.add(store.stories[storyIndex].id);
                                   }
@@ -655,7 +641,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ).whenComplete(() => {
                       if(AuthenticationService.isCurrentUserLoggedIn()){
-                        print(seenImgIds),
                         markStoriesAsSeenUserStory(store,seenImgIds),
                       }
 
@@ -688,6 +673,7 @@ class _HomeScreenState extends State<HomeScreen> {
     List<StoryContent> storyByCategory = [];
     List<Widget> widgetsList = [];
     Store currentStore;
+    List<CategoryList> remainingCategoriesList = [];
     bool isDoFollowing = false;
 
     snapshot?.reversed
@@ -695,16 +681,17 @@ class _HomeScreenState extends State<HomeScreen> {
       currentStore = Store.fromSnapshot(data),
       currentStore.storeId = data.id,
       storesList.add(currentStore),
-      if (!categories.contains(Store.fromSnapshot(data).category))
-        {categories.add(Store.fromSnapshot(data).category)},
+      /*if (!categories.contains(currentStore.category))
+        {categories.add(currentStore.category)},*/
       if(currentStore.stories.length > 0)
         for(int i = 0; i< currentStore.stories.length ; i++){
           if(!categories.contains(currentStore.stories[i].category)){
             {categories.add(currentStore.stories[i].category)},
           }
         }
-    })
-        .toList();
+    }).toList();
+
+    remainingCategoriesList = categoryList.where((e) => !categories.contains(e.value) && !remainingCategoriesList.contains(e.value)).toList();
 
     for (int category in categories) {
       for (Store store in storesList) {
@@ -712,7 +699,6 @@ class _HomeScreenState extends State<HomeScreen> {
           for(StoryContent sc in store.stories){
             sc.storeName = isArabic(context) ? store.nameAr : store.nameEn;
             sc.storeId = store.storeId;
-            print("Store ID for sc : " + store.storeId + " "+ store.nameAr);
           }
           storyByCategory.addAll(store.stories.where((e) => e.category == category).toList());
 
@@ -723,25 +709,27 @@ class _HomeScreenState extends State<HomeScreen> {
       }
       List<ImageStoreModel> imgs = [];
       for (StoryContent sc in storyByCategory) {
-        print(sc.description);
-        print("Store ID for sc : " + sc.storeId);
         imgs.add(ImageStoreModel(sc.img,sc.storeName,sc.storeId,sc.seenBy.contains(AuthenticationService.getAuthInstance().currentUser?.uid),sc.id,sc.seenBy,sc.description));
       }
-      String cateName =  categoryList.where((e) => e.value == category).first.name ?? "-";
 
-      CategoryWidget categoryWidget = CategoryWidget(getCategoryThumbnail(category),cateName, imgs);
+      String cateName =  categoryList.where((e) => e.value == category).first?.name ?? "-";
+
+      CategoryWidget categoryWidget = CategoryWidget(getCategoryThumbnail(category),cateName,category, imgs);
       categoryWidgets.add(categoryWidget);
       storyByCategory.clear();
     }
 
+    for(CategoryList category in remainingCategoriesList){
+      categoryWidgets.add(CategoryWidget(getCategoryThumbnail(category.value), category.name ,category.value, []));
+    }
+    categoryWidgets.sort((a, b) => a.categoryID.compareTo(b.categoryID));
     for (CategoryWidget cw in categoryWidgets) {
       int startIndex = getLastSeenImage(cw);
       bool isSeen = isAllCategoryStoriesSeen(cw);
       Color circleColor = activeColor;
       if(isSeen){
-        circleColor = seenColor;
+         circleColor = seenColor;
       }
-
       widgetsList.add(CupertinoPageScaffold(
         backgroundColor: CupertinoColors.white,
         child: Align(
@@ -768,6 +756,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: MediaQuery.of(context).size.height * 0.11,
                 child: GestureDetector(
                   onTap: () async{
+                    if(cw.images.length == 0){
+                      LoginHelper.showEmptyCategoryAlertDialog(context);
+                      return;
+                    }
                     List<SeenImageModel> seenImagesIndexList = [];
                     await showCupertinoDialog(
                       context: context,
@@ -786,7 +778,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               child: StoryPageView(
                                 initialStoryIndex: (_)=> startIndex,
                                 itemBuilder: (context, pageIndex, storyIndex) {
-                                  print("Store ID for image : " + cw.images[storyIndex].storeId);
                                   SeenImageModel img = SeenImageModel(storyIndex,cw,cw.images[storyIndex].storeId,cw.images[storyIndex].imageId);
                                   try{
                                     var list = seenImagesIndexList.where((a) => a.imageId == cw.images[storyIndex].imageId);
@@ -875,7 +866,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ),
                                           ),
                                           onTap: () async{
-                                            print("Search for user : " + cw.images[storyIndex].storeId);
                                             if(AuthenticationService.isCurrentUserLoggedIn()){
                                               late UserModel user;
                                               late UserModel currentUser;
@@ -884,7 +874,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   .get()
                                                   .then((value) =>
                                                   value.docs.forEach((doc) {
-                                                    print(doc.id);
                                                     user = UserModel.fromJson(value.docs.first.data());
                                                   }));
 
@@ -952,9 +941,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                 {
                                                                   'followedStores':FieldValue.arrayUnion(user.followedStores)
                                                                 }).then((value) async => {
-                                                              print("Updating store " + store.storeId),
                                                               await FirebaseFirestore.instance.collection('Store').doc(cw.images[storyIndex].storeId.replaceAll(" ", "")).update({'numOfFollowers': store.numOfFollowers}).then((value) => {
-                                                                print("Updated"),
                                                                 setState(() {
                                                                   isDoFollowing = false;
                                                                 })
@@ -1009,7 +996,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ).whenComplete(() => {
                       if(AuthenticationService.isCurrentUserLoggedIn() && seenImagesIndexList.isNotEmpty)
-                        markStoriesAsSeen(seenImagesIndexList),
+                            markStoriesAsSeen(seenImagesIndexList),
                         print(seenImagesIndexList),
                     });
                   },
@@ -1030,12 +1017,16 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ));
     }
-    return GridView.count(
-      // Create a grid with 2 columns. If you change the scrollDirection to
-      // horizontal, this produces 2 rows.
-      crossAxisCount: 3,
-      // Generate 100 widgets that display their index in the List.
-      children: List.of(widgetsList),
+    return Directionality(
+      textDirection: isArabic(context) ? ui.TextDirection.rtl : ui.TextDirection.ltr,
+      child: GridView.count(
+        // Create a grid with 2 columns. If you change the scrollDirection to
+        // horizontal, this produces 2 rows.
+        crossAxisCount: 3,
+
+        // Generate 100 widgets that display their index in the List.
+        children: List.of(widgetsList),
+      ),
     );
   }
   //CategoryEnd////////////////////////////////////////////////////////////////////////////////////
@@ -1045,18 +1036,17 @@ class _HomeScreenState extends State<HomeScreen> {
     var image = store.stories.where((element) => !element.seenBy.contains(AuthenticationService.getAuthInstance().currentUser!.uid));
     int index = 0;
     if(image.isNotEmpty){
-      print("image.isNotEmpty " + AuthenticationService.getAuthInstance().currentUser!.uid);
       index = store.stories.indexOf(image.first);
     }
 
     return index;
   }
 
+
   bool isAllSeen(Store store){
 
       var image = store.stories.where((element) => !element.seenBy.contains(AuthenticationService.getAuthInstance().currentUser!.uid));
       if(image.isNotEmpty){
-        print("Not all seen");
         return false;
       }
 
@@ -1144,43 +1134,43 @@ bool isAllCategoryStoriesSeen(CategoryWidget cw) {
 
 
 /////////////////////////////////////////////////////////////
-void registerNotification() async {
-  // 1. Initialize the Firebase app
-  await Firebase.initializeApp();
-
-  // 2. Instantiate Firebase Messaging
-  _messaging = FirebaseMessaging.instance;
-
-  // 3. On iOS, this helps to take the user permissions
-  NotificationSettings settings = await _messaging.requestPermission(
-    alert: true,
-    badge: true,
-    provisional: false,
-    sound: true,
-  );
-
-  if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-    print('User granted permission');
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      // ...
-      if (_notificationInfo != null) {
-        // For displaying the notification as an overlay
-        showSimpleNotification(
-          Text("this is a message from simple notification"),
-          //leading: NotificationBadge(totalNotifications: _totalNotifications),
-          subtitle: Text("this is a message from simple notification"),
-          background: Colors.cyan.shade700,
-          duration: Duration(seconds: 3),
-        );
-      }
-    });
-  }
-  else
-  {
-    print('User declined or has not accepted permission');
-  }
-}
-checkForInitialMessage() async {
+// void registerNotification() async {
+//   // 1. Initialize the Firebase app
+//   await Firebase.initializeApp();
+//
+//   // 2. Instantiate Firebase Messaging
+//   _messaging = FirebaseMessaging.instance;
+//
+//   // 3. On iOS, this helps to take the user permissions
+//   NotificationSettings settings = await _messaging.requestPermission(
+//     alert: true,
+//     badge: true,
+//     provisional: false,
+//     sound: true,
+//   );
+//
+//   if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+//     print('User granted permission');
+//     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+//       // ...
+//       if (_notificationInfo != null) {
+//         // For displaying the notification as an overlay
+//         showSimpleNotification(
+//           Text("this is a message from simple notification"),
+//           //leading: NotificationBadge(totalNotifications: _totalNotifications),
+//           subtitle: Text("this is a message from simple notification"),
+//           background: Colors.cyan.shade700,
+//           duration: Duration(seconds: 3),
+//         );
+//       }
+//     });
+//   }
+//   else
+//   {
+//     print('User declined or has not accepted permission');
+//   }
+// }
+/*checkForInitialMessage() async {
   await Firebase.initializeApp();
   RemoteMessage? initialMessage =
   await FirebaseMessaging.instance.getInitialMessage();
@@ -1192,7 +1182,7 @@ checkForInitialMessage() async {
     );
 
   }
-}
+}*/
 
 getCategoryThumbnail(int id){
   return AssetImage('assets/Categories/'+ id.toString()+ '.jpg');

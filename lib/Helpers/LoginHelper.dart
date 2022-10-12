@@ -70,6 +70,63 @@ class LoginHelper{
    return context.locale.languageCode == 'ar';
  }
 
+ static showEmptyCategoryAlertDialog(BuildContext context) {
+   Widget okButton = GestureDetector(
+     child: Container(
+       padding: EdgeInsets.all(10),
+       child: isArabic(context) ? const Text("تم") : const Text("Done"),
+     ),
+     onTap: (){
+       Navigator.of(context, rootNavigator: true).pop('dialog');
+     },
+   );
+
+   AlertDialog alert = AlertDialog(
+     shape: const RoundedRectangleBorder(
+         borderRadius: BorderRadius.all(Radius.circular(32.0))),
+     actions: [
+       okButton,
+     ],
+     content: SizedBox(
+       width: double.maxFinite,
+       height: MediaQuery.of(context).size.height / 4,
+       child: ListView(
+         children: <Widget>[
+           Row(
+             mainAxisAlignment: MainAxisAlignment.center,
+             children: [
+               LimitedBox(
+                   maxHeight: MediaQuery.of(context).size.height * 0.15,
+                   maxWidth: MediaQuery.of(context).size.width,
+                   child: Image.asset('assets/images/nooffers.png')
+               ),
+             ],
+           ),
+           const Divider(),
+           ListTile(
+             title: isArabic(context)
+                 ? const Text(
+               'لا يوجد عروض على هذا الصنف في الوقت الحالي.',
+               style: TextStyle(fontSize: 17),
+             )
+                 : const Text(
+               'There are no offers for this category at the moment.',
+               style: TextStyle(fontSize: 17),
+             ),
+           ),
+         ],
+       ),
+     ),
+   );
+
+   // show the dialog
+   showDialog(
+     context: context,
+     builder: (BuildContext context) {
+       return alert;
+     },
+   );
+ }
  static Future<UserModel> getUserWithEmail(String email) async {
    late UserModel user;
    await FirebaseFirestore.instance.collection('Users').where('email', isEqualTo: email.trim()).get().then((value) => value.docs.forEach((doc) {
