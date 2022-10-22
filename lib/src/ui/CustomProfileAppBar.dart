@@ -33,10 +33,10 @@ class CustomProfileAppBar extends StatelessWidget {
           }, icon: Icon(Icons.arrow_back)) : Container(),
           Padding(
             padding: EdgeInsets.only(
-              left: MediaQuery.of(context).size.height * .08,
+              left: MediaQuery.of(context).size.height * .057,
             ),),
 
-    Image.asset('assets/images/logo2.png',height: MediaQuery.of(context).size.width * 0.17,width: MediaQuery.of(context).size.width * 0.30,),
+       Image.asset('assets/images/offerstorylogo.png',height: MediaQuery.of(context).size.width * 0.4,width: MediaQuery.of(context).size.width * 0.4,),
 
     ],
     ),

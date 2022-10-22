@@ -27,6 +27,7 @@ void main() async{
         path: 'assets/languages',
         fallbackLocale: const Locale('ar', 'JO'),
         assetLoader: const CodegenLoader(),
+
         child: const App()
     ),);
   });

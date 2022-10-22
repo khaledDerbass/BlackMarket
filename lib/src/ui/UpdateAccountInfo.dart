@@ -80,10 +80,10 @@ class UpdateAccountPageState extends State<UpdateAccountPage> {
                 children: [
                   TextField(
                     onChanged: (value) {},
-                    controller: _usernameController,
+                    controller: _emailController,
                     decoration:  InputDecoration(
                       fillColor: Colors.transparent,
-                      labelText: isArabic(context) ? 'اسم المستخدم' : 'Username',
+                      labelText: isArabic(context) ? 'البريد الإلكتروني' : 'Email',
                       filled: true,
                     ),
                   ),

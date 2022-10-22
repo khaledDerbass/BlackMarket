@@ -73,11 +73,14 @@ class _AddPostPageState extends State<AddPostPage> {
           automaticallyImplyLeading: false,
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
-                  bottomRight: Radius.circular(25),
-                  bottomLeft: Radius.circular(25))),
+                  bottomRight: Radius.circular(15),
+                  bottomLeft: Radius.circular(15))),
           title: Center(
-            child: Text(isArabic(context) ? 'إضافة منشور' : "Add Post",style: TextStyle(
-    fontFamily:'SouqFont')),
+
+                child: Image.asset('assets/images/offerstorylogo.png',height: MediaQuery.of(context).size.width * 0.4,width: MediaQuery.of(context).size.width * 0.4,),
+
+
+
           ),
         ),
         body: Stack(

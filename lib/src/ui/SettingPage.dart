@@ -129,29 +129,7 @@ class SettingPageState extends State<SettingPage> {
                               ),
                             }),
                         const Divider(),
-                        ListTile(
-                            title: isArabic(context)
-                                ? const Text(
-                              'إعلانات ممولة',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                  fontFamily:'SouqFont'
-                              ),                )
-                                :  Text(
-                              'Ads',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                  fontFamily:'SouqFont'
-                              ),                ),
-                            trailing: Icon(
-                              Icons.ads_click
-                              ,
-                              color: Colors.black,
-                            ),
-                            onTap: () => {
-                            }),          ],
+                            ],
               ),
     ),
     ],),),

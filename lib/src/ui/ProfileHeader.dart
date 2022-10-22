@@ -166,10 +166,10 @@ class profileHeaderState extends State<profileHeader>{
                         child: Text(
                           isArabic(context) ? widget.searchStore?.store.nameAr ?? "" : widget.searchStore?.store.nameEn ?? "",
                           style:  TextStyle(
-                            fontWeight: FontWeight.w900,
+                            fontWeight: FontWeight.w700,
                             decoration: TextDecoration.none,
-                            fontSize: MediaQuery.of(context).size.width * 0.035,
-                            letterSpacing: .5,fontFamily: 'SouqFont'
+                            fontSize: MediaQuery.of(context).size.width * 0.03,
+                            letterSpacing: .05,fontFamily: 'SouqFont'
                           ),
                         ),
                       ),
@@ -517,7 +517,7 @@ class profileHeaderState extends State<profileHeader>{
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             LimitedBox(
-                              maxWidth: MediaQuery.of(context).size.width * 0.3,
+                              maxWidth: MediaQuery.of(context).size.width * 0.8,
                               child: Padding(
                                 padding:  EdgeInsets.only(left: MediaQuery.of(context).size.height *
                                     0.02 ,
@@ -528,10 +528,10 @@ class profileHeaderState extends State<profileHeader>{
                                 child: Text(
                                   storeName,
                                   style: TextStyle(
-                                    fontWeight: FontWeight.w900,
+                                    fontWeight: FontWeight.w700,
                                     decoration: TextDecoration.none,
-                                    fontSize: MediaQuery.of(context).size.width * 0.035,
-                                    letterSpacing: .5,
+                                    fontSize: MediaQuery.of(context).size.width * 0.03,
+                                    letterSpacing: .05,
                                   ),
                                 ),
                               ),

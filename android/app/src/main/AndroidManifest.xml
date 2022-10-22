@@ -1,9 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.souq.app.souq">
    <application
-        android:label="Souq Story"
+        android:label="Offer Story"
         android:name="${applicationName}"
-     android:icon="@drawable/souqappicon">
+     android:icon="@drawable/offerstoryappicons">
 
 
         <activity

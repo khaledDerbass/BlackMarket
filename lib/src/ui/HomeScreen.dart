@@ -96,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               height: MediaQuery.of(context).size.height * 0.12,
                               child:  Stack(
                                 children: [
-                                  HeaderWidget(MediaQuery.of(context).size.height * 0.12, false, Icons.account_circle_rounded),
+                                  HeaderWidget(MediaQuery.of(context).size.height * 0.1, false, Icons.account_circle_rounded),
                                   Positioned(
                                     left: 13,
                                     child: IconButton(
@@ -106,13 +106,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                       icon: Icon(Icons.menu_outlined,color: Colors.white,size: MediaQuery.of(context).size.height * 0.032,),
                                     ),
                                   ),
-                                  Row(
+                                  /*Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Image.asset('assets/images/logo2.png',height: MediaQuery.of(context).size.width * 0.17,width: MediaQuery.of(context).size.width * 0.30,),
+                                      Image.asset('assets/images/offerstorylogo.png',height: MediaQuery.of(context).size.width * 0.99,width: MediaQuery.of(context).size.width * 1.0,),
 
                                     ],
-                                  ),
+                                  ),*/
                                     Padding(
                                       padding: EdgeInsets.only(right: MediaQuery.of(context).size.width * 0.03),
                                       child: Row(

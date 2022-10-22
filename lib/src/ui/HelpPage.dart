@@ -29,7 +29,15 @@ class HelpPageState extends State<HelpPage> {
                 left: MediaQuery.of(context).size.height * .05,
                 right: MediaQuery.of(context).size.height * .05,
               ),
-              child: ListView(
+             child:
+              isArabic(context) ?
+              Text("www.facebook.com/OfferStoryApp تواصل معنا على الفيسبوك")
+                  : Text("Contact us on Facebook www.facebook.com/OfferStoryApp"),
+
+
+        /*
+              ListView(
+
                 children: [
                   Align(
                     alignment: isArabic(context)
@@ -131,22 +139,23 @@ class HelpPageState extends State<HelpPage> {
                   ListTile(
                       title: isArabic(context)
                           ? const Text(
-                        'مركز المساعدة والدعم',
+                        'لأي استفسار حول التطبيق او اي مشكلة تواجهك الرجاء التواصل معنا عبر صفحة الفيسبوك ',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),                )
                           : const Text(
-                        'Help & Support Center',
+                        'For any inquiries about the application or any problem you face, please contact us via the Facebook page',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      onTap: () => {
+                      ),
 
-                      }),
-            ],),),
+
+            ],),*/
+            ),
           ],),),
     );
   }

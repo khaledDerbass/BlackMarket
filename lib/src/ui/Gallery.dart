@@ -273,7 +273,7 @@ class _GalleryState extends State<Gallery> {
                     children: [
                       Flexible(
                         child: Padding(
-                          padding: const EdgeInsets.all(15),
+                          padding: const EdgeInsets.all(10),
                           child: Text(url.description),
                         ),
                       )
