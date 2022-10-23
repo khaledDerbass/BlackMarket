@@ -204,13 +204,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                     icon: Icon(Icons.menu_outlined,color: Colors.white,size: MediaQuery.of(context).size.height * 0.032,),
                                   ),
                                 ),
-                                Row(
+                                /*Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Image.asset('assets/images/logo2.png',height: MediaQuery.of(context).size.width * 0.16,width: MediaQuery.of(context).size.width * 0.16,),
 
                                   ],
-                                ),
+                                ),*/
                                 Padding(
                                   padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.025,right: MediaQuery.of(context).size.width * 0.03),
                                   child: Row(
@@ -577,7 +577,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     color: Colors.white,
                                                     fontWeight: FontWeight.bold,
                                                     decoration: TextDecoration.none,
-                                                      fontFamily:'SouqFont',
+                                                    fontFamily:'SouqFont',
                                                   ),
                                                 ),
                                               ],
@@ -648,15 +648,21 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                 ),
               ),
-              Container(
+                Container(
+                height: MediaQuery.of(context).size.height * 0.13,
+                width: MediaQuery.of(context).size.height * 0.16,
+                child: Padding(
                 padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height * 0.005),
+                    top: MediaQuery.of(context).size.height * 0.02,
+                    left: MediaQuery.of(context).size.height * 0.04,
+               ),
                 child: isArabic(context)
-                    ? Text(store.nameAr,style: TextStyle(
+                    ? Text(store.nameAr, maxLines: 2,style: TextStyle(
                     fontFamily:'SouqFont'))
-                    : Text(store.nameEn,style: TextStyle(
+                    : Text(store.nameEn, maxLines: 2,style: TextStyle(
                     fontFamily:'SouqFont')),
               ),
+    ),
             ],
           )
               : Container(),

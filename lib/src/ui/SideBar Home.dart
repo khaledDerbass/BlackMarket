@@ -15,13 +15,23 @@ class SideDrawer extends StatelessWidget {
         children: <Widget>[
           DrawerHeader(
             child: Center(
-              child: Text(
-                'Souq Story',
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Image.asset('assets/images/offerstoryside.png',
+                    height: MediaQuery.of(context).size.width * 0.22,
+                    width: MediaQuery.of(context).size.width * 0.24,
+                  ),
+
+
+
+               Text(
+                'Offer Story',
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.white, fontSize: 25,
-                    fontFamily:'SouqFont'),
-              ),
-            ),
+                    fontFamily:'SouqFont', fontWeight: FontWeight.bold,),
+              ),],
+            ),),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
               color: Colors.deepPurpleAccent,

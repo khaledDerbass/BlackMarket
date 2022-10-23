@@ -156,21 +156,26 @@ class profileHeaderState extends State<profileHeader>{
             Column(
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     LimitedBox(
-                      maxWidth: MediaQuery.of(context).size.width * 0.3,
-                      child: Padding(
-                        padding:  EdgeInsets.all(MediaQuery.of(context).size.height *
-                            0.02 ,),
+                        maxWidth: MediaQuery.of(context).size.width * 0.93,
+                        child: Padding(
+                          padding:  EdgeInsets.only(
+                            left: MediaQuery.of(context).size.height *
+                              0.001 ,
+                            right: MediaQuery.of(context).size.height *
+                                0.04 ,
+                            top: MediaQuery.of(context).size.height *
+                                0.02 ,),
                         child: Text(
                           isArabic(context) ? widget.searchStore?.store.nameAr ?? "" : widget.searchStore?.store.nameEn ?? "",
-                          style:  TextStyle(
-                            fontWeight: FontWeight.w700,
-                            decoration: TextDecoration.none,
-                            fontSize: MediaQuery.of(context).size.width * 0.03,
-                            letterSpacing: .05,fontFamily: 'SouqFont'
-                          ),
+                          maxLines: 2, style: TextStyle(
+                          fontWeight: FontWeight.w900,
+                          decoration: TextDecoration.none,
+                          fontSize: MediaQuery.of(context).size.width * 0.03,
+                          letterSpacing: .005,
+                        ),
                         ),
                       ),
                     ),
@@ -517,21 +522,21 @@ class profileHeaderState extends State<profileHeader>{
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             LimitedBox(
-                              maxWidth: MediaQuery.of(context).size.width * 0.8,
-                              child: Padding(
-                                padding:  EdgeInsets.only(left: MediaQuery.of(context).size.height *
-                                    0.02 ,
-                                right: MediaQuery.of(context).size.height *
-                                    0.02 ,
-                                top: MediaQuery.of(context).size.height *
-                                    0.02 ,),
+                              maxWidth: MediaQuery.of(context).size.width * 0.93,
+                              child: Padding(     padding:  EdgeInsets.only(
+          left: MediaQuery.of(context).size.height *
+          0.001 ,
+          right: MediaQuery.of(context).size.height *
+          0.04 ,
+          top: MediaQuery.of(context).size.height *
+          0.02 ,),
                                 child: Text(
-                                  storeName,
+                                  storeName,maxLines: 2,
                                   style: TextStyle(
-                                    fontWeight: FontWeight.w700,
+                                    fontWeight: FontWeight.w500,
                                     decoration: TextDecoration.none,
                                     fontSize: MediaQuery.of(context).size.width * 0.03,
-                                    letterSpacing: .05,
+                                    letterSpacing: .005,
                                   ),
                                 ),
                               ),

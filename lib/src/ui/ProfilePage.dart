@@ -40,7 +40,7 @@ class profilepageState extends State<profilepage> {
   final box = GetStorage();
   late int roleId;
   late UserStore userStore;
-  String storeName = "Souq Story";
+  String storeName = "Offer Story";
 
   profilepageState(searchStore, currentUser);
 
