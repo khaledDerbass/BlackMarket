@@ -96,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               height: MediaQuery.of(context).size.height * 0.12,
                               child:  Stack(
                                 children: [
-                                  HeaderWidget(MediaQuery.of(context).size.height * 0.1, false, Icons.account_circle_rounded),
+                                  HeaderWidget(MediaQuery.of(context).size.height * 0.12, false, Icons.account_circle_rounded),
                                   Positioned(
                                     left: 13,
                                     child: IconButton(
@@ -106,15 +106,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                       icon: Icon(Icons.menu_outlined,color: Colors.white,size: MediaQuery.of(context).size.height * 0.032,),
                                     ),
                                   ),
-                                  /*Row(
+                                  Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Image.asset('assets/images/offerstorylogo.png',height: MediaQuery.of(context).size.width * 0.99,width: MediaQuery.of(context).size.width * 1.0,),
-
+                                      Image.asset('assets/images/HomeLogo.png',height: MediaQuery.of(context).size.width * .144,width: MediaQuery.of(context).size.width * .144,),
                                     ],
-                                  ),*/
+                                  ),
                                     Padding(
-                                      padding: EdgeInsets.only(right: MediaQuery.of(context).size.width * 0.03),
+                                      padding: EdgeInsets.only(right: MediaQuery.of(context).size.width * 0.025),
                                       child: Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
@@ -195,7 +194,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               children: [
                                 HeaderWidget(MediaQuery.of(context).size.height * 0.12, false, Icons.account_circle_rounded),
                                 Positioned(
-                                  top: 25,
                                   left: 13,
                                   child: IconButton(
                                     onPressed: (){
@@ -204,15 +202,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                     icon: Icon(Icons.menu_outlined,color: Colors.white,size: MediaQuery.of(context).size.height * 0.032,),
                                   ),
                                 ),
-                                /*Row(
+                                Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Image.asset('assets/images/logo2.png',height: MediaQuery.of(context).size.width * 0.16,width: MediaQuery.of(context).size.width * 0.16,),
-
+                                    Image.asset('assets/images/HomeLogo.png',height: MediaQuery.of(context).size.width * .144,width: MediaQuery.of(context).size.width * .144,),
                                   ],
-                                ),*/
+                                ),
                                 Padding(
-                                  padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.025,right: MediaQuery.of(context).size.width * 0.03),
+                                  padding: EdgeInsets.only(right: MediaQuery.of(context).size.height * 0.025),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
@@ -405,8 +402,8 @@ class _HomeScreenState extends State<HomeScreen> {
       return ListView(
         scrollDirection: Axis.horizontal,
         padding: EdgeInsets.only(
-            right: MediaQuery.of(context).size.width * 0.01,
-            left: MediaQuery.of(context).size.width * 0.01),
+            right: MediaQuery.of(context).size.width * 0.004,
+            left: MediaQuery.of(context).size.width * 0.004),
         children: snapshot!
             .map((data) => _buildListItem(
             context, data, Store.fromSnapshot(data).stories.length,roleId,userModel))
@@ -458,8 +455,8 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: CupertinoColors.white,
       child: Padding(
         padding: EdgeInsets.only(
-            left: MediaQuery.of(context).size.width * 0.004,
-            right: MediaQuery.of(context).size.width * 0.004),
+            left: MediaQuery.of(context).size.width * 0.002,
+            right: MediaQuery.of(context).size.width * 0.002),
         child: Center(
           child: store.stories.isNotEmpty
               ? Column(
@@ -467,7 +464,7 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               Container(
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(60.0),
+                  borderRadius: BorderRadius.circular(70.0),
                   image: DecorationImage(
                     fit: BoxFit.cover,
                     image:
@@ -480,8 +477,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     style: BorderStyle.solid,
                   ),
                 ),
-                width: MediaQuery.of(context).size.height * 0.12,
-                height: MediaQuery.of(context).size.height * 0.12,
+                width: MediaQuery.of(context).size.height * 0.11,
+                height: MediaQuery.of(context).size.height * 0.11,
                 child: GestureDetector(
                   onTap: () async {
                     await showCupertinoDialog(

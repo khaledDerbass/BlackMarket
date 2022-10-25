@@ -61,15 +61,10 @@ class ContactUsState extends State<ContactUs> {
                          child: Text(isArabic(context)
                             ? "التواصل معنا عبر صفحة الفيسبوك "
                             : "Offer Story Facebook page"),
-
-
                       onPressed: () async {
-    const url = 'https://www.facebook.com/OfferStoryApp';  //Twitter's URL
-    if (await canLaunchUrl(url as Uri))
-    {await launchUrl(url as Uri);
-    }else {
-    throw 'Could not launch $url';
-    } },
+    final url =  Uri.parse('https://www.facebook.com/OfferStoryApp');
+    await launchUrl(url);
+     },
                       ),
                     ],
                   ),

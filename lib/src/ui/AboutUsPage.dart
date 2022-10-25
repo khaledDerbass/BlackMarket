@@ -75,12 +75,8 @@ class AboutUsState extends State<AboutUs> {
 
 
                       onPressed: () async {
-                        const url = 'www.facebook.com/OfferStoryApp.app';  //Twitter's URL
-                        if (await canLaunchUrl(url as Uri))
-                        {await launchUrl(url as Uri);
-                        }else {
-                          throw 'Could not launch $url';
-                        } },
+                        final url =  Uri.parse('https://www.facebook.com/OfferStoryApp');  //Twitter's URL
+                        await launchUrl(url);                      },
                     ),
                     TextButton(
                       child: Text(isArabic(context)
@@ -89,12 +85,10 @@ class AboutUsState extends State<AboutUs> {
 
 
                       onPressed: () async {
-                        const url = 'www.instagram.com/offerstory.app';  //Twitter's URL
-                        if (await canLaunchUrl(url as Uri))
-                        {await launchUrl(url as Uri);
-                        }else {
-                          throw 'Could not launch $url';
-                        } },
+                        final url = Uri.parse('https://www.instagram.com/offerstory');
+
+                        await launchUrl(url);
+                        },
                     ),
 
                   ],

@@ -45,5 +45,9 @@
 	<false/>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+    	<string>Souq Story needs access to photo library</string>
+    	<key>NSCameraUsageDescription</key>
+    	<string>Souq Story capture photo please grant camera access</string>
 </dict>
 </plist>
