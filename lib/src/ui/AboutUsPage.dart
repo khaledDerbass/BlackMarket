@@ -85,7 +85,7 @@ class AboutUsState extends State<AboutUs> {
 
 
                       onPressed: () async {
-                        final url = Uri.parse('https://www.instagram.com/offerstory');
+                        final url = Uri.parse('https://www.instagram.com/offerstory.app/');
 
                         await launchUrl(url);
                         },
