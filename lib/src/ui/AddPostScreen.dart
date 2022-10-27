@@ -68,6 +68,7 @@ class _AddPostPageState extends State<AddPostPage> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           backgroundColor: Colors.deepPurpleAccent,
           automaticallyImplyLeading: false,
@@ -284,6 +285,10 @@ class _AddPostPageState extends State<AddPostPage> {
                   ),
                   TextField(
                     controller: _descriptionController,
+                    textInputAction: TextInputAction.done,
+                    onEditingComplete: () {
+                      FocusScope.of(context).requestFocus(new FocusNode());
+                    },
                     maxLines: 5,
                     decoration: InputDecoration(
                       labelText: isArabic(context)
