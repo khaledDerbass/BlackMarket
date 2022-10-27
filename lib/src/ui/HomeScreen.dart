@@ -68,11 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
       home: Scaffold(
         key: _scaffoldKey,
         drawer: SideDrawer(),
-        backgroundColor: CupertinoColors.white,
-        appBar: AppBar(
-          backgroundColor: Colors.deepPurpleAccent,
-          automaticallyImplyLeading: false,
-        ),
+        backgroundColor: Colors.deepPurpleAccent,
         body:  RefreshIndicator(
           onRefresh: loadUser,
           child: FutureBuilder(
