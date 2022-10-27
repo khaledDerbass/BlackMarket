@@ -31,7 +31,7 @@ void main() async{
         fallbackLocale: const Locale('ar', 'JO'),
         assetLoader: const CodegenLoader(),
 
-        child: const App()
+        child:  App()
     ),);
   });
 

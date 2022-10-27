@@ -12,10 +12,12 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:ui' as ui;
 import 'package:souq/src/Services/AuthenticationService.dart';
 import 'package:souq/src/Services/StoreAuthService.dart';
+import 'package:souq/src/app.dart';
 import 'package:souq/src/blocs/StoreRepository.dart';
 import 'package:souq/src/models/CategoryWidget.dart';
 import 'package:souq/src/models/Store.dart';
 import 'package:souq/src/models/StoryItem.dart';
+import 'package:souq/src/ui/CustomProfileAppBar.dart';
 import 'package:souq/src/ui/SearchPage.dart';
 import '../../Helpers/LoginHelper.dart';
 import '../models/CategoryList.dart';
@@ -68,6 +70,13 @@ class _HomeScreenState extends State<HomeScreen> {
       home: Scaffold(
         key: _scaffoldKey,
         drawer: SideDrawer(),
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(0.1),
+          child: AppBar(
+            backgroundColor: Colors.deepPurpleAccent,
+            automaticallyImplyLeading: false,
+          ),
+        ),
         body:  RefreshIndicator(
           onRefresh: loadUser,
           child: FutureBuilder(
@@ -1134,57 +1143,6 @@ bool isAllCategoryStoriesSeen(CategoryWidget cw) {
   return true;
 }
 
-
-/////////////////////////////////////////////////////////////
-// void registerNotification() async {
-//   // 1. Initialize the Firebase app
-//   await Firebase.initializeApp();
-//
-//   // 2. Instantiate Firebase Messaging
-//   _messaging = FirebaseMessaging.instance;
-//
-//   // 3. On iOS, this helps to take the user permissions
-//   NotificationSettings settings = await _messaging.requestPermission(
-//     alert: true,
-//     badge: true,
-//     provisional: false,
-//     sound: true,
-//   );
-//
-//   if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-//     print('User granted permission');
-//     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-//       // ...
-//       if (_notificationInfo != null) {
-//         // For displaying the notification as an overlay
-//         showSimpleNotification(
-//           Text("this is a message from simple notification"),
-//           //leading: NotificationBadge(totalNotifications: _totalNotifications),
-//           subtitle: Text("this is a message from simple notification"),
-//           background: Colors.cyan.shade700,
-//           duration: Duration(seconds: 3),
-//         );
-//       }
-//     });
-//   }
-//   else
-//   {
-//     print('User declined or has not accepted permission');
-//   }
-// }
-/*checkForInitialMessage() async {
-  await Firebase.initializeApp();
-  RemoteMessage? initialMessage =
-  await FirebaseMessaging.instance.getInitialMessage();
-
-  if (initialMessage != null) {
-    PushNotification notification = PushNotification(
-      title: initialMessage.notification?.title,
-      body: initialMessage.notification?.body,
-    );
-
-  }
-}*/
 
 getCategoryThumbnail(int id){
   return AssetImage('assets/Categories/'+ id.toString()+ '.jpg');
