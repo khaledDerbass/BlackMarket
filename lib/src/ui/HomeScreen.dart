@@ -68,7 +68,6 @@ class _HomeScreenState extends State<HomeScreen> {
       home: Scaffold(
         key: _scaffoldKey,
         drawer: SideDrawer(),
-        backgroundColor: Colors.deepPurpleAccent,
         body:  RefreshIndicator(
           onRefresh: loadUser,
           child: FutureBuilder(
