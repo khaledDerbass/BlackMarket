@@ -11,6 +11,7 @@ import '../models/Store.dart';
 import '../models/UserModel.dart';
 import '../models/UserStore.dart';
 import 'CustomProfileAppBar.dart';
+import 'HandleScrollWidget.dart';
 import 'changePasswordUi.dart';
 
 class UpdateAccountPage extends StatefulWidget
@@ -28,6 +29,8 @@ class UpdateAccountPageState extends State<UpdateAccountPage> {
   TextEditingController _DescriprionController = TextEditingController();
   TextEditingController _LocationController = TextEditingController();
   GlobalKey<FormState> _form = GlobalKey<FormState>();
+  final ScrollController _controller = ScrollController();
+
   late UserStore? userStore;
   late UserModel user;
   bool isLoading = false;
@@ -55,6 +58,7 @@ class UpdateAccountPageState extends State<UpdateAccountPage> {
   Widget build(BuildContext context) {
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Colors.deepPurpleAccent,
         automaticallyImplyLeading: true,
@@ -73,8 +77,11 @@ class UpdateAccountPageState extends State<UpdateAccountPage> {
             left: MediaQuery.of(context).size.height * .05,
             right: MediaQuery.of(context).size.height * .05,
           ),
-          child: SingleChildScrollView(
-            child: Column(
+          child: HandleScrollWidget(
+            context,
+            controller: _controller,
+            child: ListView(
+              controller: _controller,
               children: [
                 TextField(
                   onChanged: (value) {},
@@ -152,27 +159,11 @@ class UpdateAccountPageState extends State<UpdateAccountPage> {
                       ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             maximumSize: Size(
-                                MediaQuery
-                                    .of(context)
-                                    .size
-                                    .height *
-                                    .2,
-                                MediaQuery
-                                    .of(context)
-                                    .size
-                                    .height *
-                                    .08),
+                                MediaQuery.of(context).size.height * .30,
+                                MediaQuery.of(context).size.height * .07),
                             minimumSize: Size(
-                                MediaQuery
-                                    .of(context)
-                                    .size
-                                    .height *
-                                    .2,
-                                MediaQuery
-                                    .of(context)
-                                    .size
-                                    .height *
-                                    .08),
+                                MediaQuery.of(context).size.height * .30,
+                                MediaQuery.of(context).size.height * .07),
                             primary: Colors.black,
                             shape: StadiumBorder(),
                           ),

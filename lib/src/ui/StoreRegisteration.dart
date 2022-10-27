@@ -10,6 +10,7 @@ import '../blocs/CategoriesRepoitory.dart';
 import '../models/CategoryList.dart';
 import '../models/CategoryModel.dart';
 import 'CustomProfileAppBar.dart';
+import 'HandleScrollWidget.dart';
 
 class StoreRegisteration extends StatefulWidget {
   const StoreRegisteration({Key? key}) : super(key: key);
@@ -35,6 +36,7 @@ class StoreRegisterationState extends State<StoreRegisteration> {
   String? _selectedCity;
   int? dropdownvalue;
   Timer? _timer;
+  final ScrollController _controller = ScrollController();
 
   @override
   void initState() {
@@ -49,194 +51,232 @@ class StoreRegisterationState extends State<StoreRegisteration> {
   }
   @override
   Widget build(BuildContext context) {
-    return Material(
-        child: NestedScrollView(
-      headerSliverBuilder: (context, index) {
-        return [
-          CustomProfileAppBar(false),
-        ];
-      },
-      body: SingleChildScrollView(
-        child: Container(
-          padding: EdgeInsets.only(
-            top: MediaQuery.of(context).size.height * .07,
-            left: MediaQuery.of(context).size.height * .05,
-            right: MediaQuery.of(context).size.height * .05,
-          ),
-          child: Column(
-            children: [
-              TextField(
-                controller: _nameArController,
-                decoration: InputDecoration(
-                  fillColor: Colors.transparent,
-                  labelText:
-                  isArabic(context) ? 'الإسم بالعربي' : 'Arabic Name',
-                  filled: true,
-                ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * .05),
-              TextField(
-                controller: _nameEnController,
-                decoration: InputDecoration(
-                  fillColor: Colors.transparent,
-                  filled: true,
-                  labelText: isArabic(context)
-                      ? 'الإسم بالإنجليزية'
-                      : 'English Name',
-                ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * .05),
-              TextField(
-                controller: _emailController,
-                decoration: InputDecoration(
-                  fillColor: Colors.transparent,
-                  filled: true,
-                  labelText:
-                  isArabic(context) ? 'البريد الإلكتروني' : 'Email',
-                ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * .05),
-              TextField(
-                controller: _phoneController,
-                decoration: InputDecoration(
-                  fillColor: Colors.transparent,
-                  filled: true,
-                  labelText: isArabic(context) ? 'رقم الهاتف' : 'Phone',
-                ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * .05),
-              TextField(
-                controller: _passwordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  fillColor: Colors.transparent,
-                  filled: true,
-                  labelText: isArabic(context) ? 'كلمة السر' : 'Password',
-                ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * .05),
-              TextField(
-                controller: _storeDesc,
-                decoration: InputDecoration(
-                  fillColor: Colors.transparent,
-                  filled: true,
-                  labelText: isArabic(context) ? ' وصف المتجر (اختياري)' : 'Store Description (Optional)',
-                ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * .05),
-              TextField(
-                controller: _storeLoc,
-                decoration: InputDecoration(
-                  fillColor: Colors.transparent,
-                  filled: true,
-                  labelText: isArabic(context) ? ' موقع المتجر (اختياري)' : 'Store Location (Optional)',
-                ),
-              ),
-
-              SizedBox(height: MediaQuery.of(context).size.height * .03),
-              LimitedBox(
-                maxHeight: MediaQuery.of(context).size.height * .25,
-                maxWidth: MediaQuery.of(context).size.width,
-                child: StreamBuilder<QuerySnapshot>(
-                    stream: repository.getCategoriesStream(),
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData)
-                        return const LinearProgressIndicator();
-                      return _buildCategoriesList(
-                          context, snapshot.data?.docs ?? []);
-                    }),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * .03),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        backgroundColor: Colors.deepPurpleAccent,
+        automaticallyImplyLeading: false,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                bottomRight: Radius.circular(15),
+                bottomLeft: Radius.circular(15))),
+        title: Row(
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width/4,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        maximumSize: Size(
-                            MediaQuery.of(context).size.height * .30,
-                            MediaQuery.of(context).size.height * .07),
-                        minimumSize: Size(
-                            MediaQuery.of(context).size.height * .30,
-                            MediaQuery.of(context).size.height * .07),
-                        primary: Colors.black,
-                        shape: const StadiumBorder(),
-                      ),
-                      onPressed: () async {
-                        _timer?.cancel();
-                        await EasyLoading.show(
-                            status: 'loading...',
-                            maskType: EasyLoadingMaskType.black,
-                            dismissOnTap: false
-                        );
-                        final snackBar1 = SnackBar(
-                            content: Text(
-                              isArabic(context)
-                                  ? 'تم التسجيل بنجاح '
-                                  : 'Your account has been created successfully',
-                              style: TextStyle(fontFamily: 'SouqFont'),
-                            ));
-                        final snackBar2 = SnackBar(
-                          content: Text(
-                            isArabic(context)
-                                ? 'حدث خطأ اثناء عملية التسجيل'
-                                : 'Error during sign up',
-                            style: TextStyle(fontFamily: 'SouqFont'),
-                          ),
-                        );
-
-                        // Find the ScaffoldMessenger in the widget tree
-                        // and use it to show a SnackBar.
-
-                        StoreAuthService.register(
-                          _emailController.text.toLowerCase().trim(),
-                          _passwordController.text,
-                          _phoneController.text,
-                          _nameArController.text,
-                          _nameEnController.text,
-                          _categoryController.text,
-                          _storeDesc.text,
-                          _storeLoc.text,
-                        ).then((value) async => {
-                          if (value)
-                            {
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(snackBar1),
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                    const LoginScreen()),
-                              )
-                            }
-                          else
-                            {
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(snackBar2),
-                            }
-                          ,
-                          _timer?.cancel(),
-                          await EasyLoading.dismiss(),
-                        });
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        //crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(isArabic(context) ? 'التسجيل كمتجر' : 'Register as Store',
-                              style: TextStyle(fontWeight:FontWeight.bold ,   fontFamily:'SouqFont',fontSize: 16)),
-                          Icon(
-                            Icons.warehouse_outlined,
-                            color: Colors.white,
-                          ),
-                        ],
-                      )),
+                  IconButton(onPressed:()=> Navigator.of(context).pop(), icon: Icon(Icons.arrow_back_ios_new))
                 ],
               ),
-            ],
-          ),
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width/2,
+              child: Row(
+                children: [
+                  Center(
+                    child: Image.asset('assets/images/offerstorylogo.png',height: MediaQuery.of(context).size.width * 0.4,width: MediaQuery.of(context).size.width * 0.4,),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
-    ));
+         body:Container(
+          padding: EdgeInsets.only(
+            top: MediaQuery.of(context).size.height * .005,
+            left: MediaQuery.of(context).size.height * .05,
+            right: MediaQuery.of(context).size.height * .05,
+            bottom: MediaQuery.of(context).size.height * .02,
+          ),
+          child: HandleScrollWidget(
+            context,
+            controller: _controller,
+            child: Column(
+              children: [
+                Expanded(
+                  child: ListView(
+                    controller: _controller,
+                    children: [
+                      TextField(
+                        controller: _nameArController,
+                        decoration: InputDecoration(
+                          fillColor: Colors.transparent,
+                          labelText:
+                          isArabic(context) ? 'الإسم بالعربي' : 'Arabic Name',
+                          filled: true,
+                        ),
+                      ),
+                      SizedBox(height: MediaQuery.of(context).size.height * .05),
+                      TextField(
+                        controller: _nameEnController,
+                        decoration: InputDecoration(
+                          fillColor: Colors.transparent,
+                          filled: true,
+                          labelText: isArabic(context)
+                              ? 'الإسم بالإنجليزية'
+                              : 'English Name',
+                        ),
+                      ),
+                      SizedBox(height: MediaQuery.of(context).size.height * .05),
+                      TextField(
+                        controller: _emailController,
+                        decoration: InputDecoration(
+                          fillColor: Colors.transparent,
+                          filled: true,
+                          labelText:
+                          isArabic(context) ? 'البريد الإلكتروني' : 'Email',
+                        ),
+                      ),
+                      SizedBox(height: MediaQuery.of(context).size.height * .05),
+                      TextField(
+                        controller: _phoneController,
+                        decoration: InputDecoration(
+                          fillColor: Colors.transparent,
+                          filled: true,
+                          labelText: isArabic(context) ? 'رقم الهاتف' : 'Phone',
+                        ),
+                      ),
+                      SizedBox(height: MediaQuery.of(context).size.height * .05),
+                      TextField(
+                        controller: _passwordController,
+                        obscureText: true,
+                        decoration: InputDecoration(
+                          fillColor: Colors.transparent,
+                          filled: true,
+                          labelText: isArabic(context) ? 'كلمة السر' : 'Password',
+                        ),
+                      ),
+                      SizedBox(height: MediaQuery.of(context).size.height * .05),
+                      TextField(
+                        scrollPadding: EdgeInsets.only(bottom: 150),
+                        controller: _storeDesc,
+                        decoration: InputDecoration(
+                          fillColor: Colors.transparent,
+                          filled: true,
+                          labelText: isArabic(context) ? ' وصف المتجر (اختياري)' : 'Store Description (Optional)',
+                        ),
+                      ),
+                      SizedBox(height: MediaQuery.of(context).size.height * .05),
+                      TextField(
+                        scrollPadding: EdgeInsets.only(bottom: 150),
+                        controller: _storeLoc,
+                        decoration: InputDecoration(
+                          fillColor: Colors.transparent,
+                          filled: true,
+                          labelText: isArabic(context) ? ' موقع المتجر (اختياري)' : 'Store Location (Optional)',
+                        ),
+                      ),
+
+                      SizedBox(height: MediaQuery.of(context).size.height * .03),
+                      LimitedBox(
+                        maxHeight: MediaQuery.of(context).size.height * .25,
+                        maxWidth: MediaQuery.of(context).size.width,
+                        child: StreamBuilder<QuerySnapshot>(
+                            stream: repository.getCategoriesStream(),
+                            builder: (context, snapshot) {
+                              if (!snapshot.hasData)
+                                return const LinearProgressIndicator();
+                              return _buildCategoriesList(
+                                  context, snapshot.data?.docs ?? []);
+                            }),
+                      ),
+                      SizedBox(height: MediaQuery.of(context).size.height * .03),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                maximumSize: Size(
+                                    MediaQuery.of(context).size.height * .30,
+                                    MediaQuery.of(context).size.height * .07),
+                                minimumSize: Size(
+                                    MediaQuery.of(context).size.height * .30,
+                                    MediaQuery.of(context).size.height * .07),
+                                primary: Colors.black,
+                                shape: const StadiumBorder(),
+                              ),
+                              onPressed: () async {
+                                _timer?.cancel();
+                                await EasyLoading.show(
+                                    status: 'loading...',
+                                    maskType: EasyLoadingMaskType.black,
+                                    dismissOnTap: false
+                                );
+                                final snackBar1 = SnackBar(
+                                    content: Text(
+                                      isArabic(context)
+                                          ? 'تم التسجيل بنجاح '
+                                          : 'Your account has been created successfully',
+                                      style: TextStyle(fontFamily: 'SouqFont'),
+                                    ));
+                                final snackBar2 = SnackBar(
+                                  content: Text(
+                                    isArabic(context)
+                                        ? 'حدث خطأ اثناء عملية التسجيل'
+                                        : 'Error during sign up',
+                                    style: TextStyle(fontFamily: 'SouqFont'),
+                                  ),
+                                );
+
+                                // Find the ScaffoldMessenger in the widget tree
+                                // and use it to show a SnackBar.
+
+                                StoreAuthService.register(
+                                  _emailController.text.toLowerCase().trim(),
+                                  _passwordController.text,
+                                  _phoneController.text,
+                                  _nameArController.text,
+                                  _nameEnController.text,
+                                  _categoryController.text,
+                                  _storeDesc.text,
+                                  _storeLoc.text,
+                                ).then((value) async => {
+                                  if (value)
+                                    {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(snackBar1),
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                            const LoginScreen()),
+                                      )
+                                    }
+                                  else
+                                    {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(snackBar2),
+                                    }
+                                  ,
+                                  _timer?.cancel(),
+                                  await EasyLoading.dismiss(),
+                                });
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                //crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(isArabic(context) ? 'التسجيل كمتجر' : 'Register as Store',
+                                      style: TextStyle(fontWeight:FontWeight.bold ,   fontFamily:'SouqFont',fontSize: 16)),
+                                  Icon(
+                                    Icons.warehouse_outlined,
+                                    color: Colors.white,
+                                  ),
+                                ],
+                              )),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+    );
   }
 
   Widget _buildCategoriesList(

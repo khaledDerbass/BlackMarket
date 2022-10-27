@@ -24,6 +24,7 @@ import '../models/Store.dart';
 import '../models/StoryItem.dart';
 import '../models/UserModel.dart';
 import '../models/UserStore.dart';
+import 'HandleScrollWidget.dart';
 import 'HomeScreen.dart';
 import 'NotificationBadge.dart';
 import 'ProfilePage.dart';
@@ -52,6 +53,8 @@ class _AddPostPageState extends State<AddPostPage> {
   String? _selectedDays;
   bool isLoading = false;
   Timer? _timer;
+  final ScrollController _controller = ScrollController();
+
   @override
   void initState() {
 
@@ -76,30 +79,53 @@ class _AddPostPageState extends State<AddPostPage> {
               borderRadius: BorderRadius.only(
                   bottomRight: Radius.circular(15),
                   bottomLeft: Radius.circular(15))),
-          title: Center(
-
-            child: Image.asset('assets/images/offerstorylogo.png',height: MediaQuery.of(context).size.width * 0.4,width: MediaQuery.of(context).size.width * 0.4,),
-
-
-
+          title: Row(
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width/4,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    IconButton(onPressed:()=> Navigator.of(context).pop(), icon: Icon(Icons.arrow_back_ios_new))
+                  ],
+                ),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width/2,
+                child: Row(
+                  children: [
+                    Center(
+                      child: Image.asset('assets/images/offerstorylogo.png',height: MediaQuery.of(context).size.width * 0.4,width: MediaQuery.of(context).size.width * 0.4,),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
-        body: SingleChildScrollView(
-          child: Column(
+        body: HandleScrollWidget(
+          context,
+          controller: _controller,
+          child: ListView(
+            controller: _controller,
             children: [
-
               SizedBox(height: MediaQuery.of(context).size.height * .05),
               LimitedBox(
                 maxHeight: MediaQuery.of(context).size.height * .05,
                 maxWidth: MediaQuery.of(context).size.width,
-                child: StreamBuilder<QuerySnapshot>(
-                    stream: repository.getCategoriesStream(),
-                    builder: (context, snapshot) {
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    StreamBuilder<QuerySnapshot>(
+                        stream: repository.getCategoriesStream(),
+                        builder: (context, snapshot) {
 
-                      if (!snapshot.hasData)
-                        return const LinearProgressIndicator();
-                      return _buildCategoriesList(context, snapshot.data?.docs ?? []);
-                    }),
+                          if (!snapshot.hasData)
+                            return const LinearProgressIndicator();
+                          return _buildCategoriesList(context, snapshot.data?.docs ?? []);
+                        }),
+                  ],
+                ),
               ),
 
               SizedBox(height: MediaQuery.of(context).size.height * .05),
@@ -191,65 +217,70 @@ class _AddPostPageState extends State<AddPostPage> {
               LimitedBox(
                 maxHeight: MediaQuery.of(context).size.height * 0.25,
                 maxWidth: MediaQuery.of(context).size.width,
-                child: DropdownButton<String>(
-                  value: _selectedDays,
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedDays = value;
-                    });
-                  },
-                  hint: Center(
-                      child: isArabic(context)
-                          ? const Text(
-                        "عدد أيام القصة",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      )
-                          : Text(
-                        "Day of story",
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'SouqFont'),
-                      )),
-                  // Hide the default underline
-                  underline: Container(),
-                  // set the color of the dropdown menu
-                  dropdownColor: Colors.white,
-                  icon: const Icon(
-                    Icons.keyboard_arrow_down,
-                    color: Colors.black,
-                  ),
-                  // isExpanded: true,
-
-                  // The list of options
-                  items: DaysList.map((e) => DropdownMenuItem(
-                    value: e,
-                    child: Container(
-                      alignment: Alignment.center,
-                      child: isArabic(context) ? Text(
-                        e + " " +"يوم",
-                        style: const TextStyle(fontSize: 16),
-                      ) : Text(
-                        e +" "+ "Day(s)",
-                        style: const TextStyle(fontSize: 16),
-                      ) ,
-                    ),
-                  )).toList(),
-
-                  // Customize the selected item
-                  selectedItemBuilder: (BuildContext context) =>
-                      DaysList.map((e) => Center(
-                        child: Text(
-                          e,
-                          style: const TextStyle(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    DropdownButton<String>(
+                      value: _selectedDays,
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedDays = value;
+                        });
+                      },
+                      hint: Center(
+                          child: isArabic(context)
+                              ? const Text(
+                            "عدد أيام القصة",
+                            style: TextStyle(
                               fontSize: 16,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          )
+                              : Text(
+                            "Day of story",
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'SouqFont'),
+                          )),
+                      // Hide the default underline
+                      underline: Container(),
+                      // set the color of the dropdown menu
+                      dropdownColor: Colors.white,
+                      icon: const Icon(
+                        Icons.keyboard_arrow_down,
+                        color: Colors.black,
+                      ),
+                      // isExpanded: true,
+
+                      // The list of options
+                      items: DaysList.map((e) => DropdownMenuItem(
+                        value: e,
+                        child: Container(
+                          alignment: Alignment.center,
+                          child: isArabic(context) ? Text(
+                            e + " " +"يوم",
+                            style: const TextStyle(fontSize: 16),
+                          ) : Text(
+                            e +" "+ "Day(s)",
+                            style: const TextStyle(fontSize: 16),
+                          ) ,
                         ),
                       )).toList(),
+
+                      // Customize the selected item
+                      selectedItemBuilder: (BuildContext context) =>
+                          DaysList.map((e) => Center(
+                            child: Text(
+                              e,
+                              style: const TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          )).toList(),
+                    ),
+                  ],
                 ),
               ),
 
