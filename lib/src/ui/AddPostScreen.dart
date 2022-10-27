@@ -78,312 +78,309 @@ class _AddPostPageState extends State<AddPostPage> {
                   bottomLeft: Radius.circular(15))),
           title: Center(
 
-                child: Image.asset('assets/images/offerstorylogo.png',height: MediaQuery.of(context).size.width * 0.4,width: MediaQuery.of(context).size.width * 0.4,),
+            child: Image.asset('assets/images/offerstorylogo.png',height: MediaQuery.of(context).size.width * 0.4,width: MediaQuery.of(context).size.width * 0.4,),
+
+
+
           ),
         ),
-        body: Stack(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
 
-                    SizedBox(height: MediaQuery.of(context).size.height * .05),
-                    LimitedBox(
-                      maxHeight: MediaQuery.of(context).size.height * .05,
-                      maxWidth: MediaQuery.of(context).size.width,
-                      child: StreamBuilder<QuerySnapshot>(
-                          stream: repository.getCategoriesStream(),
-                          builder: (context, snapshot) {
+              SizedBox(height: MediaQuery.of(context).size.height * .05),
+              LimitedBox(
+                maxHeight: MediaQuery.of(context).size.height * .05,
+                maxWidth: MediaQuery.of(context).size.width,
+                child: StreamBuilder<QuerySnapshot>(
+                    stream: repository.getCategoriesStream(),
+                    builder: (context, snapshot) {
 
-                            if (!snapshot.hasData)
-                              return const LinearProgressIndicator();
-                            return _buildCategoriesList(context, snapshot.data?.docs ?? []);
-                          }),
-                    ),
+                      if (!snapshot.hasData)
+                        return const LinearProgressIndicator();
+                      return _buildCategoriesList(context, snapshot.data?.docs ?? []);
+                    }),
+              ),
 
-                    SizedBox(height: MediaQuery.of(context).size.height * .05),
-                    Row(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(
-                              top: MediaQuery.of(context).size.width * 0.05,
-                              left: MediaQuery.of(context).size.width * 0.2,
-                              right: MediaQuery.of(context).size.width * 0.1,
-                              bottom: MediaQuery.of(context).size.width * 0.05),
-                          child: isArabic(context)
-                              ? ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    maximumSize: Size(
-                                        MediaQuery.of(context).size.height * .20,
-                                        MediaQuery.of(context).size.height * .05),
-                                    minimumSize: Size(
-                                        MediaQuery.of(context).size.height * .20,
-                                        MediaQuery.of(context).size.height * .05),
-                                    primary: Colors.black,
-                                  ),
-                                  onPressed: () {
-                                    _showChoiceDialog(context);
-                                  },
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Text('إضافة صور',style: TextStyle(
-                                          fontWeight:FontWeight.bold ,   fontFamily:'SouqFont',fontSize: 16)),
-                                      Icon(
-                                        Icons.add_photo_alternate_outlined,
-                                        color: Colors.white,
-                                      ),
-                                    ],
-                                  ))
-                              : ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    maximumSize: Size(
-                                        MediaQuery.of(context).size.height * .20,
-                                        MediaQuery.of(context).size.height * .05),
-                                    minimumSize: Size(
-                                        MediaQuery.of(context).size.height * .20,
-                                        MediaQuery.of(context).size.height * .05),
-                                    primary: Colors.black,
-                                  ),
-                                  onPressed: () {
-                                    _showChoiceDialog(context);
-                                  },
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: const [
-                                      Text('Add Photos',style: TextStyle(
-                                          fontWeight:FontWeight.bold ,   fontFamily:'SouqFont',fontSize: 16)),
-                                      Icon(
-                                        Icons.add_photo_alternate_outlined,
-                                        color: Colors.white,
-                                      ),
-                                    ],
-                                  ),
-                                ),
+              SizedBox(height: MediaQuery.of(context).size.height * .05),
+              Row(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.width * 0.05,
+                        left: MediaQuery.of(context).size.width * 0.2,
+                        right: MediaQuery.of(context).size.width * 0.1,
+                        bottom: MediaQuery.of(context).size.width * 0.05),
+                    child: isArabic(context)
+                        ? ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          maximumSize: Size(
+                              MediaQuery.of(context).size.height * .20,
+                              MediaQuery.of(context).size.height * .05),
+                          minimumSize: Size(
+                              MediaQuery.of(context).size.height * .20,
+                              MediaQuery.of(context).size.height * .05),
+                          primary: Colors.black,
                         ),
-                        imageFile !=  null ? LimitedBox(
-                          maxHeight: MediaQuery.of(context).size.height * 0.2,
-                          maxWidth: MediaQuery.of(context).size.width * 0.25,
-                          child: Container(
-                            child: Image(
-                              image: FileImage(File(imageFile!.path.toString())),
+                        onPressed: () {
+                          _showChoiceDialog(context);
+                        },
+                        child: Row(
+                          mainAxisAlignment:
+                          MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text('إضافة صور',style: TextStyle(
+                                fontWeight:FontWeight.bold ,   fontFamily:'SouqFont',fontSize: 16)),
+                            Icon(
+                              Icons.add_photo_alternate_outlined,
+                              color: Colors.white,
                             ),
+                          ],
+                        ))
+                        : ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        maximumSize: Size(
+                            MediaQuery.of(context).size.height * .20,
+                            MediaQuery.of(context).size.height * .05),
+                        minimumSize: Size(
+                            MediaQuery.of(context).size.height * .20,
+                            MediaQuery.of(context).size.height * .05),
+                        primary: Colors.black,
+                      ),
+                      onPressed: () {
+                        _showChoiceDialog(context);
+                      },
+                      child: Row(
+                        mainAxisAlignment:
+                        MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: const [
+                          Text('Add Photos',style: TextStyle(
+                              fontWeight:FontWeight.bold ,   fontFamily:'SouqFont',fontSize: 16)),
+                          Icon(
+                            Icons.add_photo_alternate_outlined,
+                            color: Colors.white,
                           ),
-                        ):Container(
-                          height: MediaQuery.of(context).size.height * 0.05,
-                          width: MediaQuery.of(context).size.width * 0.15,
-                          decoration: const BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage('assets/images/placeholder.png'),
-                              fit: BoxFit.fill,
-                            ),
-                           // shape: BoxShape.circle,
-                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  imageFile !=  null ? LimitedBox(
+                    maxHeight: MediaQuery.of(context).size.height * 0.2,
+                    maxWidth: MediaQuery.of(context).size.width * 0.25,
+                    child: Container(
+                      child: Image(
+                        image: FileImage(File(imageFile!.path.toString())),
+                      ),
+                    ),
+                  ):Container(
+                    height: MediaQuery.of(context).size.height * 0.05,
+                    width: MediaQuery.of(context).size.width * 0.15,
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage('assets/images/placeholder.png'),
+                        fit: BoxFit.fill,
+                      ),
+                      // shape: BoxShape.circle,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: MediaQuery.of(context).size.height * .05),
+              LimitedBox(
+                maxHeight: MediaQuery.of(context).size.height * 0.25,
+                maxWidth: MediaQuery.of(context).size.width,
+                child: DropdownButton<String>(
+                  value: _selectedDays,
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedDays = value;
+                    });
+                  },
+                  hint: Center(
+                      child: isArabic(context)
+                          ? const Text(
+                        "عدد أيام القصة",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )
+                          : Text(
+                        "Day of story",
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'SouqFont'),
+                      )),
+                  // Hide the default underline
+                  underline: Container(),
+                  // set the color of the dropdown menu
+                  dropdownColor: Colors.white,
+                  icon: const Icon(
+                    Icons.keyboard_arrow_down,
+                    color: Colors.black,
+                  ),
+                  // isExpanded: true,
+
+                  // The list of options
+                  items: DaysList.map((e) => DropdownMenuItem(
+                    value: e,
+                    child: Container(
+                      alignment: Alignment.center,
+                      child: isArabic(context) ? Text(
+                        e + " " +"يوم",
+                        style: const TextStyle(fontSize: 16),
+                      ) : Text(
+                        e +" "+ "Day(s)",
+                        style: const TextStyle(fontSize: 16),
+                      ) ,
+                    ),
+                  )).toList(),
+
+                  // Customize the selected item
+                  selectedItemBuilder: (BuildContext context) =>
+                      DaysList.map((e) => Center(
+                        child: Text(
+                          e,
+                          style: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      )).toList(),
+                ),
+              ),
+
+              Align(
+                alignment: isArabic(context)
+                    ? Alignment.centerRight
+                    : Alignment.centerLeft,
+                child: Padding(
+                  padding: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.width * 0.10,
+                      left: MediaQuery.of(context).size.width * 0.02,
+                      right: MediaQuery.of(context).size.width * 0.02),
+                  child: isArabic(context)
+                      ? const Text(
+                    "وصف الإعلان",
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        fontFamily:'SouqFont'
+                    ),
+                  )
+                      : const Text(
+                    "Descriptions",
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        fontFamily:'SouqFont'
+                    ),
+                  ),
+                ),
+              ),
+              TextField(
+                controller: _descriptionController,
+                textInputAction: TextInputAction.done,
+                onEditingComplete: () {
+                  FocusScope.of(context).requestFocus(new FocusNode());
+                },
+                maxLines: 5,
+                decoration: InputDecoration(
+                  labelText: isArabic(context)
+                      ? 'أدخل وصف الإعلان هنا'
+                      : 'Enter the description here',
+                  fillColor: Colors.transparent,
+                  filled: true,
+                  border: InputBorder.none,
+                ),
+              ),
+              Align(
+                child: Padding(
+                  padding: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.width * 0.10,
+                      left: MediaQuery.of(context).size.width * 0.02,
+                      right: MediaQuery.of(context).size.width * 0.02),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      maximumSize: Size(
+                          MediaQuery.of(context).size.height * .25,
+                          MediaQuery.of(context).size.height * .07),
+                      minimumSize: Size(
+                          MediaQuery.of(context).size.height * .25,
+                          MediaQuery.of(context).size.height * .07),
+                      primary: Colors.black,
+                      shape: StadiumBorder(),
+                    ),
+                    onPressed: _selectedDays == null || dropdownvalue == null || imageFile == null ? null: () async{
+                      _timer?.cancel();
+                      await EasyLoading.show(
+                          status: 'loading...',
+                          maskType: EasyLoadingMaskType.black,
+                          dismissOnTap: false
+                      );
+                      print('EasyLoading show');
+                      setState(() {
+                        isLoading = true;
+                      });
+                      UserStore userStore = await loadStore(context);
+                      File? file = await compressFile(File(imageFile!.path));
+                      print("Size before : ${File(imageFile!.path).lengthSync()}");
+                      print("Size After : ${File(file!.path).lengthSync()}");
+                      XFile compressedImage = XFile(file.path);
+                      Uint8List? bytes = await compressedImage.readAsBytes();
+                      String img = base64Encode(bytes);
+                      StoryContent storyContent = StoryContent(ImageHelper.idGenerator(),img, dropdownvalue!, _descriptionController.text, int.parse(_selectedDays!), DateTime.now().millisecondsSinceEpoch,[]);
+                      List<dynamic> list = [];
+                      list.add(storyContent.toJson());
+                      print(storyContent.toJson());
+                      try {
+                        await FirebaseFirestore.instance
+                            .collection('Store')
+                            .doc(userStore.userModel.storeId)
+                            .update(
+                            {'Stories': FieldValue.arrayUnion(list)}).then((
+                            value) async =>
+                        {
+                          setState(() {
+                            isLoading = false;
+                          }),
+                          _timer?.cancel(),
+                          await EasyLoading.dismiss(),
+                          LoginHelper.showSuccessAlertDialog(context, isArabic(context) ? "تمت إضافة قصتك بنجاح ، يمكنك إضافة المزيد من القصص من خلال هذه الصفحة" :
+                          "Your Story has been shared successfully, you can add more stories from this page."),
+                        });
+                      }on FirebaseException catch  (e) {
+                        LoginHelper.showErrorAlertDialog(context, e.message.toString());
+                        print(e.message);
+                        setState(() {
+                          isLoading = false;
+                        });
+
+
+                      }  // show a notification at top of screen.
+
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      //    crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                            isArabic(context) ? 'إضافة الإعلان' : 'Submit',style: TextStyle(
+                            fontWeight:FontWeight.bold ,   fontFamily:'SouqFont',fontSize: 16)),
+                        isLoading ? CircularProgressIndicator() :Icon(
+                          Icons.done_outline,
+                          color: Colors.white,
                         ),
                       ],
                     ),
-                    SizedBox(height: MediaQuery.of(context).size.height * .05),
-                    LimitedBox(
-                      maxHeight: MediaQuery.of(context).size.height * 0.25,
-                      maxWidth: MediaQuery.of(context).size.width,
-                      child: DropdownButton<String>(
-                        value: _selectedDays,
-                        onChanged: (value) {
-                          setState(() {
-                            _selectedDays = value;
-                          });
-                        },
-                        hint: Center(
-                            child: isArabic(context)
-                                ? const Text(
-                              "عدد أيام القصة",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            )
-                                : Text(
-                              "Day of story",
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'SouqFont'),
-                            )),
-                        // Hide the default underline
-                        underline: Container(),
-                        // set the color of the dropdown menu
-                        dropdownColor: Colors.white,
-                        icon: const Icon(
-                          Icons.keyboard_arrow_down,
-                          color: Colors.black,
-                        ),
-                        // isExpanded: true,
-
-                        // The list of options
-                        items: DaysList.map((e) => DropdownMenuItem(
-                          value: e,
-                          child: Container(
-                            alignment: Alignment.center,
-                            child: isArabic(context) ? Text(
-                              e + " " +"يوم",
-                              style: const TextStyle(fontSize: 16),
-                            ) : Text(
-                              e +" "+ "Day(s)",
-                              style: const TextStyle(fontSize: 16),
-                            ) ,
-                          ),
-                        )).toList(),
-
-                        // Customize the selected item
-                        selectedItemBuilder: (BuildContext context) =>
-                            DaysList.map((e) => Center(
-                              child: Text(
-                                e,
-                                style: const TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            )).toList(),
-                      ),
-                    ),
-
-                    Align(
-                      alignment: isArabic(context)
-                          ? Alignment.centerRight
-                          : Alignment.centerLeft,
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                            top: MediaQuery.of(context).size.width * 0.10,
-                            left: MediaQuery.of(context).size.width * 0.02,
-                            right: MediaQuery.of(context).size.width * 0.02),
-                        child: isArabic(context)
-                            ? const Text(
-                                "وصف الإعلان",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                    fontFamily:'SouqFont'
-                                ),
-                              )
-                            : const Text(
-                                "Descriptions",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                    fontFamily:'SouqFont'
-                                ),
-                              ),
-                      ),
-                    ),
-                    TextField(
-                      controller: _descriptionController,
-                      textInputAction: TextInputAction.done,
-                      onEditingComplete: () {
-                        FocusScope.of(context).requestFocus(new FocusNode());
-                      },
-                      maxLines: 5,
-                      decoration: InputDecoration(
-                        labelText: isArabic(context)
-                            ? 'أدخل وصف الإعلان هنا'
-                            : 'Enter the description here',
-                        fillColor: Colors.transparent,
-                        filled: true,
-                        border: InputBorder.none,
-                      ),
-                    ),
-                    Align(
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                            top: MediaQuery.of(context).size.width * 0.10,
-                            left: MediaQuery.of(context).size.width * 0.02,
-                            right: MediaQuery.of(context).size.width * 0.02),
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            maximumSize: Size(
-                                MediaQuery.of(context).size.height * .25,
-                                MediaQuery.of(context).size.height * .07),
-                            minimumSize: Size(
-                                MediaQuery.of(context).size.height * .25,
-                                MediaQuery.of(context).size.height * .07),
-                            primary: Colors.black,
-                            shape: StadiumBorder(),
-                          ),
-                          onPressed: _selectedDays == null || dropdownvalue == null || imageFile == null ? null: () async{
-                            _timer?.cancel();
-                            await EasyLoading.show(
-                                status: 'loading...',
-                                maskType: EasyLoadingMaskType.black,
-                                dismissOnTap: false
-                            );
-                            print('EasyLoading show');
-                            setState(() {
-                              isLoading = true;
-                            });
-                            UserStore userStore = await loadStore(context);
-                            File? file = await compressFile(File(imageFile!.path));
-                            print("Size before : ${File(imageFile!.path).lengthSync()}");
-                            print("Size After : ${File(file!.path).lengthSync()}");
-                            XFile compressedImage = XFile(file.path);
-                            Uint8List? bytes = await compressedImage.readAsBytes();
-                            String img = base64Encode(bytes);
-                            StoryContent storyContent = StoryContent(ImageHelper.idGenerator(),img, dropdownvalue!, _descriptionController.text, int.parse(_selectedDays!), DateTime.now().millisecondsSinceEpoch,[]);
-                            List<dynamic> list = [];
-                            list.add(storyContent.toJson());
-                            print(storyContent.toJson());
-                            try {
-                              await FirebaseFirestore.instance
-                                  .collection('Store')
-                                  .doc(userStore.userModel.storeId)
-                                  .update(
-                                  {'Stories': FieldValue.arrayUnion(list)}).then((
-                                  value) async =>
-                              {
-                              setState(() {
-                              isLoading = false;
-                              }),
-                                _timer?.cancel(),
-                                await EasyLoading.dismiss(),
-                                LoginHelper.showSuccessAlertDialog(context, isArabic(context) ? "تمت إضافة قصتك بنجاح ، يمكنك إضافة المزيد من القصص من خلال هذه الصفحة" :
-                                    "Your Story has been shared successfully, you can add more stories from this page."),
-                              });
-                            }on FirebaseException catch  (e) {
-                              LoginHelper.showErrorAlertDialog(context, e.message.toString());
-                              print(e.message);
-                              setState(() {
-                                isLoading = false;
-                              });
-
-
-                               }  // show a notification at top of screen.
-
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        //    crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                  isArabic(context) ? 'إضافة الإعلان' : 'Submit',style: TextStyle(
-                                  fontWeight:FontWeight.bold ,   fontFamily:'SouqFont',fontSize: 16)),
-                              isLoading ? CircularProgressIndicator() :Icon(
-                                Icons.done_outline,
-                                color: Colors.white,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         bottomNavigationBar: ConvexAppBar(
           height: MediaQuery.of(context).size.height * 0.07,
@@ -465,7 +462,7 @@ class _AddPostPageState extends State<AddPostPage> {
                     _openGallery(context);
                   },
                   title: Text(isArabic(context) ? 'الاستوديو' : 'Gallery',style: TextStyle(
-          fontFamily:'SouqFont')),
+                      fontFamily:'SouqFont')),
                   leading: Icon(
                     Icons.account_box,
                     color: Colors.deepPurpleAccent,
@@ -480,7 +477,7 @@ class _AddPostPageState extends State<AddPostPage> {
                     _openCamera(context);
                   },
                   title: Text(isArabic(context) ? 'الكاميرا' : 'Camera',style: TextStyle(
-          fontFamily:'SouqFont')),
+                      fontFamily:'SouqFont')),
                   leading: Icon(
                     Icons.camera,
                     color: Colors.deepPurpleAccent,
@@ -552,7 +549,7 @@ class _AddPostPageState extends State<AddPostPage> {
 
   void _openGallery(BuildContext context) async {
     final pickedFile = await ImagePicker().pickImage(
-      source: ImageSource.gallery
+        source: ImageSource.gallery
     );
     setState(() {
       imageFile = pickedFile!;
@@ -581,10 +578,10 @@ class _AddPostPageState extends State<AddPostPage> {
     final splitted = filePath.substring(0, (lastIndex));
     final outPath = "${splitted}_out${filePath.substring(lastIndex)}";
     var result = await FlutterImageCompress.compressAndGetFile(
-      file.absolute.path, outPath,
-      quality: 50,
-      minHeight: 700,
-      minWidth: 700
+        file.absolute.path, outPath,
+        quality: 50,
+        minHeight: 700,
+        minWidth: 700
     );
 
     print(file.lengthSync());
@@ -624,28 +621,28 @@ class _AddPostPageState extends State<AddPostPage> {
                     image: NetworkImage(
                         'https://icons.iconarchive.com/icons/wikipedia/flags/1024/JO-Jordan-Flag-icon.png')),
                 onTap: () => {
-                      context.setLocale(Locale('ar', 'JO')),
-                      Navigator.of(context, rootNavigator: true).pop('dialog')
-                    }),
+                  context.setLocale(Locale('ar', 'JO')),
+                  Navigator.of(context, rootNavigator: true).pop('dialog')
+                }),
             const Divider(),
             ListTile(
                 title: isArabic(context)
                     ? const Text(
-                        'الإنجليزية',
-                        style: TextStyle(fontSize: 17),
-                      )
+                  'الإنجليزية',
+                  style: TextStyle(fontSize: 17),
+                )
                     : const Text(
-                        'English',
-                        style: TextStyle(fontSize: 17),
-                      ),
+                  'English',
+                  style: TextStyle(fontSize: 17),
+                ),
                 trailing: Image(
                     width: MediaQuery.of(context).size.width * 0.09,
                     image: NetworkImage(
                         'https://www.lifepng.com/wp-content/uploads/2021/03/Classic-Uk-Flag-png-hd.png')),
                 onTap: () => {
-                      context.setLocale(Locale('en', 'US')),
-                      Navigator.of(context, rootNavigator: true).pop('dialog')
-                    }),
+                  context.setLocale(Locale('en', 'US')),
+                  Navigator.of(context, rootNavigator: true).pop('dialog')
+                }),
           ],
         ),
       ),
