@@ -3,7 +3,7 @@
    <application
         android:label="Offer Story"
         android:name="${applicationName}"
-     android:icon="@drawable/offerstoryappicon">
+     android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
             android:exported="true"
