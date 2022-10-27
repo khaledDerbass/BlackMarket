@@ -6,14 +6,17 @@ import 'package:flutter/services.dart';
 import 'package:get_storage/get_storage.dart';
 import 'generated/codegen_loader.g.dart';
 import 'src/app.dart';
+import 'firebase_options.dart';
+
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await GetStorage.init();
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.deepPurpleAccent,
+
   ));
 
   SystemChrome.setPreferredOrientations(

@@ -29,6 +29,14 @@
             {
               "client_id": "664105166585-qn4u29q0qblhuhb98f1grq691b7ppp4u.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "664105166585-9hbrbq703m48u3pi1jv3aq1n5nrr1cdg.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.souq.app.souq",
+                "app_store_id": "6444027557"
+              }
             }
           ]
         }
