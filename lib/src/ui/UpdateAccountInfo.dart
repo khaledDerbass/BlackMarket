@@ -73,156 +73,152 @@ class UpdateAccountPageState extends State<UpdateAccountPage> {
             left: MediaQuery.of(context).size.height * .05,
             right: MediaQuery.of(context).size.height * .05,
           ),
-          child: Stack(
-            children: [
-              SingleChildScrollView(
-                child: Column(
-                  children: [
-                    TextField(
-                      onChanged: (value) {},
-                      controller: _emailController,
-                      decoration:  InputDecoration(
-                        fillColor: Colors.transparent,
-                        labelText: isArabic(context) ? 'البريد الإلكتروني' : 'Email',
-                        filled: true,
-                      ),
-                    ),
-                    SizedBox(
-                        height:
-                        MediaQuery
-                            .of(context)
-                            .size
-                            .height * .03),
-                    TextFormField(
-                      controller: _phoneController,
-                      decoration: InputDecoration(
-                        labelText:
-                        isArabic(context) ? 'رقم الهاتف' : 'Phone Number',
-                      ),
-                    ),
-                    SizedBox(
-                        height:
-                        MediaQuery
-                            .of(context)
-                            .size
-                            .height * .05),
-                    TextFormField(
-                      controller: _usernameController,
-                      decoration: InputDecoration(
-                        labelText: isArabic(context)
-                            ? 'اسم المستخدم'
-                            : 'Username',
-                      ),
-                    ),
-                    SizedBox(
-                        height:
-                        MediaQuery
-                            .of(context)
-                            .size
-                            .height * .05),
-
-                    userStore != null ? TextFormField(
-                      controller: _DescriprionController,
-                      decoration: InputDecoration(
-                        labelText:
-                        isArabic(context) ? 'وصف المتجر' : 'Store Description',
-                      ),
-                    ) : Container(),
-                    userStore != null ? SizedBox(
-                        height:
-                        MediaQuery
-                            .of(context)
-                            .size
-                            .height * .05) : Container(),
-                    userStore != null ? TextFormField(
-                      controller: _LocationController,
-                      decoration: InputDecoration(
-                        labelText:
-                        isArabic(context) ? 'موقع المتجر' : 'Store Location',
-                      ),
-                    ) : Container(),
-                    SizedBox(
-                        height:
-                        MediaQuery
-                            .of(context)
-                            .size
-                            .height * .10),
-                    FittedBox(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                maximumSize: Size(
-                                    MediaQuery
-                                        .of(context)
-                                        .size
-                                        .height *
-                                        .2,
-                                    MediaQuery
-                                        .of(context)
-                                        .size
-                                        .height *
-                                        .08),
-                                minimumSize: Size(
-                                    MediaQuery
-                                        .of(context)
-                                        .size
-                                        .height *
-                                        .2,
-                                    MediaQuery
-                                        .of(context)
-                                        .size
-                                        .height *
-                                        .08),
-                                primary: Colors.black,
-                                shape: StadiumBorder(),
-                              ),
-                              onPressed: () async {
-                                _timer?.cancel();
-                                await EasyLoading.show(
-                                    status: 'loading...',
-                                    maskType: EasyLoadingMaskType.black,
-                                    dismissOnTap: false
-                                );
-                                print(FirebaseAuth.instance.currentUser?.uid);
-                                await FirebaseFirestore.instance
-                                    .collection('Users')
-                                    .where('email', isEqualTo: FirebaseAuth.instance.currentUser?.email)
-                                    .get()
-                                    .then((value) => value.docs.forEach((doc) async {
-                                  await FirebaseFirestore.instance.collection('Users').doc(value.docs.first.id).update({'email' : _emailController.text,'phoneNumber': _phoneController.text,'name' : _usernameController.text}).then((value) async => {
-                                    if(userStore !=null){
-                                      await FirebaseFirestore.instance.collection('Store').doc(userStore!.store.storeId.replaceAll(" ", "")).update({'locStore' : _LocationController.text,'descStore' : _DescriprionController.text}),
-                                    },
-                                    _timer?.cancel(),
-                                    await EasyLoading.dismiss(),
-                                    LoginHelper.showSuccessAlertDialog(context, isArabic(context)? "تم تحديث معلومات الحساب بنجاح"  : "Account information has been updated successfully.")
-                                  });
-                                }));
-
-
-                              },
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(isArabic(context)
-                                      ? 'حفظ'
-                                      : "Save", style: TextStyle(
-                                      fontFamily: 'SouqFont')),
-                                  Icon(
-                                    Icons.edit,
-                                    color: Colors.white,
-                                  ),
-                                ],
-                              )),
-                        ],
-                      ),
-                    ),
-                  ],
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                TextField(
+                  onChanged: (value) {},
+                  controller: _emailController,
+                  decoration:  InputDecoration(
+                    fillColor: Colors.transparent,
+                    labelText: isArabic(context) ? 'البريد الإلكتروني' : 'Email',
+                    filled: true,
+                  ),
                 ),
-              ),
-            ],
+                SizedBox(
+                    height:
+                    MediaQuery
+                        .of(context)
+                        .size
+                        .height * .03),
+                TextFormField(
+                  controller: _phoneController,
+                  decoration: InputDecoration(
+                    labelText:
+                    isArabic(context) ? 'رقم الهاتف' : 'Phone Number',
+                  ),
+                ),
+                SizedBox(
+                    height:
+                    MediaQuery
+                        .of(context)
+                        .size
+                        .height * .05),
+                TextFormField(
+                  controller: _usernameController,
+                  decoration: InputDecoration(
+                    labelText: isArabic(context)
+                        ? 'اسم المستخدم'
+                        : 'Username',
+                  ),
+                ),
+                SizedBox(
+                    height:
+                    MediaQuery
+                        .of(context)
+                        .size
+                        .height * .05),
+
+                userStore != null ? TextFormField(
+                  controller: _DescriprionController,
+                  decoration: InputDecoration(
+                    labelText:
+                    isArabic(context) ? 'وصف المتجر' : 'Store Description',
+                  ),
+                ) : Container(),
+                userStore != null ? SizedBox(
+                    height:
+                    MediaQuery
+                        .of(context)
+                        .size
+                        .height * .05) : Container(),
+                userStore != null ? TextFormField(
+                  controller: _LocationController,
+                  decoration: InputDecoration(
+                    labelText:
+                    isArabic(context) ? 'موقع المتجر' : 'Store Location',
+                  ),
+                ) : Container(),
+                SizedBox(
+                    height:
+                    MediaQuery
+                        .of(context)
+                        .size
+                        .height * .10),
+                FittedBox(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            maximumSize: Size(
+                                MediaQuery
+                                    .of(context)
+                                    .size
+                                    .height *
+                                    .2,
+                                MediaQuery
+                                    .of(context)
+                                    .size
+                                    .height *
+                                    .08),
+                            minimumSize: Size(
+                                MediaQuery
+                                    .of(context)
+                                    .size
+                                    .height *
+                                    .2,
+                                MediaQuery
+                                    .of(context)
+                                    .size
+                                    .height *
+                                    .08),
+                            primary: Colors.black,
+                            shape: StadiumBorder(),
+                          ),
+                          onPressed: () async {
+                            _timer?.cancel();
+                            await EasyLoading.show(
+                                status: 'loading...',
+                                maskType: EasyLoadingMaskType.black,
+                                dismissOnTap: false
+                            );
+                            print(FirebaseAuth.instance.currentUser?.uid);
+                            await FirebaseFirestore.instance
+                                .collection('Users')
+                                .where('email', isEqualTo: FirebaseAuth.instance.currentUser?.email)
+                                .get()
+                                .then((value) => value.docs.forEach((doc) async {
+                              await FirebaseFirestore.instance.collection('Users').doc(value.docs.first.id).update({'email' : _emailController.text,'phoneNumber': _phoneController.text,'name' : _usernameController.text}).then((value) async => {
+                                if(userStore !=null){
+                                  await FirebaseFirestore.instance.collection('Store').doc(userStore!.store.storeId.replaceAll(" ", "")).update({'locStore' : _LocationController.text,'descStore' : _DescriprionController.text}),
+                                },
+                                _timer?.cancel(),
+                                await EasyLoading.dismiss(),
+                                LoginHelper.showSuccessAlertDialog(context, isArabic(context)? "تم تحديث معلومات الحساب بنجاح"  : "Account information has been updated successfully.")
+                              });
+                            }));
+
+
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(isArabic(context)
+                                  ? 'حفظ'
+                                  : "Save", style: TextStyle(
+                                  fontFamily: 'SouqFont')),
+                              Icon(
+                                Icons.edit,
+                                color: Colors.white,
+                              ),
+                            ],
+                          )),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           )
       ): Center(child: CircularProgressIndicator(),),
     );
