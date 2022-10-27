@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.souq.app.souq">
+    package="com.souq.story.offers">
    <application
         android:label="Offer Story"
         android:name="${applicationName}"
