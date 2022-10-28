@@ -46,8 +46,8 @@
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>NSPhotoLibraryUsageDescription</key>
-    	<string>Souq Story needs access to photo library</string>
+    	<string>Souq Story needs access to photo library in order to share an image from your gallery as post</string>
     	<key>NSCameraUsageDescription</key>
-    	<string>Souq Story capture photo please grant camera access</string>
+    	<string>Souq Story capture photo please grant camera access to take a picture and share it as post</string>
 </dict>
 </plist>
