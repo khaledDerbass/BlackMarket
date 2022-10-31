@@ -1,10 +1,15 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get_storage/get_storage.dart';
+import '../src/Services/AuthenticationService.dart';
 import '../src/models/UserModel.dart';
+import '../src/ui/HomeScreen.dart';
 
 class LoginHelper{
 
@@ -246,5 +251,68 @@ class LoginHelper{
      },
    );
  }
+ static showDeleteAccountConfirmationDialog(BuildContext context) {
 
+   // set up the buttons
+   Widget cancelButton = TextButton(
+     child: Text(isArabic(context) ? "إلغاء" :"Cancel"),
+     onPressed:  () {
+       Navigator.pop(context);
+     },
+   );
+   Widget continueButton = TextButton(
+     child: Text(isArabic(context) ? "تأكيد" :"Confirm"),
+     onPressed:  () async {
+       Timer? _timer;
+       EasyLoading.addStatusCallback((status) {
+         print('EasyLoading Status $status');
+         if (status == EasyLoadingStatus.dismiss) {
+           _timer?.cancel();
+         }
+       });
+       _timer?.cancel();
+       await EasyLoading.show(
+           status: 'loading...',
+           maskType: EasyLoadingMaskType.black,
+           dismissOnTap: false
+       );
+       try{
+         FirebaseAuth.instance.currentUser?.delete().then((value) async => {
+           _timer?.cancel(),
+           await EasyLoading.dismiss(),
+       });
+       Navigator.of(context, rootNavigator: true).pop('dialog');
+         Navigator.push(
+           context,
+           MaterialPageRoute(
+               builder: (context) =>
+               const HomeScreen()),
+         );
+       LoginHelper.showSuccessAlertDialog(context, isArabic(context) ? "تم حذف الحساب" : "Account has been deleted");
+
+       }catch(e){
+         LoginHelper.showErrorAlertDialog(context, isArabic(context) ? "حدث خطأ أثناء حذف الحساب" : "Error while deleting account");
+       }
+
+       },
+   );
+
+   // set up the AlertDialog
+   AlertDialog alert = AlertDialog(
+     content: isArabic(context) ? Text("هل أنت متأكد من حذف حسابك ؟")
+         :Text("Are you sure to delete your account ?"),
+     actions: [
+       cancelButton,
+       continueButton,
+     ],
+   );
+
+   // show the dialog
+   showDialog(
+     context: context,
+     builder: (BuildContext context) {
+       return alert;
+     },
+   );
+ }
 }

@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:souq/Helpers/LoginHelper.dart';
 import 'package:souq/src/ui/AccountPage.dart';
 import 'package:souq/src/ui/HelpPage.dart';
 import 'CustomProfileAppBar.dart';
@@ -66,37 +67,27 @@ class SettingPageState extends State<SettingPage> {
                         ListTile(
                             title: isArabic(context)
                                 ? const Text(
-                              'إشعارات',
+                              'حذف الحساب',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
-                                  fontFamily:'SouqFont'
-                              ),                )
+                              ),
+                            )
                                 : const Text(
-                              'Notifications',
+                              'Delete Account',
                               style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
                                   fontFamily:'SouqFont'
-                              ),                ),
-                            /*trailing: Icon(
-                              Icons.notification_add
+                              ),
+                            ),
+                            trailing: Icon(
+                              Icons.delete
                               ,
                               color: Colors.black,
-                            ),*/
-                            trailing:
-                            Switch(
-                              value: isSwitched,
-                              onChanged: (value){
-                                setState(() {
-                                  isSwitched=value;
-                                });
-                              },
-                              activeTrackColor: Colors.purple,
-                              activeColor: Colors.deepPurpleAccent,
                             ),
                             onTap: () => {
-
+                              LoginHelper.showDeleteAccountConfirmationDialog(context)
                             }),
                         const Divider(),
                         ListTile(
