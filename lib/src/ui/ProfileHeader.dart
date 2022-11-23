@@ -310,31 +310,31 @@ class profileHeaderState extends State<profileHeader>{
                     ),
                   ],
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    LimitedBox(
-                      maxWidth: MediaQuery.of(context).size.width * 0.8,
-                      child: Padding(
-                        padding:   EdgeInsets.only(left: MediaQuery.of(context).size.height *
-                            0.02 ,
-                          right: MediaQuery.of(context).size.height *
-                              0.02 ,
-                          top: MediaQuery.of(context).size.height *
-                              0.02 ,),
-                        child: Text(
-                          widget.searchStore!.store.locStore,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w900,
-                            decoration: TextDecoration.none,
-                            fontSize: MediaQuery.of(context).size.width * 0.035,
-                            letterSpacing: .5,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.start,
+                //   children: [
+                //     LimitedBox(
+                //       maxWidth: MediaQuery.of(context).size.width * 0.8,
+                //       child: Padding(
+                //         padding:   EdgeInsets.only(left: MediaQuery.of(context).size.height *
+                //             0.02 ,
+                //           right: MediaQuery.of(context).size.height *
+                //               0.02 ,
+                //           top: MediaQuery.of(context).size.height *
+                //               0.02 ,),
+                //         child: Text(
+                //           widget.searchStore!.store.locStore,
+                //           style: TextStyle(
+                //             fontWeight: FontWeight.w900,
+                //             decoration: TextDecoration.none,
+                //             fontSize: MediaQuery.of(context).size.width * 0.035,
+                //             letterSpacing: .5,
+                //           ),
+                //         ),
+                //       ),
+                //     ),
+                //   ],
+                // ),
 
                 SizedBox(
                   height:
@@ -550,7 +550,7 @@ class profileHeaderState extends State<profileHeader>{
                               maxWidth: MediaQuery.of(context).size.width * 0.8,
                               child: Padding(
                                 padding:   EdgeInsets.only(left: MediaQuery.of(context).size.height *
-                                    0.02 ,
+                                    0.002 ,
                                   right: MediaQuery.of(context).size.height *
                                       0.02 ,
                                   top: MediaQuery.of(context).size.height *
@@ -568,30 +568,37 @@ class profileHeaderState extends State<profileHeader>{
                             ),
                           ],
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            LimitedBox(
-                              maxWidth: MediaQuery.of(context).size.width * 0.8,
-                              child: Padding(
-                                padding:   EdgeInsets.only(left: MediaQuery.of(context).size.height *
-                                    0.02 ,
-                                  right: MediaQuery.of(context).size.height *
-                                      0.02 ,
-                                  top: MediaQuery.of(context).size.height *
-                                      0.02 ,),
-                                child: Text(
-                                  storeLoc,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w900,
-                                    decoration: TextDecoration.none,
-                                    fontSize: MediaQuery.of(context).size.width * 0.035,
-                                    letterSpacing: .5,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.start,
+                        //   children: [
+                        //     LimitedBox(
+                        //       maxWidth: MediaQuery.of(context).size.width * 0.8,
+                        //       child: Padding(
+                        //         padding:   EdgeInsets.only(left: MediaQuery.of(context).size.height *
+                        //             0.02 ,
+                        //           right: MediaQuery.of(context).size.height *
+                        //               0.02 ,
+                        //           top: MediaQuery.of(context).size.height *
+                        //               0.02 ,),
+                        //         child: Text(
+                        //           storeLoc,
+                        //           style: TextStyle(
+                        //             fontWeight: FontWeight.w900,
+                        //             decoration: TextDecoration.none,
+                        //             fontSize: MediaQuery.of(context).size.width * 0.035,
+                        //             letterSpacing: .5,
+                        //           ),
+                        //         ),
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        actions(context),
+                        SizedBox(
+                          height: 20,
                         ),
                         userStore.userModel.storeId != userStore.store.storeId ? Padding(
                           padding:  EdgeInsets.only(left: MediaQuery.of(context).size.height *
@@ -756,7 +763,13 @@ class profileHeaderState extends State<profileHeader>{
               );
             }
           }
-
+          SizedBox(
+            height: 20,
+          );
+          actions(context);
+          SizedBox(
+          height: 20,
+          );
           // Displaying LoadingSpinner to indicate waiting state
           return Center(
             child: CircularProgressIndicator(),
@@ -897,3 +910,25 @@ class profileHeaderState extends State<profileHeader>{
 
 
 
+Widget actions(BuildContext context) {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Expanded(
+        child: OutlinedButton(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 50),
+            child: Text("Edit Profile", style: TextStyle(color: Colors.black)),
+          ),
+          style: OutlinedButton.styleFrom(
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              minimumSize: Size(0, 30),
+              side: BorderSide(
+                color: Colors.grey,
+              )),
+          onPressed: () {},
+        ),
+      ),
+    ],
+  );
+}

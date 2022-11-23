@@ -59,6 +59,7 @@ dependencies:
   animated_splash: ^1.0.0
   change_app_package_name: ^1.1.0
   rename: ^2.0.1
+  flutter_form_builder: ^7.7.0
 dependency_overrides:
   image_picker_android: 0.8.4+13
 

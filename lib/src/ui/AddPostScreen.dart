@@ -17,14 +17,16 @@ import 'package:image_picker/image_picker.dart';
 import 'package:souq/Helpers/ImageHelper.dart';
 import '../../Helpers/LoginHelper.dart';
 import '../blocs/CategoriesRepoitory.dart';
+import '../blocs/CitiesRepository.dart';
 import '../blocs/StoryTimeRepo.dart';
 import '../models/CategoryList.dart';
 import '../models/CategoryModel.dart';
+import '../models/CityList.dart';
+import '../models/CityModel.dart';
 import '../models/Store.dart';
 import '../models/StoryItem.dart';
 import '../models/UserModel.dart';
 import '../models/UserStore.dart';
-import 'HandleScrollWidget.dart';
 import 'HomeScreen.dart';
 import 'NotificationBadge.dart';
 import 'ProfilePage.dart';
@@ -42,6 +44,8 @@ class _AddPostPageState extends State<AddPostPage> {
   XFile? imageFile;
   final box = GetStorage();
   CategoriesRepository repository = CategoriesRepository();
+  CitiesRepository Cityrepository = CitiesRepository();
+
   StoryTimeRepo repositoryStoryTimeRepo = StoryTimeRepo();
   final TextEditingController _descriptionController = TextEditingController();
   int? dropdownvalue;
@@ -53,8 +57,6 @@ class _AddPostPageState extends State<AddPostPage> {
   String? _selectedDays;
   bool isLoading = false;
   Timer? _timer;
-  final ScrollController _controller = ScrollController();
-
   @override
   void initState() {
 
@@ -71,7 +73,6 @@ class _AddPostPageState extends State<AddPostPage> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           backgroundColor: Colors.deepPurpleAccent,
           automaticallyImplyLeading: false,
@@ -79,44 +80,25 @@ class _AddPostPageState extends State<AddPostPage> {
               borderRadius: BorderRadius.only(
                   bottomRight: Radius.circular(15),
                   bottomLeft: Radius.circular(15))),
-          title: Row(
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width/4,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    IconButton(onPressed:()=> Navigator.of(context).pop(), icon: Icon(Icons.arrow_back_ios_new))
-                  ],
-                ),
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width/2,
-                child: Row(
-                  children: [
-                    Center(
-                      child: Image.asset('assets/images/offerstorylogo.png',height: MediaQuery.of(context).size.width * 0.4,width: MediaQuery.of(context).size.width * 0.4,),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+          title: Center(
+
+                child: Image.asset('assets/images/offerstorylogo.png',height: MediaQuery.of(context).size.width * 0.4,width: MediaQuery.of(context).size.width * 0.4,),
+
+
+
           ),
         ),
-        body: HandleScrollWidget(
-          context,
-          controller: _controller,
-          child: ListView(
-            controller: _controller,
-            children: [
-              SizedBox(height: MediaQuery.of(context).size.height * .05),
-              LimitedBox(
-                maxHeight: MediaQuery.of(context).size.height * .05,
-                maxWidth: MediaQuery.of(context).size.width,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    StreamBuilder<QuerySnapshot>(
+        body: Stack(
+          children: [
+            SingleChildScrollView(
+              child: Column(
+                children: [
+
+                  SizedBox(height: MediaQuery.of(context).size.height * .05),
+                  LimitedBox(
+                    maxHeight: MediaQuery.of(context).size.height * .05,
+                    maxWidth: MediaQuery.of(context).size.width ,
+                    child: StreamBuilder<QuerySnapshot>(
                         stream: repository.getCategoriesStream(),
                         builder: (context, snapshot) {
 
@@ -124,103 +106,27 @@ class _AddPostPageState extends State<AddPostPage> {
                             return const LinearProgressIndicator();
                           return _buildCategoriesList(context, snapshot.data?.docs ?? []);
                         }),
-                  ],
-                ),
-              ),
-
-              SizedBox(height: MediaQuery.of(context).size.height * .05),
-              Row(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.width * 0.05,
-                        left: MediaQuery.of(context).size.width * 0.2,
-                        right: MediaQuery.of(context).size.width * 0.1,
-                        bottom: MediaQuery.of(context).size.width * 0.05),
-                    child: isArabic(context)
-                        ? ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          maximumSize: Size(
-                              MediaQuery.of(context).size.height * .20,
-                              MediaQuery.of(context).size.height * .05),
-                          minimumSize: Size(
-                              MediaQuery.of(context).size.height * .20,
-                              MediaQuery.of(context).size.height * .05),
-                          primary: Colors.black,
-                        ),
-                        onPressed: () {
-                          _showChoiceDialog(context);
-                        },
-                        child: Row(
-                          mainAxisAlignment:
-                          MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text('إضافة صور',style: TextStyle(
-                                fontWeight:FontWeight.bold ,   fontFamily:'SouqFont',fontSize: 16)),
-                            Icon(
-                              Icons.add_photo_alternate_outlined,
-                              color: Colors.white,
-                            ),
-                          ],
-                        ))
-                        : ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        maximumSize: Size(
-                            MediaQuery.of(context).size.height * .20,
-                            MediaQuery.of(context).size.height * .05),
-                        minimumSize: Size(
-                            MediaQuery.of(context).size.height * .20,
-                            MediaQuery.of(context).size.height * .05),
-                        primary: Colors.black,
-                      ),
-                      onPressed: () {
-                        _showChoiceDialog(context);
-                      },
-                      child: Row(
-                        mainAxisAlignment:
-                        MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: const [
-                          Text('Add Photos',style: TextStyle(
-                              fontWeight:FontWeight.bold ,   fontFamily:'SouqFont',fontSize: 16)),
-                          Icon(
-                            Icons.add_photo_alternate_outlined,
-                            color: Colors.white,
-                          ),
-                        ],
-                      ),
-                    ),
                   ),
-                  imageFile !=  null ? LimitedBox(
-                    maxHeight: MediaQuery.of(context).size.height * 0.2,
-                    maxWidth: MediaQuery.of(context).size.width * 0.25,
-                    child: Container(
-                      child: Image(
-                        image: FileImage(File(imageFile!.path.toString())),
-                      ),
-                    ),
-                  ):Container(
-                    height: MediaQuery.of(context).size.height * 0.05,
-                    width: MediaQuery.of(context).size.width * 0.15,
-                    decoration: const BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage('assets/images/placeholder.png'),
-                        fit: BoxFit.fill,
-                      ),
-                      // shape: BoxShape.circle,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * .05),
-              LimitedBox(
-                maxHeight: MediaQuery.of(context).size.height * 0.25,
-                maxWidth: MediaQuery.of(context).size.width,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    DropdownButton<String>(
+                  //////////////////////////////////////////
+                  // SizedBox(height: MediaQuery.of(context).size.height * .05),
+                  // LimitedBox(
+                  //   maxHeight: MediaQuery.of(context).size.height * .05,
+                  //   maxWidth: MediaQuery.of(context).size.width ,
+                  //   child: StreamBuilder<QuerySnapshot>(
+                  //       stream: Cityrepository.getCitiesStream(),
+                  //       builder: (context, snapshot) {
+                  //
+                  //         if (!snapshot.hasData)
+                  //           return const LinearProgressIndicator();
+                  //         return _CitiesList(context, snapshot.data?.docs ?? []);
+                  //       }),
+                  // ),
+                  /////////////////////////////////////
+                  SizedBox(height: MediaQuery.of(context).size.height * .05),
+                  LimitedBox(
+                    maxHeight: MediaQuery.of(context).size.height * 0.05,
+                    maxWidth: MediaQuery.of(context).size.width,
+                    child: DropdownButton<String>(
                       value: _selectedDays,
                       onChanged: (value) {
                         setState(() {
@@ -230,10 +136,11 @@ class _AddPostPageState extends State<AddPostPage> {
                       hint: Center(
                           child: isArabic(context)
                               ? const Text(
-                            "عدد أيام القصة",
+                            "عدد أيام العرص",
                             style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'SouqFont'
                             ),
                           )
                               : Text(
@@ -280,138 +187,219 @@ class _AddPostPageState extends State<AddPostPage> {
                             ),
                           )).toList(),
                     ),
-                  ],
-                ),
-              ),
-
-              Align(
-                alignment: isArabic(context)
-                    ? Alignment.centerRight
-                    : Alignment.centerLeft,
-                child: Padding(
-                  padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.width * 0.10,
-                      left: MediaQuery.of(context).size.width * 0.02,
-                      right: MediaQuery.of(context).size.width * 0.02),
-                  child: isArabic(context)
-                      ? const Text(
-                    "وصف الإعلان",
-                    style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        fontFamily:'SouqFont'
-                    ),
-                  )
-                      : const Text(
-                    "Descriptions",
-                    style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        fontFamily:'SouqFont'
-                    ),
                   ),
-                ),
-              ),
-              TextField(
-                controller: _descriptionController,
-                textInputAction: TextInputAction.done,
-                onEditingComplete: () {
-                  FocusScope.of(context).requestFocus(new FocusNode());
-                },
-                maxLines: 5,
-                decoration: InputDecoration(
-                  labelText: isArabic(context)
-                      ? 'أدخل وصف الإعلان هنا'
-                      : 'Enter the description here',
-                  fillColor: Colors.transparent,
-                  filled: true,
-                  border: InputBorder.none,
-                ),
-              ),
-              Align(
-                child: Padding(
-                  padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.width * 0.10,
-                      left: MediaQuery.of(context).size.width * 0.02,
-                      right: MediaQuery.of(context).size.width * 0.02),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      maximumSize: Size(
-                          MediaQuery.of(context).size.height * .25,
-                          MediaQuery.of(context).size.height * .07),
-                      minimumSize: Size(
-                          MediaQuery.of(context).size.height * .25,
-                          MediaQuery.of(context).size.height * .07),
-                      primary: Colors.black,
-                      shape: StadiumBorder(),
-                    ),
-                    onPressed: _selectedDays == null || dropdownvalue == null || imageFile == null ? null: () async{
-                      _timer?.cancel();
-                      await EasyLoading.show(
-                          status: 'loading...',
-                          maskType: EasyLoadingMaskType.black,
-                          dismissOnTap: false
-                      );
-                      print('EasyLoading show');
-                      setState(() {
-                        isLoading = true;
-                      });
-                      UserStore userStore = await loadStore(context);
-                      File? file = await compressFile(File(imageFile!.path));
-                      print("Size before : ${File(imageFile!.path).lengthSync()}");
-                      print("Size After : ${File(file!.path).lengthSync()}");
-                      XFile compressedImage = XFile(file.path);
-                      Uint8List? bytes = await compressedImage.readAsBytes();
-                      String img = base64Encode(bytes);
-                      StoryContent storyContent = StoryContent(ImageHelper.idGenerator(),img, dropdownvalue!, _descriptionController.text, int.parse(_selectedDays!), DateTime.now().millisecondsSinceEpoch,[]);
-                      List<dynamic> list = [];
-                      list.add(storyContent.toJson());
-                      print(storyContent.toJson());
-                      try {
-                        await FirebaseFirestore.instance
-                            .collection('Store')
-                            .doc(userStore.userModel.storeId)
-                            .update(
-                            {'Stories': FieldValue.arrayUnion(list)}).then((
-                            value) async =>
-                        {
-                          setState(() {
-                            isLoading = false;
-                          }),
-                          _timer?.cancel(),
-                          await EasyLoading.dismiss(),
-                          LoginHelper.showSuccessAlertDialog(context, isArabic(context) ? "تمت إضافة قصتك بنجاح ، يمكنك إضافة المزيد من القصص من خلال هذه الصفحة" :
-                          "Your Story has been shared successfully, you can add more stories from this page."),
-                        });
-                      }on FirebaseException catch  (e) {
-                        LoginHelper.showErrorAlertDialog(context, e.message.toString());
-                        print(e.message);
-                        setState(() {
-                          isLoading = false;
-                        });
-
-
-                      }  // show a notification at top of screen.
-
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      //    crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                            isArabic(context) ? 'إضافة الإعلان' : 'Submit',style: TextStyle(
-                            fontWeight:FontWeight.bold ,   fontFamily:'SouqFont',fontSize: 16)),
-                        isLoading ? CircularProgressIndicator() :Icon(
-                          Icons.done_outline,
-                          color: Colors.white,
+                  SizedBox(height: MediaQuery.of(context).size.height * .05),
+                  Row(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(
+                            top: MediaQuery.of(context).size.width * 0.05,
+                            left: MediaQuery.of(context).size.width * 0.2,
+                            right: MediaQuery.of(context).size.width * 0.1,
+                            bottom: MediaQuery.of(context).size.width * 0.05),
+                        child: isArabic(context)
+                            ? ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  maximumSize: Size(
+                                      MediaQuery.of(context).size.height * .20,
+                                      MediaQuery.of(context).size.height * .05),
+                                  minimumSize: Size(
+                                      MediaQuery.of(context).size.height * .20,
+                                      MediaQuery.of(context).size.height * .05),
+                                  primary: Colors.black,
+                                ),
+                                onPressed: () {
+                                  _showChoiceDialog(context);
+                                },
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text('إضافة صور',style: TextStyle(
+                                        fontWeight:FontWeight.bold ,   fontFamily:'SouqFont',fontSize: 16)),
+                                    Icon(
+                                      Icons.add_photo_alternate_outlined,
+                                      color: Colors.white,
+                                    ),
+                                  ],
+                                ))
+                            : ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  maximumSize: Size(
+                                      MediaQuery.of(context).size.height * .20,
+                                      MediaQuery.of(context).size.height * .05),
+                                  minimumSize: Size(
+                                      MediaQuery.of(context).size.height * .20,
+                                      MediaQuery.of(context).size.height * .05),
+                                  primary: Colors.black,
+                                ),
+                                onPressed: () {
+                                  _showChoiceDialog(context);
+                                },
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: const [
+                                    Text('Add Photos',style: TextStyle(
+                                        fontWeight:FontWeight.bold ,   fontFamily:'SouqFont',fontSize: 16)),
+                                    Icon(
+                                      Icons.add_photo_alternate_outlined,
+                                      color: Colors.white,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                      ),
+                      imageFile !=  null ? LimitedBox(
+                        maxHeight: MediaQuery.of(context).size.height * 0.2,
+                        maxWidth: MediaQuery.of(context).size.width * 0.25,
+                        child: Container(
+                          child: Image(
+                            image: FileImage(File(imageFile!.path.toString())),
+                          ),
                         ),
-                      ],
+                      ):Container(
+                        height: MediaQuery.of(context).size.height * 0.05,
+                        width: MediaQuery.of(context).size.width * 0.15,
+                        decoration: const BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage('assets/images/placeholder.png'),
+                            fit: BoxFit.fill,
+                          ),
+                         // shape: BoxShape.circle,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  Align(
+                    alignment: isArabic(context)
+                        ? Alignment.centerRight
+                        : Alignment.centerLeft,
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                          top: MediaQuery.of(context).size.width * 0.10,
+                          left: MediaQuery.of(context).size.width * 0.02,
+                          right: MediaQuery.of(context).size.width * 0.02),
+                      child: isArabic(context)
+                          ? const Text(
+                              "وصف الإعلان",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                  fontFamily:'SouqFont'
+                              ),
+                            )
+                          : const Text(
+                              "Descriptions",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                  fontFamily:'SouqFont'
+                              ),
+                            ),
                     ),
                   ),
-                ),
+                  TextField(
+                    controller: _descriptionController,
+                    maxLines: 5,
+                    decoration: InputDecoration(
+                      labelText: isArabic(context)
+                          ? 'أدخل وصف الإعلان هنا'
+                          : 'Enter the description here',
+                      fillColor: Colors.transparent,
+                      filled: true,
+                      border: InputBorder.none,
+                    ),
+                  ),
+                  Align(
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                          top: MediaQuery.of(context).size.width * 0.10,
+                          left: MediaQuery.of(context).size.width * 0.02,
+                          right: MediaQuery.of(context).size.width * 0.02),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          maximumSize: Size(
+                              MediaQuery.of(context).size.height * .25,
+                              MediaQuery.of(context).size.height * .07),
+                          minimumSize: Size(
+                              MediaQuery.of(context).size.height * .25,
+                              MediaQuery.of(context).size.height * .07),
+                          primary: Colors.black,
+                          shape: StadiumBorder(),
+                        ),
+                        onPressed: _selectedDays == null || dropdownvalue == null || imageFile == null ? null: () async{
+                          _timer?.cancel();
+                          await EasyLoading.show(
+                              status: 'loading...',
+                              maskType: EasyLoadingMaskType.black,
+                              dismissOnTap: false
+                          );
+                          print('EasyLoading show');
+                          setState(() {
+                            isLoading = true;
+                          });
+                          UserStore userStore = await loadStore(context);
+                          File? file = await compressFile(File(imageFile!.path));
+                          print("Size before : ${File(imageFile!.path).lengthSync()}");
+                          print("Size After : ${File(file!.path).lengthSync()}");
+                          XFile compressedImage = XFile(file.path);
+                          Uint8List? bytes = await compressedImage.readAsBytes();
+                          String img = base64Encode(bytes);
+                          StoryContent storyContent = StoryContent(ImageHelper.idGenerator(),img, dropdownvalue!, _descriptionController.text, int.parse(_selectedDays!), DateTime.now().millisecondsSinceEpoch,[]);
+                          List<dynamic> list = [];
+                          list.add(storyContent.toJson());
+                          print(storyContent.toJson());
+                          try {
+                            await FirebaseFirestore.instance
+                                .collection('Store')
+                                .doc(userStore.userModel.storeId)
+                                .update(
+                                {'Stories': FieldValue.arrayUnion(list)}).then((
+                                value) async =>
+                            {
+                            setState(() {
+                            isLoading = false;
+                            }),
+                              _timer?.cancel(),
+                              await EasyLoading.dismiss(),
+                              LoginHelper.showSuccessAlertDialog(context, isArabic(context) ? "تمت إضافة قصتك بنجاح ، يمكنك إضافة المزيد من القصص من خلال هذه الصفحة" :
+                                  "Your Story has been shared successfully, you can add more stories from this page."),
+                            });
+                          }on FirebaseException catch  (e) {
+                            LoginHelper.showErrorAlertDialog(context, e.message.toString());
+                            print(e.message);
+                            setState(() {
+                              isLoading = false;
+                            });
+
+
+                             }  // show a notification at top of screen.
+
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      //    crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                                isArabic(context) ? 'إضافة الإعلان' : 'Submit',style: TextStyle(
+                                fontWeight:FontWeight.bold ,   fontFamily:'SouqFont',fontSize: 16)),
+                            isLoading ? CircularProgressIndicator() :Icon(
+                              Icons.done_outline,
+                              color: Colors.white,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
         bottomNavigationBar: ConvexAppBar(
           height: MediaQuery.of(context).size.height * 0.07,
@@ -493,7 +481,7 @@ class _AddPostPageState extends State<AddPostPage> {
                     _openGallery(context);
                   },
                   title: Text(isArabic(context) ? 'الاستوديو' : 'Gallery',style: TextStyle(
-                      fontFamily:'SouqFont')),
+          fontFamily:'SouqFont')),
                   leading: Icon(
                     Icons.account_box,
                     color: Colors.deepPurpleAccent,
@@ -508,7 +496,7 @@ class _AddPostPageState extends State<AddPostPage> {
                     _openCamera(context);
                   },
                   title: Text(isArabic(context) ? 'الكاميرا' : 'Camera',style: TextStyle(
-                      fontFamily:'SouqFont')),
+          fontFamily:'SouqFont')),
                   leading: Icon(
                     Icons.camera,
                     color: Colors.deepPurpleAccent,
@@ -580,7 +568,7 @@ class _AddPostPageState extends State<AddPostPage> {
 
   void _openGallery(BuildContext context) async {
     final pickedFile = await ImagePicker().pickImage(
-        source: ImageSource.gallery
+      source: ImageSource.gallery
     );
     setState(() {
       imageFile = pickedFile!;
@@ -609,10 +597,10 @@ class _AddPostPageState extends State<AddPostPage> {
     final splitted = filePath.substring(0, (lastIndex));
     final outPath = "${splitted}_out${filePath.substring(lastIndex)}";
     var result = await FlutterImageCompress.compressAndGetFile(
-        file.absolute.path, outPath,
-        quality: 50,
-        minHeight: 700,
-        minWidth: 700
+      file.absolute.path, outPath,
+      quality: 50,
+      minHeight: 700,
+      minWidth: 700
     );
 
     print(file.lengthSync());
@@ -652,28 +640,28 @@ class _AddPostPageState extends State<AddPostPage> {
                     image: NetworkImage(
                         'https://icons.iconarchive.com/icons/wikipedia/flags/1024/JO-Jordan-Flag-icon.png')),
                 onTap: () => {
-                  context.setLocale(Locale('ar', 'JO')),
-                  Navigator.of(context, rootNavigator: true).pop('dialog')
-                }),
+                      context.setLocale(Locale('ar', 'JO')),
+                      Navigator.of(context, rootNavigator: true).pop('dialog')
+                    }),
             const Divider(),
             ListTile(
                 title: isArabic(context)
                     ? const Text(
-                  'الإنجليزية',
-                  style: TextStyle(fontSize: 17),
-                )
+                        'الإنجليزية',
+                        style: TextStyle(fontSize: 17),
+                      )
                     : const Text(
-                  'English',
-                  style: TextStyle(fontSize: 17),
-                ),
+                        'English',
+                        style: TextStyle(fontSize: 17),
+                      ),
                 trailing: Image(
                     width: MediaQuery.of(context).size.width * 0.09,
                     image: NetworkImage(
                         'https://www.lifepng.com/wp-content/uploads/2021/03/Classic-Uk-Flag-png-hd.png')),
                 onTap: () => {
-                  context.setLocale(Locale('en', 'US')),
-                  Navigator.of(context, rootNavigator: true).pop('dialog')
-                }),
+                      context.setLocale(Locale('en', 'US')),
+                      Navigator.of(context, rootNavigator: true).pop('dialog')
+                    }),
           ],
         ),
       ),
@@ -687,5 +675,64 @@ class _AddPostPageState extends State<AddPostPage> {
       },
     );
   }
+//
+//   Widget _CitiesList(BuildContext context, List<DocumentSnapshot>? snapshot) {
+//     var snapshots = snapshot?.first;
+//     var list = isArabic(context) ? CityList.cityListFromJson(snapshots!['CityListAr'] as Map<String, dynamic>)
+//         : CityList.cityListFromJson(snapshots!['CityList'] as Map<String, dynamic>);
+//     print(list.first.name);
+//     print("lwngth "   + list.length.toString());
+//     List<CityModel> listOfCities = [];
+//     for(int i =0 ;i < list.length; i++){
+//       listOfCities.add(CityModel(list[i].name,list[i].value));
+//     }
+//     return DropdownButton(
+//       hint: Center(
+//           child: isArabic(context)
+//               ? const Text(
+//             " حدد مكان العرض",
+//             style: TextStyle(
+//               fontSize: 16,
+//               fontWeight: FontWeight.bold,
+//             ),
+//           )
+//               : Text(
+//             "Select Offer Area(s)",
+//             style: TextStyle(
+//                 fontSize: 16,
+//                 fontWeight: FontWeight.bold,
+//                 fontFamily: 'SouqFont'),
+//           )),
+//       // Hide the default underline
+//       underline: Container(),
+//       // set the color of the dropdown menu
+//       dropdownColor: Colors.white,
+//
+//       // Down Arrow Icon
+//       icon: const Icon(Icons.keyboard_arrow_down),
+//       value: dropdownvalue,
+//       items: listOfCities.map((CityModel item) {
+//         return DropdownMenuItem(
+//           value: item.value,
+//           child: Text(item.type),
+//         );
+//       }).toList(),
+//       onChanged: (int? newValue) {
+//         setState(() {
+//           dropdownvalue = newValue!;
+//         });
+//       },
+//       selectedItemBuilder: (BuildContext context) =>
+//           listOfCities.map((CityModel item) => Center(
+//             child: Text(
+//               item.type,
+//               style: const TextStyle(
+//                   fontSize: 16,
+//                   color: Colors.black,
+//                   fontWeight: FontWeight.bold),
+//             ),
+//           )).toList(),);
+//   }
+//
 }
 ////////////////////////

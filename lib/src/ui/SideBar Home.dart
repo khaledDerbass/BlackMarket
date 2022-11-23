@@ -78,12 +78,19 @@ class SideDrawer extends StatelessWidget {
               onTap: () => {
                     showLanguageAlertDialog(context),
                   }),
-    //       ListTile(
-    //         leading: Icon(Icons.home_filled),
-    //         title: Text(isArabic(context) ? 'المدينة/البلد' :'Country/State',style: TextStyle(
-    // fontFamily:'SouqFont'),),
-    //         onTap: () => {showCitiesAlertDialog(context)},
-    //       ),
+          ListTile(
+            leading: Icon(Icons.home),
+            title: Text(isArabic(context) ? 'الدولة' :'Country',style: TextStyle(
+    fontFamily:'SouqFont'),),
+            onTap: () => {showCountriesAlertDialog(context)},
+          ),
+          ListTile(
+            leading: Icon(Icons.add_location_outlined),
+            title: Text(isArabic(context) ? 'المدينة' :'City',style: TextStyle(
+                fontFamily:'SouqFont'),),
+            onTap: () => {showCitiesAlertDialog(context)},
+          ),
+
           isLoggedIN == true
               ? ListTile(
                   leading: Icon(Icons.logout),
@@ -198,19 +205,19 @@ class SideDrawer extends StatelessWidget {
           fontFamily:'SouqFont'),),
       content: SizedBox(
         width: double.maxFinite,
-        height: MediaQuery.of(context).size.height / 5,
+        height: MediaQuery.of(context).size.height * 5,
         child: ListView(
           children: <Widget>[
             ListTile(
                 title: isArabic(context)
                     ? const Text(
                   'عمًان',
-                  style: TextStyle(fontSize: 17,
+                  style: TextStyle(fontSize: 15,
                       fontFamily:'SouqFont'),
                 )
                     : const Text(
                   'Amman',
-                  style: TextStyle(fontSize: 17,
+                  style: TextStyle(fontSize: 15,
                       fontFamily:'SouqFont'),
                 ),
                 onTap: () => {
@@ -221,12 +228,12 @@ class SideDrawer extends StatelessWidget {
                 title: isArabic(context)
                     ? const Text(
                   'إربد',
-                  style: TextStyle(fontSize: 17,
+                  style: TextStyle(fontSize: 15,
                       fontFamily:'SouqFont'),
                 )
                     : const Text(
                   'Irbid',
-                  style: TextStyle(fontSize: 17,
+                  style: TextStyle(fontSize: 15,
                       fontFamily:'SouqFont'),
                 ),
                 onTap: () => {
@@ -237,12 +244,95 @@ class SideDrawer extends StatelessWidget {
                 title: isArabic(context)
                     ? const Text(
                   'الزرقاء',
-                  style: TextStyle(fontSize: 17,
+                  style: TextStyle(fontSize: 15,
                       fontFamily:'SouqFont'),
                 )
                     : const Text(
                   'Zarqa',
-                  style: TextStyle(fontSize: 17,
+                  style: TextStyle(fontSize: 15,
+                      fontFamily:'SouqFont'),
+                ),
+                onTap: () => {
+
+                }),
+          ],
+        ),
+      ),
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+  showCountriesAlertDialog(BuildContext context) {
+    Widget okButton = GestureDetector(
+      child: Container(
+        padding: EdgeInsets.all(10),
+        child: isArabic(context) ? const Text("تم") : const Text("Done"),
+      ),
+      onTap: (){
+        Navigator.of(context, rootNavigator: true).pop('dialog');
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      actions: [
+        okButton,
+      ],
+      title: isArabic(context) ? const Text("الدولة",style: TextStyle(
+        fontFamily:'SouqFont',),) : const Text("Country",style: TextStyle(
+          fontFamily:'SouqFont'),),
+      content: SizedBox(
+        width: double.maxFinite,
+        height: MediaQuery.of(context).size.height * 2,
+        child: ListView(
+          children: <Widget>[
+            ListTile(
+                title: isArabic(context)
+                    ? const Text(
+                  'الأردن',
+                  style: TextStyle(fontSize: 15,
+                      fontFamily:'SouqFont'),
+                )
+                    : const Text(
+                  'Jordan',
+                  style: TextStyle(fontSize: 15,
+                      fontFamily:'SouqFont'),
+                ),
+                onTap: () => {
+
+                }),
+            const Divider(),
+            ListTile(
+                title: isArabic(context)
+                    ? const Text(
+                  'قطر',
+                  style: TextStyle(fontSize: 15,
+                      fontFamily:'SouqFont'),
+                )
+                    : const Text(
+                  'Qatar',
+                  style: TextStyle(fontSize: 15,
+                      fontFamily:'SouqFont'),
+                ),
+                onTap: () => {
+
+                }),
+            const Divider(),
+            ListTile(
+                title: isArabic(context)
+                    ? const Text(
+                  'البحرين',
+                  style: TextStyle(fontSize: 15,
+                      fontFamily:'SouqFont'),
+                )
+                    : const Text(
+                  'Bahrain',
+                  style: TextStyle(fontSize: 15,
                       fontFamily:'SouqFont'),
                 ),
                 onTap: () => {

@@ -86,8 +86,15 @@ class profilepageState extends State<profilepage> {
                                   color: Colors.black,
                                 ),
                               ),
+                              Tab(
+                                icon: Icon(
+                                  Icons.map_outlined,
+                                  color: Colors.black,
+                                ),
+                              ),
                             ],
                           ),
+
                         ),
                         Expanded(
                           child: TabBarView(
@@ -440,6 +447,12 @@ class profilepageState extends State<profilepage> {
                               Tab(
                                 icon: Icon(
                                   Icons.grid_on_sharp,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              Tab(
+                                icon: Icon(
+                                  Icons.map_outlined,
                                   color: Colors.black,
                                 ),
                               ),
