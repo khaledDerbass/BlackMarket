@@ -293,7 +293,7 @@ class _AddPostPageState extends State<AddPostPage> {
                               ),
                             )
                           : const Text(
-                              "Descriptions",
+                              "Description",
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -538,7 +538,6 @@ class _AddPostPageState extends State<AddPostPage> {
       underline: Container(),
       // set the color of the dropdown menu
       dropdownColor: Colors.white,
-
       // Down Arrow Icon
       icon: const Icon(Icons.keyboard_arrow_down),
       value: dropdownvalue,

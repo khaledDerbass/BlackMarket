@@ -117,7 +117,7 @@ class ChangePasswordUiState extends State<ChangePasswordUi> {
                                         isArabic(context) ? 'تعديل' : "Modify",style: TextStyle(
     fontFamily:'SouqFont'),),
                                     Icon(
-                                      Icons.refresh,
+                                      Icons.system_update_outlined,
                                       color: Colors.white,
                                     ),
                                   ],

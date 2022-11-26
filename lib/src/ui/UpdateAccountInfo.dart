@@ -4,15 +4,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:souq/Helpers/LoginHelper.dart';
-import 'package:souq/src/Services/AuthenticationService.dart';
 import '../models/Store.dart';
 import '../models/UserModel.dart';
 import '../models/UserStore.dart';
-import 'CustomProfileAppBar.dart';
 import 'HandleScrollWidget.dart';
-import 'changePasswordUi.dart';
 
 class UpdateAccountPage extends StatefulWidget
 {
@@ -61,14 +59,39 @@ class UpdateAccountPageState extends State<UpdateAccountPage> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Colors.deepPurpleAccent,
-        automaticallyImplyLeading: true,
+        automaticallyImplyLeading: false,
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
-                bottomRight: Radius.circular(25),
-                bottomLeft: Radius.circular(25))),
-        title: Center(
-          child: Text(isArabic(context) ? 'تعديل معلومات الحساب' : "Edit Account Info",style: TextStyle(
-              fontFamily:'SouqFont')),
+                bottomRight: Radius.circular(15),
+                bottomLeft: Radius.circular(15))),
+        title: Row(
+            children: [
+        Container(
+        width: MediaQuery.of(context).size.width / 4,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            IconButton(
+                onPressed: () => Navigator.of(context).pop(),
+                icon: Icon(Icons.arrow_back_ios_new))
+          ],
+        ),
+      ),
+              Container(
+                width: MediaQuery.of(context).size.width / 2,
+                child: Row(
+                  children: [
+                    Center(
+                      child: Image.asset(
+                        'assets/images/offerstorylogo.png',
+                        height: MediaQuery.of(context).size.width * 0.4,
+                        width: MediaQuery.of(context).size.width * 0.4,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
         ),
       ),
       body: !isLoading ? Container(
@@ -100,6 +123,11 @@ class UpdateAccountPageState extends State<UpdateAccountPage> {
                         .height * .03),
                 TextFormField(
                   controller: _phoneController,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(
+                      RegExp(r"[0-9]"),
+                    )
+                  ],
                   decoration: InputDecoration(
                     labelText:
                     isArabic(context) ? 'رقم الهاتف' : 'Phone Number',
@@ -152,18 +180,22 @@ class UpdateAccountPageState extends State<UpdateAccountPage> {
                         .of(context)
                         .size
                         .height * .10),
-                FittedBox(
-                  child: Row(
+
+                 Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            maximumSize: Size(
-                                MediaQuery.of(context).size.height * .30,
-                                MediaQuery.of(context).size.height * .07),
-                            minimumSize: Size(
-                                MediaQuery.of(context).size.height * .30,
-                                MediaQuery.of(context).size.height * .07),
+                  maximumSize: Size(
+                  MediaQuery.of(context).size.height *
+                      .24,
+                    MediaQuery.of(context).size.height *
+                        .07),
+        minimumSize: Size(
+            MediaQuery.of(context).size.height *
+                .24,
+            MediaQuery.of(context).size.height *
+                .07),
                             primary: Colors.black,
                             shape: StadiumBorder(),
                           ),
@@ -193,21 +225,20 @@ class UpdateAccountPageState extends State<UpdateAccountPage> {
 
                           },
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Text(isArabic(context)
-                                  ? 'حفظ'
-                                  : "Save", style: TextStyle(
-                                  fontFamily: 'SouqFont')),
+                                  ? 'حفظ التعديل'
+                                  : "Save changes", style: TextStyle(
+                                  fontFamily: 'SouqFont',fontSize: 16,fontWeight: FontWeight.bold)),
                               Icon(
-                                Icons.edit,
+                                Icons.save_alt,
                                 color: Colors.white,
                               ),
                             ],
                           )),
                     ],
                   ),
-                ),
               ],
             ),
           )

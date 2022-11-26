@@ -13,9 +13,11 @@ import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:souq/Helpers/LoginHelper.dart';
 import 'package:souq/src/Services/AuthenticationService.dart';
+import 'package:souq/src/ui/UserPrefrencesScreen.dart';
 import '../models/Store.dart';
 import '../models/UserModel.dart';
 import '../models/UserStore.dart';
+import 'EditProfilePage.dart';
 
 class profileHeader extends StatefulWidget {
   final UserStore? searchStore;
@@ -67,7 +69,7 @@ class profileHeaderState extends State<profileHeader>{
         }
       }
     }
-
+    //     ملف الشخص الاخر /////////////////////////////////////////////////////////////////////////////////////
     return widget.searchStore != null ?
     SliverToBoxAdapter(
       child: Padding(
@@ -94,7 +96,6 @@ class profileHeaderState extends State<profileHeader>{
                   backgroundImage: widget.searchStore!.userModel.profilePicture.isNotEmpty ?
                   Image.memory(base64Decode(widget.searchStore!.userModel.profilePicture)).image
                       : Image.asset('assets/images/pic2.png').image,),
-
                 Row(
                   children: [
                     Column(
@@ -113,7 +114,9 @@ class profileHeaderState extends State<profileHeader>{
                           style: const TextStyle(
                             decoration: TextDecoration.none,
                             fontSize: 12,
-                            letterSpacing: .5,fontFamily: 'SouqFont'
+                            letterSpacing: .5,
+                              fontFamily: 'SouqFont',
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ],
@@ -140,7 +143,8 @@ class profileHeaderState extends State<profileHeader>{
                           style: const TextStyle(
                             decoration: TextDecoration.none,
                             letterSpacing: .5,
-                            fontSize: 12,fontFamily: 'SouqFont'
+                            fontSize: 12,fontFamily: 'SouqFont',
+                            fontWeight: FontWeight.w700,
                           ),
                         )
                       ],
@@ -171,15 +175,17 @@ class profileHeaderState extends State<profileHeader>{
                         child: Text(
                           isArabic(context) ? widget.searchStore?.store.nameAr ?? "" : widget.searchStore?.store.nameEn ?? "",
                           maxLines: 2, style: TextStyle(
-                          fontWeight: FontWeight.w900,
                           decoration: TextDecoration.none,
-                          fontSize: MediaQuery.of(context).size.width * 0.03,
-                          letterSpacing: .005,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'SouqFont',
+                          fontSize: 18,
+                          letterSpacing: .5,
                         ),
                         ),
                       ),
                     ),
-                    widget.searchStore?.userModel.email != AuthenticationService.getAuthInstance().currentUser?.email ? Padding(
+                    widget.searchStore?.userModel.email != AuthenticationService.getAuthInstance().currentUser?.email ?
+                    Padding(
                       padding:  EdgeInsets.only(right:MediaQuery.of(context).size.height *
                           .039 ),
                       child: ElevatedButton(
@@ -298,11 +304,11 @@ class profileHeaderState extends State<profileHeader>{
                           top: MediaQuery.of(context).size.height *
                               0.02 ,),
                         child: Text(
-                          widget.searchStore!.store.descStore,
+                          widget.searchStore!.store.descStore,maxLines: 3,
                           style: TextStyle(
                             fontWeight: FontWeight.w900,
                             decoration: TextDecoration.none,
-                            fontSize: MediaQuery.of(context).size.width * 0.035,
+                            fontSize:12,
                             letterSpacing: .5,
                           ),
                         ),
@@ -310,31 +316,31 @@ class profileHeaderState extends State<profileHeader>{
                     ),
                   ],
                 ),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.start,
-                //   children: [
-                //     LimitedBox(
-                //       maxWidth: MediaQuery.of(context).size.width * 0.8,
-                //       child: Padding(
-                //         padding:   EdgeInsets.only(left: MediaQuery.of(context).size.height *
-                //             0.02 ,
-                //           right: MediaQuery.of(context).size.height *
-                //               0.02 ,
-                //           top: MediaQuery.of(context).size.height *
-                //               0.02 ,),
-                //         child: Text(
-                //           widget.searchStore!.store.locStore,
-                //           style: TextStyle(
-                //             fontWeight: FontWeight.w900,
-                //             decoration: TextDecoration.none,
-                //             fontSize: MediaQuery.of(context).size.width * 0.035,
-                //             letterSpacing: .5,
-                //           ),
-                //         ),
-                //       ),
-                //     ),
-                //   ],
-                // ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    LimitedBox(
+                      maxWidth: MediaQuery.of(context).size.width * 0.8,
+                      child: Padding(
+                        padding:   EdgeInsets.only(left: MediaQuery.of(context).size.height *
+                            0.02 ,
+                          right: MediaQuery.of(context).size.height *
+                              0.02 ,
+                          top: MediaQuery.of(context).size.height *
+                              0.02 ,),
+                        child: Text(
+                          widget.searchStore!.store.locStore,maxLines: 3,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w900,
+                            decoration: TextDecoration.none,
+                            fontSize:12,
+                            letterSpacing: .5,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
 
                 SizedBox(
                   height:
@@ -343,12 +349,15 @@ class profileHeaderState extends State<profileHeader>{
               ],
             ),
           ],
-        ),
-      ),
+        )),
+
     )
         : roleId == 2
+    //     ملف التاجر الشخصي /////////////////////////////////////////////////////////////////////////////////////
+
         ? SliverToBoxAdapter(
-      child: FutureBuilder(
+
+    child: FutureBuilder(
         builder: (ctx, snapshot) {
           // Checking if future is resolved or not
           if (snapshot.connectionState == ConnectionState.done) {
@@ -424,14 +433,17 @@ class profileHeaderState extends State<profileHeader>{
                                           img= base64Encode(bytes!),
                                             userStore.userModel.profilePicture = img,
                                             await FirebaseFirestore.instance.collection('Users').where('email' , isEqualTo: FirebaseAuth.instance.currentUser!.email).get().then((value) async => {
-                                            await FirebaseFirestore.instance.collection('Users').doc(value.docs.first.id).update(
+                                            await FirebaseFirestore.instance.collection('Users').doc(value.docs.first.id).
+                                            update(
                                               {
                                                 'profilePicture':img
-                                              }).then((value) async => {
+                                              }
+                                              ).then((value) async => {
+                                                LoginHelper.showSuccessAlertDialog(context, isArabic(context) ? "تم تغيير الصورة الشخصية بنجاح" : "Your profile photo has been changed successfully."),
                                               _timer?.cancel(),
                                               await EasyLoading.dismiss(),
-                                                LoginHelper.showSuccessAlertDialog(context, isArabic(context) ? "تم تغيير الصورة الشخصية بنجاح" : "Your profile photo has been changed successfully."),
                                             setState(() {
+
 
                                             })
                                             }),
@@ -475,8 +487,8 @@ class profileHeaderState extends State<profileHeader>{
                                   style: TextStyle(
                                     decoration: TextDecoration.none,
                                     fontSize: 12,
-                                    letterSpacing: .5,fontFamily: 'SouqFont'
-                                  ),
+                                    letterSpacing: .5,fontFamily: 'SouqFont',
+                                    fontWeight: FontWeight.w700,                                  ),
                                 ),
                               ],
                             ),
@@ -502,7 +514,7 @@ class profileHeaderState extends State<profileHeader>{
                                   style: TextStyle(
                                     decoration: TextDecoration.none,
                                     letterSpacing: .5,
-                                    fontSize: 12,fontFamily: 'SouqFont'
+                                    fontSize: 12,fontFamily: 'SouqFont', fontWeight: FontWeight.w700,
                                   ),
                                 )
                               ],
@@ -524,19 +536,46 @@ class profileHeaderState extends State<profileHeader>{
                             LimitedBox(
                               maxWidth: MediaQuery.of(context).size.width * 0.93,
                               child: Padding(     padding:  EdgeInsets.only(
-          left: MediaQuery.of(context).size.height *
-          0.001 ,
-          right: MediaQuery.of(context).size.height *
-          0.04 ,
-          top: MediaQuery.of(context).size.height *
-          0.02 ,),
+                                left: MediaQuery.of(context).size.height *
+                                0.01 ,
+                                right: MediaQuery.of(context).size.height *
+                                0.04 ,
+                                top: MediaQuery.of(context).size.height *
+                                0.02 ,),
                                 child: Text(
                                   storeName,maxLines: 2,
                                   style: TextStyle(
-                                    fontWeight: FontWeight.w500,
                                     decoration: TextDecoration.none,
-                                    fontSize: MediaQuery.of(context).size.width * 0.03,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'SouqFont',
+                                    fontSize: 16,
                                     letterSpacing: .005,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            LimitedBox(
+                              maxWidth: MediaQuery.of(context).size.width * 0.8,
+                              child: Padding(
+                                padding:
+                                EdgeInsets.only(left: MediaQuery.of(context).size.height *
+                                    0.002 ,
+                                  right: MediaQuery.of(context).size.height *
+                                      0.02 ,
+                                  top: MediaQuery.of(context).size.height *
+                                      0.02 ,),
+                                child: Text(
+                                  storeDesc,maxLines: 3,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w900,
+                                    decoration: TextDecoration.none,
+                                    fontSize:12,
+                                    letterSpacing: .5,
                                   ),
                                 ),
                               ),
@@ -556,11 +595,11 @@ class profileHeaderState extends State<profileHeader>{
                                   top: MediaQuery.of(context).size.height *
                                       0.02 ,),
                                 child: Text(
-                                  storeDesc,
+                                  storeLoc,maxLines: 3,
                                   style: TextStyle(
                                     fontWeight: FontWeight.w900,
                                     decoration: TextDecoration.none,
-                                    fontSize: MediaQuery.of(context).size.width * 0.035,
+                                    fontSize:12,
                                     letterSpacing: .5,
                                   ),
                                 ),
@@ -568,39 +607,13 @@ class profileHeaderState extends State<profileHeader>{
                             ),
                           ],
                         ),
-                        // Row(
-                        //   mainAxisAlignment: MainAxisAlignment.start,
-                        //   children: [
-                        //     LimitedBox(
-                        //       maxWidth: MediaQuery.of(context).size.width * 0.8,
-                        //       child: Padding(
-                        //         padding:   EdgeInsets.only(left: MediaQuery.of(context).size.height *
-                        //             0.02 ,
-                        //           right: MediaQuery.of(context).size.height *
-                        //               0.02 ,
-                        //           top: MediaQuery.of(context).size.height *
-                        //               0.02 ,),
-                        //         child: Text(
-                        //           storeLoc,
-                        //           style: TextStyle(
-                        //             fontWeight: FontWeight.w900,
-                        //             decoration: TextDecoration.none,
-                        //             fontSize: MediaQuery.of(context).size.width * 0.035,
-                        //             letterSpacing: .5,
-                        //           ),
-                        //         ),
-                        //       ),
-                        //     ),
-                        //   ],
-                        // ),
                         SizedBox(
-                          height: 20,
+                          height:  MediaQuery.of(context).size.height * .015,
                         ),
                         actions(context),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        userStore.userModel.storeId != userStore.store.storeId ? Padding(
+                        userStore.userModel.storeId != userStore.store.storeId ?
+///
+                        Padding(
                           padding:  EdgeInsets.only(left: MediaQuery.of(context).size.height *
                               .1 ),
                           child: ElevatedButton(
@@ -624,9 +637,9 @@ class profileHeaderState extends State<profileHeader>{
                               CrossAxisAlignment.center,
                               children: const [
                                 Text('Follow',style: TextStyle(
-          fontFamily:'SouqFont'
-          ),
-          ),
+                                  fontFamily:'SouqFont'
+                                  ),
+                                  ),
                                 Icon(
                                   Icons.add,
                                   color: Colors.white,
@@ -634,11 +647,12 @@ class profileHeaderState extends State<profileHeader>{
                               ],
                             ),
                           ),
-                        ) : Container(),
+                        )
+                            : Container(),
                         SizedBox(
-                          height:
-                          MediaQuery.of(context).size.height * .005,
+                          height: MediaQuery.of(context).size.height * .005,
                         ),
+
                       ],
                     ),
                   ],
@@ -658,6 +672,8 @@ class profileHeaderState extends State<profileHeader>{
         future:  loadStore(context),
       ),
     )
+
+    //     ملف التاجر  ////////////////////////////////////////////////////////////////////////////////////
         : SliverToBoxAdapter(
       child: FutureBuilder(
         builder: (ctx, snapshot) {
@@ -749,27 +765,21 @@ class profileHeaderState extends State<profileHeader>{
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
                             decoration: TextDecoration.none,
-                            fontSize:MediaQuery.of(context).size.width * 0.035,
+                            fontSize:16,
                             letterSpacing: 0.5,fontFamily: 'SouqFont'
                           ),
                         ),
                       ),
                     ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * .005,
-                    ),
+                    // SizedBox(
+                    //   height: MediaQuery.of(context).size.height * .005,
+                    // ),
+                    // حط الوصف للمتجر/////////////////////////////////////////////////////////////////////////////////////
                   ],
                 ),
               );
             }
           }
-          SizedBox(
-            height: 20,
-          );
-          actions(context);
-          SizedBox(
-          height: 20,
-          );
           // Displaying LoadingSpinner to indicate waiting state
           return Center(
             child: CircularProgressIndicator(),
@@ -908,25 +918,35 @@ class profileHeaderState extends State<profileHeader>{
 
 }
 
-
-
 Widget actions(BuildContext context) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
       Expanded(
         child: OutlinedButton(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 50),
-            child: Text("Edit Profile", style: TextStyle(color: Colors.black)),
-          ),
+          // child: Padding(
+           // padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: isArabic(context)?Text("تعديل الملف الشخصي", style: TextStyle(color: Colors.black,fontWeight:FontWeight.bold,fontFamily: 'SouqFont',
+              fontSize: 16,letterSpacing: .5,
+            ))
+                :Text("Edit Profile", style: TextStyle(color: Colors.black,fontWeight:FontWeight.bold,fontFamily: 'SouqFont',
+                fontSize: 18,                                    letterSpacing: .5,
+            )),
+
           style: OutlinedButton.styleFrom(
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               minimumSize: Size(0, 30),
               side: BorderSide(
                 color: Colors.grey,
               )),
-          onPressed: () {},
+          onPressed: () {
+              Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                const EditProfile()),
+          );
+              },
         ),
       ),
     ],
