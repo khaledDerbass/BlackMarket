@@ -17,6 +17,8 @@ class AccountPage extends StatefulWidget {
 }
 
 class AccountPageState extends State<AccountPage> {
+  TextEditingController _StoreNameArController = TextEditingController();
+  TextEditingController _StoreNameEnController = TextEditingController();
   TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
@@ -61,25 +63,31 @@ class AccountPageState extends State<AccountPage> {
                   _emailController.text = data.email;
                   _phoneController.text = data.phoneNumber;
                   if (userStore != null) {
+                    _StoreNameArController.text = userStore!.store.nameAr;
+              _StoreNameEnController.text = userStore!.store.nameEn;
                     _DescriprionController.text = userStore!.store.descStore;
                     _LocationController.text = userStore!.store.locStore;
                   }
                   return Container(
                     padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * .08,
+                      top: MediaQuery.of(context).size.height * .01,
                       left: MediaQuery.of(context).size.height * .05,
                       right: MediaQuery.of(context).size.height * .05,
                     ),
                     child: Form(
                       key: _form,
-                      child: Column(
-                        children: [
+                          child: SingleChildScrollView(
+                            child: ListView(
+                              shrinkWrap: true,
+                              children: [
                           TextFormField(
                             readOnly: true,
-                            controller: _emailController,
+                            controller: _emailController,   style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'SouqFont'),
                             decoration: InputDecoration(
                               fillColor: Colors.transparent,
-                              filled: true,
                               enabled: false,
                               labelText: isArabic(context)
                                   ? 'البريد الإلكتروني'
@@ -90,67 +98,40 @@ class AccountPageState extends State<AccountPage> {
                               height: MediaQuery.of(context).size.height * .03),
                           TextFormField(
                             readOnly: true,
-                            controller: _phoneController,
+                            controller: _phoneController,   style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'SouqFont'),
                             decoration: InputDecoration(
                               fillColor: Colors.transparent,
-                              filled: true,
                               enabled: false,
                               labelText: isArabic(context)
                                   ? 'رقم الهاتف'
                                   : 'Phone Number',
                             ),
                           ),
+                          userStore == null ?
                           SizedBox(
-                              height: MediaQuery.of(context).size.height * .05),
-                          TextFormField(
+                              height: MediaQuery.of(context).size.height * .03): Container(),
+                          userStore == null ?  TextFormField(
                             readOnly: true,
                             enabled: false,
-                            controller: _usernameController,
+                            controller: _usernameController,   style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'SouqFont'),
                             decoration: InputDecoration(
+                              enabled: false,
                               fillColor: Colors.transparent,
                               labelText: isArabic(context)
                                   ? 'اسم المستخدم'
                                   : 'Username',
-                              filled: true,
                             ),
-                          ),
+                          ): Container(),
+                          userStore != null ? UserStoreFields() : Container(),
+
                           SizedBox(
-                              height: MediaQuery.of(context).size.height * .05),
-                          userStore != null
-                              ? TextFormField(
-                                  readOnly: true,
-                                  enabled: false,
-                                  controller: _DescriprionController,
-                                  decoration: InputDecoration(
-                                    filled: true,
-                                    fillColor: Colors.transparent,
-                                    labelText: isArabic(context)
-                                        ? 'وصف المتجر'
-                                        : 'Store Description',
-                                  ),
-                                )
-                              : Container(),
-                          userStore != null
-                              ? SizedBox(
-                                  height:
-                                      MediaQuery.of(context).size.height * .05)
-                              : Container(),
-                          userStore != null
-                              ? TextFormField(
-                                  readOnly: true,
-                                  enabled: false,
-                                  controller: _LocationController,
-                                  decoration: InputDecoration(
-                                    filled: true,
-                                    fillColor: Colors.transparent,
-                                    labelText: isArabic(context)
-                                        ? 'موقع المتجر'
-                                        : 'Store Location',
-                                  ),
-                                )
-                              : Container(),
-                          SizedBox(
-                              height: MediaQuery.of(context).size.height * .08),
+                              height: MediaQuery.of(context).size.height * .07),
                  Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -247,7 +228,7 @@ class AccountPageState extends State<AccountPage> {
                               ]),
                         ],
                       ),
-                    ),
+                    ),)
                   );
                 }
               }
@@ -267,6 +248,58 @@ class AccountPageState extends State<AccountPage> {
 
   bool isArabic(BuildContext context) {
     return context.locale.languageCode == 'ar';
+  }
+  Widget UserStoreFields() {
+    return Column(children: [
+      SizedBox(height: MediaQuery.of(context).size.height * .03),
+      TextFormField(
+        controller: _StoreNameArController,   style: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          fontFamily: 'SouqFont'),
+        decoration: InputDecoration(
+          enabled: false,                              fillColor: Colors.transparent,
+          labelText: isArabic(context) ? 'الإسم العربي' : 'Arabic Name',
+        ),
+      ),
+      SizedBox(height: MediaQuery.of(context).size.height * .03),
+      TextFormField(
+        readOnly: true,
+        controller: _StoreNameEnController,   style: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          fontFamily: 'SouqFont'),
+        decoration: InputDecoration(
+          fillColor: Colors.transparent,
+          enabled: false,
+          labelText: isArabic(context) ? 'الإسم الانجليزي' : 'English Name',
+        ),
+      ),
+      SizedBox(height: MediaQuery.of(context).size.height * .03),
+      TextFormField(
+        controller: _DescriprionController,   style: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          fontFamily: 'SouqFont'),
+        decoration: InputDecoration(
+          fillColor: Colors.transparent,
+          enabled: false,
+          labelText: isArabic(context) ? 'وصف المتجر' : 'Store Description',
+        ),
+      ),
+      SizedBox(height: MediaQuery.of(context).size.height * .03),
+      TextFormField(
+        controller: _LocationController,   style: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          fontFamily: 'SouqFont'),
+        decoration: InputDecoration(
+          fillColor: Colors.transparent,
+          enabled: false,
+          labelText: isArabic(context) ? 'موقع المتجر' : 'Store Location',
+        ),
+      )
+    ]);
   }
 
   Future<UserModel> loadUser() async {

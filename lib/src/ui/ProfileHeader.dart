@@ -113,10 +113,9 @@ class profileHeaderState extends State<profileHeader>{
                           isArabic(context) ? 'العروض' : 'Offers',
                           style: const TextStyle(
                             decoration: TextDecoration.none,
-                            fontSize: 12,
-                            letterSpacing: .5,
-                              fontFamily: 'SouqFont',
-                            fontWeight: FontWeight.w600,
+                            letterSpacing: 1,
+                            fontSize: 12,fontFamily: 'SouqFont',
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
                       ],
@@ -142,7 +141,7 @@ class profileHeaderState extends State<profileHeader>{
                               : 'Followers',
                           style: const TextStyle(
                             decoration: TextDecoration.none,
-                            letterSpacing: .5,
+                            letterSpacing:1,
                             fontSize: 12,fontFamily: 'SouqFont',
                             fontWeight: FontWeight.w700,
                           ),
@@ -487,7 +486,7 @@ class profileHeaderState extends State<profileHeader>{
                                   style: TextStyle(
                                     decoration: TextDecoration.none,
                                     fontSize: 12,
-                                    letterSpacing: .5,fontFamily: 'SouqFont',
+                                    letterSpacing: 1,fontFamily: 'SouqFont',
                                     fontWeight: FontWeight.w700,                                  ),
                                 ),
                               ],
@@ -513,7 +512,7 @@ class profileHeaderState extends State<profileHeader>{
                                       : 'Followers',
                                   style: TextStyle(
                                     decoration: TextDecoration.none,
-                                    letterSpacing: .5,
+                                    letterSpacing: 1,
                                     fontSize: 12,fontFamily: 'SouqFont', fontWeight: FontWeight.w700,
                                   ),
                                 )

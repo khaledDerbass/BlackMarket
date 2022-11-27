@@ -5,9 +5,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:souq/src/models/Store.dart';
+import '../../Helpers/LoginHelper.dart';
 import '../models/UserModel.dart';
 import '../models/UserStore.dart';
+import 'CustomProfileAppBar.dart';
 import 'UserPrefrencesScreen.dart';
 
 class EditProfile extends StatefulWidget {
@@ -17,31 +20,28 @@ class EditProfile extends StatefulWidget {
   _EditProfileState createState() => _EditProfileState();
 }
 
-// late final FirebaseMessaging _messaging;
-// PushNotification? _notificationInfo;
 enum Branch { havebranch, nobranch }
 
 class _EditProfileState extends State<EditProfile> {
   late UserStore? userStore;
   late UserModel user;
+  TextEditingController _DescriprionController = TextEditingController();
+  TextEditingController _LocationController = TextEditingController();
+
   Branch _branch = Branch.nobranch;
   bool isLoading = false;
   Timer? _timer;
-  bool BranHidden = false;
-  bool LocHidden = false;
+
   @override
   void initState() {
     setState(() {
       isLoading = true;
     });
     loadUser().then((value) => {
-          // _usernameController.text = user.name,
-          // _emailController.text = user.email,
-          // _phoneController.text = user.phoneNumber,
           if (userStore != null)
             {
-              // _DescriprionController.text = userStore!.store.descStore,
-              // _LocationController.text = userStore!.store.locStore,
+              _DescriprionController.text = userStore!.store.descStore,
+              _LocationController.text = userStore!.store.locStore,
             },
           setState(() {
             isLoading = false;
@@ -52,253 +52,273 @@ class _EditProfileState extends State<EditProfile> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.deepPurpleAccent,
-        automaticallyImplyLeading: false,
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                bottomRight: Radius.circular(15),
-                bottomLeft: Radius.circular(15))),
-        title: Row(
-          children: [
-            Container(
-              width: MediaQuery.of(context).size.width / 4,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  IconButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      icon: Icon(Icons.arrow_back_ios_new))
-                ],
+        resizeToAvoidBottomInset: false,
+        body: NestedScrollView(
+          headerSliverBuilder: (context, index) {
+            return [
+              CustomProfileAppBar(false),
+            ];
+          },
+          body: Container(
+              padding: EdgeInsets.only(
+                top: MediaQuery.of(context).size.width * 0.05,
+                left: MediaQuery.of(context).size.width * 0.02,
+                right: MediaQuery.of(context).size.width * 0.02,
               ),
-            ),
-            Container(
-              width: MediaQuery.of(context).size.width / 2,
-              child: Row(
-                children: [
-                  Center(
-                    child: Image.asset(
-                      'assets/images/offerstorylogo.png',
-                      height: MediaQuery.of(context).size.width * 0.4,
-                      width: MediaQuery.of(context).size.width * 0.4,
+              child: SingleChildScrollView(
+                  // context,
+                  child: ListView(shrinkWrap: true, children: [
+                Align(
+                  alignment: isArabic(context)
+                      ? Alignment.centerRight
+                      : Alignment.centerLeft,
+                  child: isArabic(context)
+                      ? const Text(
+                          "تعديل وصف المتجر",
+                          style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'SouqFont'),
+                        )
+                      : const Text(
+                          "Edit Store Description",
+                          style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'SouqFont'),
+                        ),
+                ),
+                TextField(
+                  controller: _DescriprionController,
+                  maxLines: 3,
+                  decoration: InputDecoration(
+                    // labelText:userStore!.store.descStore,
+                    fillColor: Colors.transparent, //filled: true,
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                SizedBox(height: MediaQuery.of(context).size.height * .05),
+                Align(
+                  alignment: isArabic(context)
+                      ? Alignment.centerRight
+                      : Alignment.centerLeft,
+                  child: isArabic(context)
+                      ? const Text(
+                          "تعديل عنوان المتجر",
+                          style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'SouqFont'),
+                        )
+                      : const Text(
+                          "Edit Store Location",
+                          style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'SouqFont'),
+                        ),
+                ),
+                TextField(
+                  controller: _LocationController,
+                  maxLines: 3,
+                  decoration: InputDecoration(
+                    // labelText: userStore!.store.locStore,
+                    fillColor: Colors.transparent, //filled: true,
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                SizedBox(height: MediaQuery.of(context).size.height * .03),
+                Padding(
+                  padding: EdgeInsets.only(
+                    left: MediaQuery.of(context).size.width * 0.17,
+                  ),
+                  child: ListTile(
+                    title: isArabic(context)
+                        ? Text(
+                            'ليس لدينا فرع آخر',
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'SouqFont'),
+                          )
+                        : Text(
+                            'No Other Branches',
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'SouqFont'),
+                          ),
+                    leading: Radio(
+                      fillColor: MaterialStateColor.resolveWith(
+                          (states) => Colors.deepPurpleAccent),
+                      focusColor: MaterialStateColor.resolveWith(
+                          (states) => Colors.deepPurpleAccent),
+                      value: Branch.nobranch,
+                      groupValue: _branch,
+                      onChanged: (Branch? Value) {
+                        setState(() {
+                          _branch = Value!;
+                        });
+                      },
                     ),
                   ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-      body: Stack(children: [
-        SingleChildScrollView(
-            child: Column(children: [
-          SizedBox(height: MediaQuery.of(context).size.height * .01),
-          Align(
-            alignment: isArabic(context)
-                ? Alignment.centerRight
-                : Alignment.centerLeft,
-            child: Padding(
-              padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).size.width * 0.10,
-                  left: MediaQuery.of(context).size.width * 0.02,
-                  right: MediaQuery.of(context).size.width * 0.02,
-                  bottom: MediaQuery.of(context).size.width * 0.02),
-              child: isArabic(context)
-                  ? const Text(
-                      "تعديل وصف المتجر",
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'SouqFont'),
-                    )
-                  : const Text(
-                      "Edit Store Description",
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'SouqFont'),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                    left: MediaQuery.of(context).size.width * 0.17,
+                  ),
+                  child: ListTile(
+                    title: isArabic(context)
+                        ? Text(
+                            'أكثر من فرع',
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'SouqFont'),
+                          )
+                        : Text(
+                            'Other Branches',
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'SouqFont'),
+                          ),
+                    leading: Radio(
+                      fillColor: MaterialStateColor.resolveWith(
+                          (states) => Colors.deepPurpleAccent),
+                      focusColor: MaterialStateColor.resolveWith(
+                          (states) => Colors.deepPurpleAccent),
+                      value: Branch.havebranch,
+                      groupValue: _branch,
+                      onChanged: (Branch? Value) {
+                        setState(() {
+                          _branch = Value!;
+                          if (Branch.havebranch == Value) {
+                            Padding(
+                              padding: EdgeInsets.only(
+                                  top: MediaQuery.of(context).size.width * 0.05,
+                                  left: MediaQuery.of(context).size.width * 0.3,
+                                  right:
+                                      MediaQuery.of(context).size.width * 0.02,
+                                  bottom:
+                                      MediaQuery.of(context).size.width * 0.02),
+                              child: Row(
+                                children: [
+                                  IconButton(
+                                      onPressed: () {
+                                        newBranch();
+                                      },
+                                      icon: Icon(Icons.add_circle_outline)),
+                                  TextButton(
+                                    onPressed: () {
+                                      newBranch();
+                                    },
+                                    child: isArabic(context)
+                                        ? Text(
+                                            "إضافة فرع",
+                                            style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                                fontFamily: 'SouqFont',
+                                                color: Colors.black),
+                                          )
+                                        : Text(
+                                            "Add Branch",
+                                            style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                                fontFamily: 'SouqFont',
+                                                color: Colors.black),
+                                          ),
+                                  )
+                                ],
+                              ),
+                            );
+                          }
+                        });
+                      },
                     ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-                left: MediaQuery.of(context).size.width * 0.02,
-                right: MediaQuery.of(context).size.width * 0.02,
-                bottom: MediaQuery.of(context).size.width * 0.02),
-            child: TextField(
-              //controller: _descriptionController,
-              maxLines: 3,
-              decoration: InputDecoration(
-                labelText: isArabic(context)
-                    ? '.. أدخل وصف المتجر هنا'
-                    : 'Enter the description here ..',
-                fillColor: Colors.transparent, //filled: true,
-                border: OutlineInputBorder(),
-              ),
-            ),
-          ),
-          Align(
-            alignment: isArabic(context)
-                ? Alignment.centerRight
-                : Alignment.centerLeft,
-            child: Padding(
-              padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).size.width * 0.05,
-                  left: MediaQuery.of(context).size.width * 0.02,
-                  right: MediaQuery.of(context).size.width * 0.02,
-                  bottom: MediaQuery.of(context).size.width * 0.02),
-              child: isArabic(context)
-                  ? const Text(
-                      "تعديل عنوان المتجر",
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'SouqFont'),
-                    )
-                  : const Text(
-                      "Edit Store Location",
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'SouqFont'),
-                    ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-                left: MediaQuery.of(context).size.width * 0.02,
-                right: MediaQuery.of(context).size.width * 0.02,
-                bottom: MediaQuery.of(context).size.width * 0.02),
-            child: TextField(
-              //controller: _descriptionController,
-              maxLines: 3,
-              decoration: InputDecoration(
-                labelText: isArabic(context)
-                    ? '.. أدخل عنوان المتجر هنا'
-                    : 'Enter the Location here ..',
-                fillColor: Colors.transparent, //filled: true,
-                border: OutlineInputBorder(),
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-                top: MediaQuery.of(context).size.width * 0.05,
-                left: MediaQuery.of(context).size.width * 0.3,
-                right: MediaQuery.of(context).size.width * 0.02,
-                bottom: MediaQuery.of(context).size.width * 0.02),
-            child: Row(
-              children: [
-                IconButton(
-                    onPressed: () {newBranch();}, icon: Icon(Icons.add_circle_outline)),
-                TextButton(
-                  onPressed: () { newBranch(); },
-                  child:isArabic(context)
-                    ? Text( "إضافة فرع",
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'SouqFont',color: Colors.black),
-                      )
-                    : Text(
-                        "Add Branch",
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'SouqFont',color: Colors.black),
-                      ),)
-              ],
-            ),
-          ),
-          // // Padding(
-          // //   padding: EdgeInsets.only(
-          // //     left: MediaQuery.of(context).size.width * 0.2,
-          // //   ),
-          // //   child: ListTile(
-          // //     title: isArabic(context)
-          // //         ? Text(
-          // //             'ليس لدينا فرع آخر',
-          // //             style: TextStyle(
-          // //                 fontSize: 16,
-          // //                 fontWeight: FontWeight.bold,
-          // //                 fontFamily: 'SouqFont'),
-          // //           )
-          // //         : Text(
-          // //             'No Other Branches',
-          // //             style: TextStyle(
-          // //                 fontSize: 16,
-          // //                 fontWeight: FontWeight.bold,
-          // //                 fontFamily: 'SouqFont'),
-          // //           ),
-          // //     leading: Radio(
-          // //       fillColor: MaterialStateColor.resolveWith(
-          // //           (states) => Colors.deepPurpleAccent),
-          // //       focusColor: MaterialStateColor.resolveWith(
-          // //           (states) => Colors.deepPurpleAccent),
-          // //       value: Branch.nobranch,
-          // //       groupValue: _branch,
-          // //       onChanged: (Branch? Value) {
-          // //         setState(() {
-          // //           _branch = Value!;
-          // //         });
-          // //       },
-          // //     ),
-          // //   ),
-          // // ),
-          // // Padding(
-          // //   padding: EdgeInsets.only(
-          // //     left: MediaQuery.of(context).size.width * 0.2,
-          // //   ),
-          // //   child: ListTile(
-          // //     title: isArabic(context)
-          // //         ? Text(
-          // //             'أكثر من فرع',
-          // //             style: TextStyle(
-          // //                 fontSize: 16,
-          // //                 fontWeight: FontWeight.bold,
-          // //                 fontFamily: 'SouqFont'),
-          // //           )
-          // //         : Text(
-          // //             'Other Branches',
-          // //             style: TextStyle(
-          // //                 fontSize: 16,
-          // //                 fontWeight: FontWeight.bold,
-          // //                 fontFamily: 'SouqFont'),
-          // //           ),
-          // //     leading: Radio(
-          // //       fillColor: MaterialStateColor.resolveWith(
-          // //           (states) => Colors.deepPurpleAccent),
-          // //       focusColor: MaterialStateColor.resolveWith(
-          // //           (states) => Colors.deepPurpleAccent),
-          // //       value: Branch.havebranch,
-          // //       groupValue: _branch,
-          // //       onChanged: (Branch? Value) {
-          // //         setState(() {
-          // //           _branch = Value!;
-          // //          if(Branch.havebranch == Value) {
-          // //            Row(children: [
-          // //              IconButton(
-          // //                  onPressed: () {
-          // //                    Navigator.push(
-          // //                      context,
-          // //                      MaterialPageRoute(builder: (context) => profilepage()),
-          // //                    );
-          // //                  },
-          // //                  icon: Icon(
-          // //                    Icons.save_alt,
-          // //                    color: Colors.white,
-          // //                    size: MediaQuery.of(context).size.height * 0.035,
-          // //                  ))
-          // //            ]);
-          // //          }
-          // //         });
-          // //       },
-          // //     ),
-          // //   ),
-          // ),
-        ]))
-      ]),
-    );
+                  ),
+                ),
+                SizedBox(height: MediaQuery.of(context).size.height * .10),
+                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        maximumSize: Size(
+                            MediaQuery.of(context).size.height * .24,
+                            MediaQuery.of(context).size.height * .07),
+                        minimumSize: Size(
+                            MediaQuery.of(context).size.height * .24,
+                            MediaQuery.of(context).size.height * .07),
+                        primary: Colors.black,
+                        shape: StadiumBorder(),
+                      ),
+                      onPressed: () async {
+                        _timer?.cancel();
+                        await EasyLoading.show(
+                            status: 'loading...',
+                            maskType: EasyLoadingMaskType.black,
+                            dismissOnTap: false);
+                        print(FirebaseAuth.instance.currentUser?.uid);
+                        await FirebaseFirestore.instance
+                            .collection('Users')
+                            .where('email',
+                                isEqualTo:
+                                    FirebaseAuth.instance.currentUser?.email)
+                            .get()
+                            .then((value) => value.docs.forEach((doc) async {
+                                  await FirebaseFirestore.instance
+                                      .collection('Users')
+                                      .doc(value.docs.first.id)
+                                      .update({
+                                    'email': FirebaseAuth
+                                        .instance.currentUser?.email,
+                                  }).then((value) async => {
+                                            if (userStore != null)
+                                              {
+                                                await FirebaseFirestore.instance
+                                                    .collection('Store')
+                                                    .doc(userStore!
+                                                        .store.storeId
+                                                        .replaceAll(" ", ""))
+                                                    .update({
+                                                  'locStore':
+                                                      _LocationController.text,
+                                                  'descStore':
+                                                      _DescriprionController
+                                                          .text
+                                                }),
+                                              },
+                                            _timer?.cancel(),
+                                            await EasyLoading.dismiss(),
+                                            LoginHelper.showSuccessAlertDialog(
+                                                context,
+                                                isArabic(context)
+                                                    ? "تم تحديث معلومات الحساب بنجاح"
+                                                    : "Account information has been updated successfully.")
+                                          });
+                                }));
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text(
+                              isArabic(context)
+                                  ? 'حفظ التعديل'
+                                  : "Save changes",
+                              style: TextStyle(
+                                  fontFamily: 'SouqFont',
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold)),
+                          Icon(
+                            Icons.save_alt,
+                            color: Colors.white,
+                          ),
+                        ],
+                      )),
+                ])
+              ]))),
+        ));
   }
 
   Widget newBranch() => Column(children: [
