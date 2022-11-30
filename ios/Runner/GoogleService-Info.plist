@@ -3,21 +3,23 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>664105166585-9hbrbq703m48u3pi1jv3aq1n5nrr1cdg.apps.googleusercontent.com</string>
+	<string>445360726578-hmjhdqig63jcihg2g6qpaa7q5e8jplve.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.664105166585-9hbrbq703m48u3pi1jv3aq1n5nrr1cdg</string>
+	<string>com.googleusercontent.apps.445360726578-hmjhdqig63jcihg2g6qpaa7q5e8jplve</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>445360726578-e0ijco2jpptk2bo0daajoc9h7drifde3.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyBeHvdI-mTiiicmB4IeY-wnH1uANrzia40</string>
+	<string>AIzaSyCcWIK47jR8z7MraWvl-zqDmbr0b2efzmw</string>
 	<key>GCM_SENDER_ID</key>
-	<string>664105166585</string>
+	<string>445360726578</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.souq.app.souq</string>
+	<string>com.offer.app.offer</string>
 	<key>PROJECT_ID</key>
-	<string>souq-story</string>
+	<string>black-market-kwd</string>
 	<key>STORAGE_BUCKET</key>
-	<string>souq-story.appspot.com</string>
+	<string>black-market-kwd.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:664105166585:ios:f38e5b085aabb00ddd6428</string>
+	<string>1:445360726578:ios:8277bd028a4730a77f522b</string>
 </dict>
 </plist>

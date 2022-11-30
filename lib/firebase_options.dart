@@ -50,20 +50,20 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDg-Jnr_x_lvmu84ZTgIhN_rQpc-CGabAE',
-    appId: '1:664105166585:android:e8927da2a1092be0dd6428',
-    messagingSenderId: '664105166585',
-    projectId: 'souq-story',
-    storageBucket: 'souq-story.appspot.com',
+    apiKey: 'AIzaSyAy5N5jydKgW1qrQaZWu66L3jKgPpRZdD8',
+    appId: '1:445360726578:android:fa1f3d513fc9922f7f522b',
+    messagingSenderId: '445360726578',
+    projectId: 'black-market-kwd',
+    storageBucket: 'black-market-kwd.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBeHvdI-mTiiicmB4IeY-wnH1uANrzia40',
-    appId: '1:664105166585:ios:f38e5b085aabb00ddd6428',
-    messagingSenderId: '664105166585',
-    projectId: 'souq-story',
-    storageBucket: 'souq-story.appspot.com',
-    iosClientId: '664105166585-9hbrbq703m48u3pi1jv3aq1n5nrr1cdg.apps.googleusercontent.com',
-    iosBundleId: 'com.souq.app.souq',
+    apiKey: 'AIzaSyCcWIK47jR8z7MraWvl-zqDmbr0b2efzmw',
+    appId: '1:445360726578:ios:8277bd028a4730a77f522b',
+    messagingSenderId: '445360726578',
+    projectId: 'black-market-kwd',
+    storageBucket: 'black-market-kwd.appspot.com',
+    iosClientId: '445360726578-hmjhdqig63jcihg2g6qpaa7q5e8jplve.apps.googleusercontent.com',
+    iosBundleId: 'com.offer.app.offer',
   );
 }
